@@ -1,11 +1,11 @@
-package ethapi
+package bgmapi
 
 import (
 	"math/big"
 	"testing"
 
-	"github.com/meitu/go-ethereum/common/hexutil"
-	"github.com/meitu/go-ethereum/core/types"
+	"github.com/5sWind/bgmchain/common/hexutil"
+	"github.com/5sWind/bgmchain/core/types"
 )
 
 func TestToTransaction(t *testing.T) {

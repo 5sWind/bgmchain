@@ -1,25 +1,25 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-bgmchain Authors
+// This file is part of go-bgmchain.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-bgmchain is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-bgmchain is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-bgmchain. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
 import (
 	"fmt"
 
-	"github.com/meitu/go-ethereum/log"
+	"github.com/5sWind/bgmchain/log"
 )
 
 // deployDashboard queries the user for various input on deploying a web-service
@@ -59,7 +59,7 @@ func (w *wizard) deployDashboard() {
 		}
 	}
 	listing := make(map[string]string)
-	for _, service := range []string{"ethstats", "explorer", "wallet", "faucet"} {
+	for _, service := range []string{"bgmstats", "explorer", "wallet", "faucet"} {
 		// Gather all the locally hosted pages of this type
 		var pages []string
 		for _, server := range available[service] {
@@ -70,8 +70,8 @@ func (w *wizard) deployDashboard() {
 			// If there's a service running on the machine, retrieve it's port number
 			var port int
 			switch service {
-			case "ethstats":
-				if infos, err := checkEthstats(client, w.network); err == nil {
+			case "bgmstats":
+				if infos, err := checkBgmstats(client, w.network); err == nil {
 					port = infos.port
 				}
 			case "faucet":
@@ -112,15 +112,15 @@ func (w *wizard) deployDashboard() {
 			// No service hosting for this
 		}
 	}
-	// If we have ethstats running, ask whether to make the secret public or not
-	var ethstats bool
-	if w.conf.ethstats != "" {
+	// If we have bgmstats running, ask whbgmchain to make the secret public or not
+	var bgmstats bool
+	if w.conf.bgmstats != "" {
 		fmt.Println()
-		fmt.Println("Include ethstats secret on dashboard (y/n)? (default = yes)")
-		ethstats = w.readDefaultString("y") == "y"
+		fmt.Println("Include bgmstats secret on dashboard (y/n)? (default = yes)")
+		bgmstats = w.readDefaultString("y") == "y"
 	}
 	// Try to deploy the dashboard container on the host
-	if out, err := deployDashboard(client, w.network, infos.port, infos.host, listing, &w.conf, ethstats); err != nil {
+	if out, err := deployDashboard(client, w.network, infos.port, infos.host, listing, &w.conf, bgmstats); err != nil {
 		log.Error("Failed to deploy dashboard container", "err", err)
 		if len(out) > 0 {
 			fmt.Printf("%s\n", out)

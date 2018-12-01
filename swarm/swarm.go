@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
 package swarm
 
@@ -23,22 +23,22 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/meitu/go-ethereum/accounts/abi/bind"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/contracts/chequebook"
-	"github.com/meitu/go-ethereum/contracts/ens"
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/ethclient"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/rpc"
-	"github.com/meitu/go-ethereum/swarm/api"
-	httpapi "github.com/meitu/go-ethereum/swarm/api/http"
-	"github.com/meitu/go-ethereum/swarm/fuse"
-	"github.com/meitu/go-ethereum/swarm/network"
-	"github.com/meitu/go-ethereum/swarm/storage"
+	"github.com/5sWind/bgmchain/accounts/abi/bind"
+	"github.com/5sWind/bgmchain/common"
+	"github.com/5sWind/bgmchain/contracts/chequebook"
+	"github.com/5sWind/bgmchain/contracts/ens"
+	"github.com/5sWind/bgmchain/crypto"
+	"github.com/5sWind/bgmchain/bgmclient"
+	"github.com/5sWind/bgmchain/log"
+	"github.com/5sWind/bgmchain/node"
+	"github.com/5sWind/bgmchain/p2p"
+	"github.com/5sWind/bgmchain/p2p/discover"
+	"github.com/5sWind/bgmchain/rpc"
+	"github.com/5sWind/bgmchain/swarm/api"
+	httpapi "github.com/5sWind/bgmchain/swarm/api/http"
+	"github.com/5sWind/bgmchain/swarm/fuse"
+	"github.com/5sWind/bgmchain/swarm/network"
+	"github.com/5sWind/bgmchain/swarm/storage"
 )
 
 // the swarm stack
@@ -76,7 +76,7 @@ func (self *Swarm) API() *SwarmAPI {
 
 // creates a new swarm service instance
 // implements node.Service
-func NewSwarm(ctx *node.ServiceContext, backend chequebook.Backend, ensClient *ethclient.Client, config *api.Config, swapEnabled, syncEnabled bool, cors string) (self *Swarm, err error) {
+func NewSwarm(ctx *node.ServiceContext, backend chequebook.Backend, ensClient *bgmclient.Client, config *api.Config, swapEnabled, syncEnabled bool, cors string) (self *Swarm, err error) {
 	if bytes.Equal(common.FromHex(config.PublicKey), storage.ZeroKey) {
 		return nil, fmt.Errorf("empty public key")
 	}

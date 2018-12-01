@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
 // Package netutil contains extensions to the net package.
 package netutil
@@ -119,7 +119,7 @@ func (l *Netlist) Add(cidr string) {
 	*l = append(*l, *n)
 }
 
-// Contains reports whether the given IP is contained in the list.
+// Contains reports whbgmchain the given IP is contained in the list.
 func (l *Netlist) Contains(ip net.IP) bool {
 	if l == nil {
 		return false
@@ -132,7 +132,7 @@ func (l *Netlist) Contains(ip net.IP) bool {
 	return false
 }
 
-// IsLAN reports whether an IP is a local network address.
+// IsLAN reports whbgmchain an IP is a local network address.
 func IsLAN(ip net.IP) bool {
 	if ip.IsLoopback() {
 		return true
@@ -143,7 +143,7 @@ func IsLAN(ip net.IP) bool {
 	return lan6.Contains(ip)
 }
 
-// IsSpecialNetwork reports whether an IP is located in a special-use network range
+// IsSpecialNetwork reports whbgmchain an IP is located in a special-use network range
 // This includes broadcast, multicast and documentation addresses.
 func IsSpecialNetwork(ip net.IP) bool {
 	if ip.IsMulticast() {
@@ -163,7 +163,7 @@ var (
 	errLAN         = errors.New("LAN address from WAN host")
 )
 
-// CheckRelayIP reports whether an IP relayed from the given sender IP
+// CheckRelayIP reports whbgmchain an IP relayed from the given sender IP
 // is a valid connection target.
 //
 // There are four rules:

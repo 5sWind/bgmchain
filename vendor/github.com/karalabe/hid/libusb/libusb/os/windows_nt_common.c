@@ -112,7 +112,7 @@ const char *windows_error_str(DWORD error_code)
 #endif
 
 /* Hash table functions - modified From glibc 2.3.2:
-   [Aho,Sethi,Ullman] Compilers: Principles, Techniques and Tools, 1986
+   [Aho,Sbgmi,Ullman] Compilers: Principles, Techniques and Tools, 1986
    [Knuth]            The Art of Computer Programming, part 3 (6.4)  */
 
 #define HTAB_SIZE 1021UL	// *MUST* be a prime number!!

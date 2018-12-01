@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-bgmchain Authors
+// This file is part of go-bgmchain.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-bgmchain is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-bgmchain is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-bgmchain. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -21,8 +21,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/meitu/go-ethereum/accounts/keystore"
-	"github.com/meitu/go-ethereum/log"
+	"github.com/5sWind/bgmchain/accounts/keystore"
+	"github.com/5sWind/bgmchain/log"
 )
 
 // deployFaucet queries the user for various input on deploying a faucet, after
@@ -39,7 +39,7 @@ func (w *wizard) deployFaucet() {
 	infos, err := checkFaucet(client, w.network)
 	if err != nil {
 		infos = &faucetInfos{
-			node:    &nodeInfos{portFull: 30303, peersTotal: 25},
+			node:    &nodeInfos{portFull: 17575, peersTotal: 25},
 			port:    80,
 			host:    client.server,
 			amount:  1,
@@ -55,14 +55,14 @@ func (w *wizard) deployFaucet() {
 	fmt.Printf("Which port should the faucet listen on? (default = %d)\n", infos.port)
 	infos.port = w.readDefaultInt(infos.port)
 
-	// Figure which virtual-host to deploy ethstats on
+	// Figure which virtual-host to deploy bgmstats on
 	if infos.host, err = w.ensureVirtualHost(client, infos.port, infos.host); err != nil {
 		log.Error("Failed to decide on faucet host", "err", err)
 		return
 	}
 	// Port and proxy settings retrieved, figure out the funcing amount per perdion configurations
 	fmt.Println()
-	fmt.Printf("How many Ethers to release per request? (default = %d)\n", infos.amount)
+	fmt.Printf("How many Bgmchains to release per request? (default = %d)\n", infos.amount)
 	infos.amount = w.readDefaultInt(infos.amount)
 
 	fmt.Println()
@@ -156,12 +156,12 @@ func (w *wizard) deployFaucet() {
 
 	// Set a proper name to report on the stats page
 	fmt.Println()
-	if infos.node.ethstats == "" {
+	if infos.node.bgmstats == "" {
 		fmt.Printf("What should the node be called on the stats page?\n")
-		infos.node.ethstats = w.readString() + ":" + w.conf.ethstats
+		infos.node.bgmstats = w.readString() + ":" + w.conf.bgmstats
 	} else {
-		fmt.Printf("What should the node be called on the stats page? (default = %s)\n", infos.node.ethstats)
-		infos.node.ethstats = w.readDefaultString(infos.node.ethstats) + ":" + w.conf.ethstats
+		fmt.Printf("What should the node be called on the stats page? (default = %s)\n", infos.node.bgmstats)
+		infos.node.bgmstats = w.readDefaultString(infos.node.bgmstats) + ":" + w.conf.bgmstats
 	}
 	// Load up the credential needed to release funds
 	if infos.node.keyJSON != "" {

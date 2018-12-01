@@ -1291,7 +1291,7 @@ func (r *StatfsResponse) String() string {
 	)
 }
 
-// An AccessRequest asks whether the file can be accessed
+// An AccessRequest asks whbgmchain the file can be accessed
 // for the purpose specified by the mask.
 type AccessRequest struct {
 	Header `json:"-"`

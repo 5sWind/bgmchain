@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2016 The go-bgmchain Authors
+// This file is part of go-bgmchain.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-bgmchain is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-bgmchain is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-bgmchain. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -27,12 +27,12 @@ import (
 	"time"
 
 	"github.com/docker/docker/pkg/reexec"
-	"github.com/meitu/go-ethereum/accounts/keystore"
-	"github.com/meitu/go-ethereum/internal/cmdtest"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/rpc"
-	"github.com/meitu/go-ethereum/swarm"
+	"github.com/5sWind/bgmchain/accounts/keystore"
+	"github.com/5sWind/bgmchain/internal/cmdtest"
+	"github.com/5sWind/bgmchain/node"
+	"github.com/5sWind/bgmchain/p2p"
+	"github.com/5sWind/bgmchain/rpc"
+	"github.com/5sWind/bgmchain/swarm"
 )
 
 func init() {
@@ -78,7 +78,7 @@ type testCluster struct {
 // ports (assigned by first listening on 127.0.0.1:0 and then passing the ports
 // as flags).
 //
-// When starting more than one node, they are connected together using the
+// When starting more than one node, they are connected togbgmchain using the
 // admin SetPeer RPC method.
 func newTestCluster(t *testing.T, size int) *testCluster {
 	cluster := &testCluster{}
@@ -112,7 +112,7 @@ func newTestCluster(t *testing.T, size int) *testCluster {
 		return cluster
 	}
 
-	// connect the nodes together
+	// connect the nodes togbgmchain
 	for _, node := range cluster.Nodes {
 		if err := node.Client.Call(nil, "admin_addPeer", cluster.Nodes[0].Enode); err != nil {
 			t.Fatal(err)

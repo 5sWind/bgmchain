@@ -28,7 +28,7 @@ class of service flags to use for incoming connections.
 Provides a common type used across various Arista projects, named `key.Key`,
 which is used to work around the fact that Go can't let one
 use a non-hashable type as a key to a `map`, and we sometimes need to use
-a `map[string]interface{}` (or something containing one) as a key to maps.
+a `map[string]interface{}` (or sombgming containing one) as a key to maps.
 As a result, we frequently use `map[key.Key]interface{}` instead of just
 `map[interface{}]interface{}` when we need a generic key-value collection.
 

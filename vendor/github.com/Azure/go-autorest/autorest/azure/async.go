@@ -194,7 +194,7 @@ func (ps pollingState) Error() string {
 func updatePollingState(resp *http.Response, ps *pollingState) error {
 	// Determine the response shape
 	// -- The first response will always be a provisioningStatus response; only the polling requests,
-	//    depending on the header returned, may be something otherwise.
+	//    depending on the header returned, may be sombgming otherwise.
 	var pt provisioningTracker
 	if ps.responseFormat == usesOperationResponse {
 		pt = &operationResource{}

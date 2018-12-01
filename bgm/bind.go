@@ -1,54 +1,54 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package bgm
 
 import (
 	"context"
 	"math/big"
 
-	"github.com/meitu/go-ethereum"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/common/hexutil"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/internal/ethapi"
-	"github.com/meitu/go-ethereum/rlp"
-	"github.com/meitu/go-ethereum/rpc"
+	"github.com/5sWind/bgmchain"
+	"github.com/5sWind/bgmchain/common"
+	"github.com/5sWind/bgmchain/common/hexutil"
+	"github.com/5sWind/bgmchain/core/types"
+	"github.com/5sWind/bgmchain/internal/bgmapi"
+	"github.com/5sWind/bgmchain/rlp"
+	"github.com/5sWind/bgmchain/rpc"
 )
 
-// ContractBackend implements bind.ContractBackend with direct calls to Ethereum
-// internals to support operating on contracts within subprotocols like eth and
+// ContractBackend implements bind.ContractBackend with direct calls to Bgmchain
+// internals to support operating on contracts within subprotocols like bgm and
 // swarm.
 //
-// Internally this backend uses the already exposed API endpoints of the Ethereum
+// Internally this backend uses the already exposed API endpoints of the Bgmchain
 // object. These should be rewritten to internal Go method calls when the Go API
 // is refactored to support a clean library use.
 type ContractBackend struct {
-	eapi  *ethapi.PublicEthereumAPI        // Wrapper around the Ethereum object to access metadata
-	bcapi *ethapi.PublicBlockChainAPI      // Wrapper around the blockchain to access chain data
-	txapi *ethapi.PublicTransactionPoolAPI // Wrapper around the transaction pool to access transaction data
+	eapi  *bgmapi.PublicBgmchainAPI        // Wrapper around the Bgmchain object to access metadata
+	bcapi *bgmapi.PublicBlockChainAPI      // Wrapper around the blockchain to access chain data
+	txapi *bgmapi.PublicTransactionPoolAPI // Wrapper around the transaction pool to access transaction data
 }
 
 // NewContractBackend creates a new native contract backend using an existing
-// Ethereum object.
-func NewContractBackend(apiBackend ethapi.Backend) *ContractBackend {
+// Bgmchain object.
+func NewContractBackend(apiBackend bgmapi.Backend) *ContractBackend {
 	return &ContractBackend{
-		eapi:  ethapi.NewPublicEthereumAPI(apiBackend),
-		bcapi: ethapi.NewPublicBlockChainAPI(apiBackend),
-		txapi: ethapi.NewPublicTransactionPoolAPI(apiBackend, new(ethapi.AddrLocker)),
+		eapi:  bgmapi.NewPublicBgmchainAPI(apiBackend),
+		bcapi: bgmapi.NewPublicBlockChainAPI(apiBackend),
+		txapi: bgmapi.NewPublicTransactionPoolAPI(apiBackend, new(bgmapi.AddrLocker)),
 	}
 }
 
@@ -62,24 +62,24 @@ func (b *ContractBackend) PendingCodeAt(ctx context.Context, contract common.Add
 	return b.bcapi.GetCode(ctx, contract, rpc.PendingBlockNumber)
 }
 
-// ContractCall implements bind.ContractCaller executing an Ethereum contract
+// ContractCall implements bind.ContractCaller executing an Bgmchain contract
 // call with the specified data as the input. The pending flag requests execution
 // against the pending block, not the stable head of the chain.
-func (b *ContractBackend) CallContract(ctx context.Context, msg ethereum.CallMsg, blockNum *big.Int) ([]byte, error) {
+func (b *ContractBackend) CallContract(ctx context.Context, msg bgmchain.CallMsg, blockNum *big.Int) ([]byte, error) {
 	out, err := b.bcapi.Call(ctx, toCallArgs(msg), toBlockNumber(blockNum))
 	return out, err
 }
 
-// ContractCall implements bind.ContractCaller executing an Ethereum contract
+// ContractCall implements bind.ContractCaller executing an Bgmchain contract
 // call with the specified data as the input. The pending flag requests execution
 // against the pending block, not the stable head of the chain.
-func (b *ContractBackend) PendingCallContract(ctx context.Context, msg ethereum.CallMsg) ([]byte, error) {
+func (b *ContractBackend) PendingCallContract(ctx context.Context, msg bgmchain.CallMsg) ([]byte, error) {
 	out, err := b.bcapi.Call(ctx, toCallArgs(msg), rpc.PendingBlockNumber)
 	return out, err
 }
 
-func toCallArgs(msg ethereum.CallMsg) ethapi.CallArgs {
-	args := ethapi.CallArgs{
+func toCallArgs(msg bgmchain.CallMsg) bgmapi.CallArgs {
+	args := bgmapi.CallArgs{
 		To:   msg.To,
 		From: msg.From,
 		Data: msg.Data,
@@ -124,7 +124,7 @@ func (b *ContractBackend) SuggestGasPrice(ctx context.Context) (*big.Int, error)
 // the backend blockchain. There is no guarantee that this is the true gas limit
 // requirement as other transactions may be added or removed by miners, but it
 // should provide a basis for setting a reasonable default.
-func (b *ContractBackend) EstimateGas(ctx context.Context, msg ethereum.CallMsg) (*big.Int, error) {
+func (b *ContractBackend) EstimateGas(ctx context.Context, msg bgmchain.CallMsg) (*big.Int, error) {
 	out, err := b.bcapi.EstimateGas(ctx, toCallArgs(msg))
 	return out.ToInt(), err
 }

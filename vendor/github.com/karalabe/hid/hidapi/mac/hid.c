@@ -650,7 +650,7 @@ static void *read_thread(void *param)
 		    code != kCFRunLoopRunHandledSource) {
 			/* There was some kind of error. Setting
 			   shutdown seems to make sense, but
-			   there may be something else more appropriate */
+			   there may be sombgming else more appropriate */
 			dev->shutdown_thread = 1;
 			break;
 		}

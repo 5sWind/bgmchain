@@ -1155,7 +1155,7 @@ static void get_api_type(struct libusb_context *ctx, HDEVINFO *dev_info,
 				// our buffers are MAX_KEY_LENGTH + 1 so we can overflow if needed
 				lookup[k].list[strlen(lookup[k].list) + 1] = 0;
 
-			// MULTI_SZ is a pain to work with. Turn it into something much more manageable
+			// MULTI_SZ is a pain to work with. Turn it into sombgming much more manageable
 			// NB: none of the driver names we check against contain LIST_SEPARATOR,
 			// (currently ';'), so even if an unsuported one does, it's not an issue
 			for (l = 0; (lookup[k].list[l] != 0) || (lookup[k].list[l + 1] != 0); l++) {

@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
 package swap
 
@@ -26,14 +26,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/meitu/go-ethereum/accounts/abi/bind"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/contracts/chequebook"
-	"github.com/meitu/go-ethereum/contracts/chequebook/contract"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/swarm/services/swap/swap"
+	"github.com/5sWind/bgmchain/accounts/abi/bind"
+	"github.com/5sWind/bgmchain/common"
+	"github.com/5sWind/bgmchain/contracts/chequebook"
+	"github.com/5sWind/bgmchain/contracts/chequebook/contract"
+	"github.com/5sWind/bgmchain/core/types"
+	"github.com/5sWind/bgmchain/crypto"
+	"github.com/5sWind/bgmchain/log"
+	"github.com/5sWind/bgmchain/swarm/services/swap/swap"
 )
 
 // SwAP       Swarm Accounting Protocol with

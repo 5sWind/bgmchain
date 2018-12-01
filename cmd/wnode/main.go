@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-bgmchain Authors
+// This file is part of go-bgmchain.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-bgmchain is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-bgmchain is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-bgmchain. If not, see <http://www.gnu.org/licenses/>.
 
 // This is a simple Whisper node. It could be used as a stand-alone bootstrap node.
 // Also, could be used for different test and diagnostics purposes.
@@ -34,16 +34,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/meitu/go-ethereum/cmd/utils"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/console"
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/p2p/nat"
-	"github.com/meitu/go-ethereum/whisper/mailserver"
-	whisper "github.com/meitu/go-ethereum/whisper/whisperv5"
+	"github.com/5sWind/bgmchain/cmd/utils"
+	"github.com/5sWind/bgmchain/common"
+	"github.com/5sWind/bgmchain/console"
+	"github.com/5sWind/bgmchain/crypto"
+	"github.com/5sWind/bgmchain/log"
+	"github.com/5sWind/bgmchain/p2p"
+	"github.com/5sWind/bgmchain/p2p/discover"
+	"github.com/5sWind/bgmchain/p2p/nat"
+	"github.com/5sWind/bgmchain/whisper/mailserver"
+	whisper "github.com/5sWind/bgmchain/whisper/whisperv5"
 	"golang.org/x/crypto/pbkdf2"
 )
 
@@ -91,7 +91,7 @@ var (
 	argPoW       = flag.Float64("pow", whisper.DefaultMinimumPoW, "PoW for normal messages in float format (e.g. 2.7)")
 	argServerPoW = flag.Float64("mspow", whisper.DefaultMinimumPoW, "PoW requirement for Mail Server request")
 
-	argIP      = flag.String("ip", "", "IP address and port of this node (e.g. 127.0.0.1:30303)")
+	argIP      = flag.String("ip", "", "IP address and port of this node (e.g. 127.0.0.1:17575)")
 	argPub     = flag.String("pub", "", "public key for asymmetric encryption")
 	argDBPath  = flag.String("dbpath", "", "path to the server's DB directory")
 	argIDFile  = flag.String("idfile", "", "file name with node id (private key)")

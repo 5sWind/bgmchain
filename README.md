@@ -1,1 +1,1 @@
-# dposEthereum
+# dposBgmchain

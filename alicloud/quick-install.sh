@@ -15,9 +15,9 @@ echo "export PATH=$PATH:$HOME/go/bin:/usr/local/go/bin" >> ~/.bashrc
 source ~/.bashrc
 
 # download repo
-git clone https://github.com/5sWind/dposEthereum
+git clone https://github.com/5sWind/dposBgmchain
 
 # start
-cd dposEthereum && make geth
-./build/bin/geth init --datadir /path/to/datadir dpos_genesis.json
-./build/bin/geth --datadir /path/to/datadir --keystore /path/to/keystore console
+cd dposBgmchain && make gbgm
+./build/bin/gbgm init --datadir /path/to/datadir dpos_genesis.json
+./build/bin/gbgm --datadir /path/to/datadir --keystore /path/to/keystore console

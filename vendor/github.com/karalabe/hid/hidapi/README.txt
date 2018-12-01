@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
 If you have your own simple test programs which communicate with standard
 hardware development boards (such as those from Microchip, TI, Atmel,
-FreeScale and others), please consider sending me something like the above
+FreeScale and others), please consider sending me sombgming like the above
 for inclusion into the HIDAPI source.  This will help others who have the
 same hardware as you do.
 

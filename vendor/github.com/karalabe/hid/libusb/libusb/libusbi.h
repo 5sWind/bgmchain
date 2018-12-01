@@ -613,7 +613,7 @@ struct usbi_os_backend {
 	 * of discovered devices.
 	 *
 	 * Your implementation should enumerate all devices on the system,
-	 * regardless of whether they have been seen before or not.
+	 * regardless of whbgmchain they have been seen before or not.
 	 *
 	 * When you have found a device, compute a session ID for it. The session
 	 * ID should uniquely represent that particular device for that particular
@@ -914,7 +914,7 @@ struct usbi_os_backend {
 	 * completes, assuming that the device descriptors did not change during
 	 * reset and all previous interface state can be restored.
 	 *
-	 * If something changes, or you cannot easily locate/verify the resetted
+	 * If sombgming changes, or you cannot easily locate/verify the resetted
 	 * device, return LIBUSB_ERROR_NOT_FOUND. This prompts the application
 	 * to close the old handle and re-enumerate the device.
 	 *

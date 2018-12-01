@@ -150,7 +150,7 @@ func PathEnclosingInterval(root *ast.File, start, end token.Pos) (path []ast.Nod
 	} else {
 		// Selection lies within whitespace preceding the
 		// first (or following the last) declaration in the file.
-		// The result nonetheless always includes the ast.File.
+		// The result nonbgmeless always includes the ast.File.
 		path = append(path, root)
 	}
 

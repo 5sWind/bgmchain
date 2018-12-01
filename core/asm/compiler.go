@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
 package asm
 
@@ -23,8 +23,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/meitu/go-ethereum/common/math"
-	"github.com/meitu/go-ethereum/core/vm"
+	"github.com/5sWind/bgmchain/common/math"
+	"github.com/5sWind/bgmchain/core/vm"
 )
 
 // Compiler contains information about the parsed source
@@ -234,7 +234,7 @@ func (c *Compiler) pushBin(v interface{}) {
 	c.binary = append(c.binary, v)
 }
 
-// isPush returns whether the string op is either any of
+// isPush returns whbgmchain the string op is either any of
 // push(N).
 func isPush(op string) bool {
 	if op == "push" {
@@ -243,7 +243,7 @@ func isPush(op string) bool {
 	return false
 }
 
-// isJump returns whether the string op is jump(i)
+// isJump returns whbgmchain the string op is jump(i)
 func isJump(op string) bool {
 	return op == "jumpi" || op == "jump"
 }

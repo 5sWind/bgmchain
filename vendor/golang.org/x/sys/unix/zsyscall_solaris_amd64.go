@@ -16,7 +16,7 @@ import (
 //go:cgo_import_dynamic libc_getgroups getgroups "libc.so"
 //go:cgo_import_dynamic libc_setgroups setgroups "libc.so"
 //go:cgo_import_dynamic libc_wait4 wait4 "libc.so"
-//go:cgo_import_dynamic libc_gethostname gethostname "libc.so"
+//go:cgo_import_dynamic libc_gbgmostname gbgmostname "libc.so"
 //go:cgo_import_dynamic libc_utimes utimes "libc.so"
 //go:cgo_import_dynamic libc_utimensat utimensat "libc.so"
 //go:cgo_import_dynamic libc_fcntl fcntl "libc.so"
@@ -98,7 +98,7 @@ import (
 //go:cgo_import_dynamic libc_setegid setegid "libc.so"
 //go:cgo_import_dynamic libc_seteuid seteuid "libc.so"
 //go:cgo_import_dynamic libc_setgid setgid "libc.so"
-//go:cgo_import_dynamic libc_sethostname sethostname "libc.so"
+//go:cgo_import_dynamic libc_sbgmostname sbgmostname "libc.so"
 //go:cgo_import_dynamic libc_setpgid setpgid "libc.so"
 //go:cgo_import_dynamic libc_setpriority setpriority "libc.so"
 //go:cgo_import_dynamic libc_setregid setregid "libc.so"
@@ -141,7 +141,7 @@ import (
 //go:linkname procgetgroups libc_getgroups
 //go:linkname procsetgroups libc_setgroups
 //go:linkname procwait4 libc_wait4
-//go:linkname procgethostname libc_gethostname
+//go:linkname procgbgmostname libc_gbgmostname
 //go:linkname procutimes libc_utimes
 //go:linkname procutimensat libc_utimensat
 //go:linkname procfcntl libc_fcntl
@@ -223,7 +223,7 @@ import (
 //go:linkname procSetegid libc_setegid
 //go:linkname procSeteuid libc_seteuid
 //go:linkname procSetgid libc_setgid
-//go:linkname procSethostname libc_sethostname
+//go:linkname procSbgmostname libc_sbgmostname
 //go:linkname procSetpgid libc_setpgid
 //go:linkname procSetpriority libc_setpriority
 //go:linkname procSetregid libc_setregid
@@ -267,7 +267,7 @@ var (
 	procgetgroups,
 	procsetgroups,
 	procwait4,
-	procgethostname,
+	procgbgmostname,
 	procutimes,
 	procutimensat,
 	procfcntl,
@@ -349,7 +349,7 @@ var (
 	procSetegid,
 	procSeteuid,
 	procSetgid,
-	procSethostname,
+	procSbgmostname,
 	procSetpgid,
 	procSetpriority,
 	procSetregid,
@@ -443,12 +443,12 @@ func wait4(pid int32, statusp *_C_int, options int, rusage *Rusage) (wpid int32,
 	return
 }
 
-func gethostname(buf []byte) (n int, err error) {
+func gbgmostname(buf []byte) (n int, err error) {
 	var _p0 *byte
 	if len(buf) > 0 {
 		_p0 = &buf[0]
 	}
-	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procgethostname)), 2, uintptr(unsafe.Pointer(_p0)), uintptr(len(buf)), 0, 0, 0, 0)
+	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procgbgmostname)), 2, uintptr(unsafe.Pointer(_p0)), uintptr(len(buf)), 0, 0, 0, 0)
 	n = int(r0)
 	if e1 != 0 {
 		err = e1
@@ -1288,12 +1288,12 @@ func Setgid(gid int) (err error) {
 	return
 }
 
-func Sethostname(p []byte) (err error) {
+func Sbgmostname(p []byte) (err error) {
 	var _p0 *byte
 	if len(p) > 0 {
 		_p0 = &p[0]
 	}
-	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procSethostname)), 2, uintptr(unsafe.Pointer(_p0)), uintptr(len(p)), 0, 0, 0, 0)
+	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procSbgmostname)), 2, uintptr(unsafe.Pointer(_p0)), uintptr(len(p)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
 	}

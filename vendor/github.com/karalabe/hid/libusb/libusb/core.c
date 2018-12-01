@@ -123,7 +123,7 @@ struct list_head active_contexts_list;
  * To begin reading the API documentation, start with the Modules page which
  * links to the different categories of libusb's functionality.
  *
- * One decision you will have to make is whether to use the synchronous
+ * One decision you will have to make is whbgmchain to use the synchronous
  * or the asynchronous data transfer interface. The \ref libusb_io documentation
  * provides some insight into this topic.
  *
@@ -873,7 +873,7 @@ out:
  * libusb_get_device_list(). If the unref_devices parameter is set, the
  * reference count of each device in the list is decremented by 1.
  * \param list the list to free
- * \param unref_devices whether to unref the devices in the list
+ * \param unref_devices whbgmchain to unref the devices in the list
  */
 void API_EXPORTED libusb_free_device_list(libusb_device **list,
 	int unref_devices)
@@ -903,7 +903,7 @@ uint8_t API_EXPORTED libusb_get_bus_number(libusb_device *dev)
 
 /** \ingroup libusb_dev
  * Get the number of the port that a device is connected to.
- * Unless the OS does something funky, or you are hot-plugging USB extension cards,
+ * Unless the OS does sombgming funky, or you are hot-plugging USB extension cards,
  * the port number returned by this call is usually guaranteed to be uniquely tied
  * to a physical port, meaning that different devices plugged on the same physical
  * port should return the same port number.
@@ -1995,7 +1995,7 @@ int API_EXPORTED libusb_attach_kernel_driver(libusb_device_handle *dev_handle,
  * continue as if this function was never called.
  *
  * \param dev_handle a device handle
- * \param enable whether to enable or disable auto kernel driver detachment
+ * \param enable whbgmchain to enable or disable auto kernel driver detachment
  *
  * \returns LIBUSB_SUCCESS on success
  * \returns LIBUSB_ERROR_NOT_SUPPORTED on platforms where the functionality
@@ -2421,7 +2421,7 @@ void usbi_log_v(struct libusb_context *ctx, enum libusb_log_level level,
 
 	if (header_len < 0 || header_len >= (int)sizeof(buf)) {
 		/* Somehow snprintf failed to write to the buffer,
-		 * remove the header so something useful is output. */
+		 * remove the header so sombgming useful is output. */
 		header_len = 0;
 	}
 	/* Make sure buffer is NUL terminated */

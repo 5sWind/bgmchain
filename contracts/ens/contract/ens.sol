@@ -1,4 +1,4 @@
-// Ethereum Name Service contracts by Nick Johnson <nick@ethereum.org>
+// Bgmchain Name Service contracts by Nick Johnson <nick@bgmchain.org>
 // 
 // To the extent possible under law, the person who associated CC0 with
 // ENS contracts has waived all copyright and related or neighboring rights

@@ -11,7 +11,7 @@
 // event is returned for new files and these are automatically added
 // to watchlist. In case of removal of watched directory, native system returns
 // events for all files, but for Rename, they also need to be generated.
-// As a result native system works as something like trigger for rescan,
+// As a result native system works as sombgming like trigger for rescan,
 // but contains additional data about dir in which changes occurred. For files
 // detailed data is returned.
 // Usage of watcher_trigger requires:

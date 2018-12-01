@@ -1,20 +1,20 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
-package ethash
+package bgmash
 
 import (
 	"encoding/binary"
@@ -26,11 +26,11 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/common/bitutil"
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/crypto/sha3"
-	"github.com/meitu/go-ethereum/log"
+	"github.com/5sWind/bgmchain/common"
+	"github.com/5sWind/bgmchain/common/bitutil"
+	"github.com/5sWind/bgmchain/crypto"
+	"github.com/5sWind/bgmchain/crypto/sha3"
+	"github.com/5sWind/bgmchain/log"
 )
 
 const (
@@ -94,7 +94,7 @@ func generateCache(dest []uint32, epoch uint64, seed []byte) {
 		if elapsed > 3*time.Second {
 			logFn = logger.Info
 		}
-		logFn("Generated ethash verification cache", "elapsed", common.PrettyDuration(elapsed))
+		logFn("Generated bgmash verification cache", "elapsed", common.PrettyDuration(elapsed))
 	}()
 	// Convert our destination slice to a byte buffer
 	header := *(*reflect.SliceHeader)(unsafe.Pointer(&dest))
@@ -102,7 +102,7 @@ func generateCache(dest []uint32, epoch uint64, seed []byte) {
 	header.Cap *= 4
 	cache := *(*[]byte)(unsafe.Pointer(&header))
 
-	// Calculate the number of theoretical rows (we'll store in one buffer nonetheless)
+	// Calculate the number of theoretical rows (we'll store in one buffer nonbgmeless)
 	size := uint64(len(cache))
 	rows := int(size) / hashBytes
 
@@ -118,7 +118,7 @@ func generateCache(dest []uint32, epoch uint64, seed []byte) {
 			case <-done:
 				return
 			case <-time.After(3 * time.Second):
-				logger.Info("Generating ethash verification cache", "percentage", atomic.LoadUint32(&progress)*100/uint32(rows)/4, "elapsed", common.PrettyDuration(time.Since(start)))
+				logger.Info("Generating bgmash verification cache", "percentage", atomic.LoadUint32(&progress)*100/uint32(rows)/4, "elapsed", common.PrettyDuration(time.Since(start)))
 			}
 		}
 	}()
@@ -160,8 +160,8 @@ func swap(buffer []byte) {
 	}
 }
 
-// prepare converts an ethash cache or dataset from a byte stream into the internal
-// int representation. All ethash methods work with ints to avoid constant byte to
+// prepare converts an bgmash cache or dataset from a byte stream into the internal
+// int representation. All bgmash methods work with ints to avoid constant byte to
 // int conversions as well as to handle both little and big endian systems.
 func prepare(dest []uint32, src []byte) {
 	for i := 0; i < len(dest); i++ {
@@ -177,7 +177,7 @@ func fnv(a, b uint32) uint32 {
 	return a*0x01000193 ^ b
 }
 
-// fnvHash mixes in data into mix using the ethash fnv method.
+// fnvHash mixes in data into mix using the bgmash fnv method.
 func fnvHash(mix []uint32, data []uint32) {
 	for i := 0; i < len(mix); i++ {
 		mix[i] = mix[i]*0x01000193 ^ data[i]
@@ -187,7 +187,7 @@ func fnvHash(mix []uint32, data []uint32) {
 // generateDatasetItem combines data from 256 pseudorandomly selected cache nodes,
 // and hashes that to compute a single dataset node.
 func generateDatasetItem(cache []uint32, index uint32, keccak512 hasher) []byte {
-	// Calculate the number of theoretical rows (we use one buffer nonetheless)
+	// Calculate the number of theoretical rows (we use one buffer nonbgmeless)
 	rows := uint32(len(cache) / hashWords)
 
 	// Initialize the mix
@@ -217,7 +217,7 @@ func generateDatasetItem(cache []uint32, index uint32, keccak512 hasher) []byte 
 	return mix
 }
 
-// generateDataset generates the entire ethash dataset for mining.
+// generateDataset generates the entire bgmash dataset for mining.
 // This method places the result into dest in machine byte order.
 func generateDataset(dest []uint32, epoch uint64, cache []uint32) {
 	// Print some debug logs to allow analysis on low end devices
@@ -231,10 +231,10 @@ func generateDataset(dest []uint32, epoch uint64, cache []uint32) {
 		if elapsed > 3*time.Second {
 			logFn = logger.Info
 		}
-		logFn("Generated ethash verification cache", "elapsed", common.PrettyDuration(elapsed))
+		logFn("Generated bgmash verification cache", "elapsed", common.PrettyDuration(elapsed))
 	}()
 
-	// Figure out whether the bytes need to be swapped for the machine
+	// Figure out whbgmchain the bytes need to be swapped for the machine
 	swapped := !isLittleEndian()
 
 	// Convert our destination slice to a byte buffer
@@ -287,7 +287,7 @@ func generateDataset(dest []uint32, epoch uint64, cache []uint32) {
 // hashimoto aggregates data from the full dataset in order to produce our final
 // value for a particular header hash and nonce.
 func hashimoto(hash []byte, nonce uint64, size uint64, lookup func(index uint32) []uint32) ([]byte, []byte) {
-	// Calculate the number of theoretical rows (we use one buffer nonetheless)
+	// Calculate the number of theoretical rows (we use one buffer nonbgmeless)
 	rows := uint32(size / mixBytes)
 
 	// Combine header+nonce into a 64 byte seed
@@ -355,7 +355,7 @@ func hashimotoFull(dataset []uint32, hash []byte, nonce uint64) ([]byte, []byte)
 	return hashimoto(hash, nonce, uint64(len(dataset))*4, lookup)
 }
 
-// datasetSizes is a lookup table for the ethash dataset size for the first 2048
+// datasetSizes is a lookup table for the bgmash dataset size for the first 2048
 // epochs (i.e. 61440000 blocks).
 var datasetSizes = []uint64{
 	1073739904, 1082130304, 1090514816, 1098906752, 1107293056,
@@ -769,7 +769,7 @@ var datasetSizes = []uint64{
 	18186498944, 18194886784, 18203275648, 18211666048, 18220048768,
 	18228444544, 18236833408, 18245220736}
 
-// cacheSizes is a lookup table for the ethash verification cache size for the
+// cacheSizes is a lookup table for the bgmash verification cache size for the
 // first 2048 epochs (i.e. 61440000 blocks).
 var cacheSizes = []uint64{
 	16776896, 16907456, 17039296, 17170112, 17301056, 17432512, 17563072,

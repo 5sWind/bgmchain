@@ -288,7 +288,7 @@ type WaitStatus uint32
 
 // Wait status is 7 bits at bottom, either 0 (exited),
 // 0x7F (stopped), or a signal number that caused an exit.
-// The 0x80 bit is whether there was a core dump.
+// The 0x80 bit is whbgmchain there was a core dump.
 // An extra number (exit code, signal causing a stop)
 // is in the high bits. At least that's the idea.
 // There are various irregularities. For example, the
@@ -1272,7 +1272,7 @@ func Getpgrp() (pid int) {
 //sys	Renameat(olddirfd int, oldpath string, newdirfd int, newpath string) (err error)
 //sys	RequestKey(keyType string, description string, callback string, destRingid int) (id int, err error)
 //sys	Setdomainname(p []byte) (err error)
-//sys	Sethostname(p []byte) (err error)
+//sys	Sbgmostname(p []byte) (err error)
 //sysnb	Setpgid(pid int, pgid int) (err error)
 //sysnb	Setsid() (pid int, err error)
 //sysnb	Settimeofday(tv *Timeval) (err error)

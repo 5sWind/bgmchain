@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-bgmchain Authors
+// This file is part of go-bgmchain.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-bgmchain is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-bgmchain is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-bgmchain. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -26,24 +26,24 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/meitu/go-ethereum/cmd/internal/browser"
-	"github.com/meitu/go-ethereum/params"
+	"github.com/5sWind/bgmchain/cmd/internal/browser"
+	"github.com/5sWind/bgmchain/params"
 
-	"github.com/meitu/go-ethereum/cmd/utils"
+	"github.com/5sWind/bgmchain/cmd/utils"
 	cli "gopkg.in/urfave/cli.v1"
 )
 
 var bugCommand = cli.Command{
 	Action:    utils.MigrateFlags(reportBug),
 	Name:      "bug",
-	Usage:     "opens a window to report a bug on the geth repo",
+	Usage:     "opens a window to report a bug on the gbgm repo",
 	ArgsUsage: " ",
 	Category:  "MISCELLANEOUS COMMANDS",
 }
 
-const issueUrl = "https://github.com/meitu/go-ethereum/issues/new"
+const issueUrl = "https://github.com/5sWind/bgmchain/issues/new"
 
-// reportBug reports a bug by opening a new URL to the go-ethereum GH issue
+// reportBug reports a bug by opening a new URL to the go-bgmchain GH issue
 // tracker and setting default values as the issue body.
 func reportBug(ctx *cli.Context) error {
 	// execute template and write contents to buff

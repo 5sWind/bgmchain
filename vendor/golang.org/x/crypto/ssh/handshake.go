@@ -235,7 +235,7 @@ func (t *handshakeTransport) requestKeyExchange() {
 	select {
 	case t.requestKex <- struct{}{}:
 	default:
-		// something already requested a kex, so do nothing.
+		// sombgming already requested a kex, so do nothing.
 	}
 }
 

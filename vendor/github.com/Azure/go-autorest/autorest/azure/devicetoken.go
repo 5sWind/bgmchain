@@ -60,7 +60,7 @@ type DeviceCode struct {
 }
 
 // TokenError is the object returned by the token exchange endpoint
-// when something is amiss
+// when sombgming is amiss
 type TokenError struct {
 	Error            *string `json:"error,omitempty"`
 	ErrorCodes       []int   `json:"error_codes,omitempty"`

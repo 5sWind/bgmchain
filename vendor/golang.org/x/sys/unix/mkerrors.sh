@@ -162,7 +162,7 @@ struct ltchars {
 #include <linux/if.h>
 #include <linux/if_alg.h>
 #include <linux/if_arp.h>
-#include <linux/if_ether.h>
+#include <linux/if_bgmchain.h>
 #include <linux/if_tun.h>
 #include <linux/if_packet.h>
 #include <linux/if_addr.h>
@@ -237,7 +237,7 @@ includes_NetBSD='
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 #include <netinet/ip_mroute.h>
-#include <netinet/if_ether.h>
+#include <netinet/if_bgmchain.h>
 
 // Needed since <sys/param.h> refers to it...
 #define schedppq 1
@@ -263,7 +263,7 @@ includes_OpenBSD='
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 #include <netinet/ip_mroute.h>
-#include <netinet/if_ether.h>
+#include <netinet/if_bgmchain.h>
 #include <net/if_bridge.h>
 
 // We keep some constants not supported in OpenBSD 5.5 and beyond for
@@ -346,7 +346,7 @@ ccflags="$@"
 		$2 ~ /^EXTATTR_NAMESPACE_NAMES/ ||
 		$2 ~ /^EXTATTR_NAMESPACE_[A-Z]+_STRING/ {next}
 
-		$2 !~ /^ETH_/ &&
+		$2 !~ /^BGM_/ &&
 		$2 !~ /^EPROC_/ &&
 		$2 !~ /^EQUIV_/ &&
 		$2 !~ /^EXPR_/ &&
@@ -394,7 +394,7 @@ ccflags="$@"
 		$2 ~ /^LINUX_REBOOT_CMD_/ ||
 		$2 ~ /^LINUX_REBOOT_MAGIC[12]$/ ||
 		$2 !~ "NLA_TYPE_MASK" &&
-		$2 ~ /^(NETLINK|NLM|NLMSG|NLA|IFA|IFAN|RT|RTCF|RTN|RTPROT|RTNH|ARPHRD|ETH_P)_/ ||
+		$2 ~ /^(NETLINK|NLM|NLMSG|NLA|IFA|IFAN|RT|RTCF|RTN|RTPROT|RTNH|ARPHRD|BGM_P)_/ ||
 		$2 ~ /^SIOC/ ||
 		$2 ~ /^TIOC/ ||
 		$2 ~ /^TCGET/ ||

@@ -25,7 +25,7 @@
 // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
 // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// THEORY OF LIABILITY, WHBGMCHAIN IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
@@ -78,8 +78,8 @@ func (t *token) String() string {
 
 type textParser struct {
 	s            string // remaining input
-	done         bool   // whether the parsing is finished (success or error)
-	backed       bool   // whether back() was called
+	done         bool   // whbgmchain the parsing is finished (success or error)
+	backed       bool   // whbgmchain back() was called
 	offset, line int
 	cur          token
 }
@@ -469,8 +469,8 @@ func (p *textParser) readStruct(sv reflect.Value, terminator string) error {
 		if tok.value == "[" {
 			// Looks like an extension or an Any.
 			//
-			// TODO: Check whether we need to handle
-			// namespace rooted names (e.g. ".something.Foo").
+			// TODO: Check whbgmchain we need to handle
+			// namespace rooted names (e.g. ".sombgming.Foo").
 			extName, err := p.consumeExtName()
 			if err != nil {
 				return err
@@ -526,7 +526,7 @@ func (p *textParser) readStruct(sv reflect.Value, terminator string) error {
 
 			var desc *ExtensionDesc
 			// This could be faster, but it's functional.
-			// TODO: Do something smarter than a linear scan.
+			// TODO: Do sombgming smarter than a linear scan.
 			for _, d := range RegisteredExtensions(reflect.New(st).Interface().(Message)) {
 				if d.Name == extName {
 					desc = d

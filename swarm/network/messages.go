@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
 package network
 
@@ -21,11 +21,11 @@ import (
 	"net"
 	"time"
 
-	"github.com/meitu/go-ethereum/contracts/chequebook"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/swarm/network/kademlia"
-	"github.com/meitu/go-ethereum/swarm/services/swap"
-	"github.com/meitu/go-ethereum/swarm/storage"
+	"github.com/5sWind/bgmchain/contracts/chequebook"
+	"github.com/5sWind/bgmchain/p2p/discover"
+	"github.com/5sWind/bgmchain/swarm/network/kademlia"
+	"github.com/5sWind/bgmchain/swarm/services/swap"
+	"github.com/5sWind/bgmchain/swarm/storage"
 )
 
 /*
@@ -193,7 +193,7 @@ The encoding of a peer is identical to that in the devp2p base protocol peers
 messages: [IP, Port, NodeID]
 note that a node's DPA address is not the NodeID but the hash of the NodeID.
 
-Timeout serves to indicate whether the responder is forwarding the query within
+Timeout serves to indicate whbgmchain the responder is forwarding the query within
 the timeout or not.
 
 NodeID serves as the owner of payment contracts and signer of proofs of transfer.
@@ -206,7 +206,7 @@ Peers message is requested by retrieval requests with a missing or zero value re
 type peersMsgData struct {
 	Peers   []*peerAddr //
 	Timeout uint64      //
-	timeout *time.Time  // indicate whether responder is expected to deliver content
+	timeout *time.Time  // indicate whbgmchain responder is expected to deliver content
 	Key     storage.Key // present if a response to a retrieval request
 	Id      uint64      // present if a response to a retrieval request
 	from    *peer

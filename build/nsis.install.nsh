@@ -1,41 +1,41 @@
-Name "geth ${MAJORVERSION}.${MINORVERSION}.${BUILDVERSION}" # VERSION variables set through command line arguments
+Name "gbgm ${MAJORVERSION}.${MINORVERSION}.${BUILDVERSION}" # VERSION variables set through command line arguments
 InstallDir "$InstDir"
 OutFile "${OUTPUTFILE}" # set through command line arguments
 
 # Links for "Add/Remove Programs"
-!define HELPURL "https://github.com/ethereum/go-ethereum/issues"
-!define UPDATEURL "https://github.com/ethereum/go-ethereum/releases"
-!define ABOUTURL "https://github.com/ethereum/go-ethereum#ethereum-go"
+!define HELPURL "https://github.com/bgmchain/go-bgmchain/issues"
+!define UPDATEURL "https://github.com/bgmchain/go-bgmchain/releases"
+!define ABOUTURL "https://github.com/bgmchain/go-bgmchain#bgmchain-go"
 !define /date NOW "%Y%m%d"
 
 PageEx license
   LicenseData {{.License}}
 PageExEnd
 
-# Install geth binary
-Section "Geth" GETH_IDX
+# Install gbgm binary
+Section "Gbgm" GBGM_IDX
   SetOutPath $INSTDIR
-  file {{.Geth}}
+  file {{.Gbgm}}
 
   # Create start menu launcher
   createDirectory "$SMPROGRAMS\${APPNAME}"
-  createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk" "$INSTDIR\geth.exe" "--fast" "--cache=512"
-  createShortCut "$SMPROGRAMS\${APPNAME}\Attach.lnk" "$INSTDIR\geth.exe" "attach" "" ""
+  createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk" "$INSTDIR\gbgm.exe" "--fast" "--cache=512"
+  createShortCut "$SMPROGRAMS\${APPNAME}\Attach.lnk" "$INSTDIR\gbgm.exe" "attach" "" ""
   createShortCut "$SMPROGRAMS\${APPNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "" ""
 
   # Firewall - remove rules (if exists)
-  SimpleFC::AdvRemoveRule "Geth incoming peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "Geth outgoing peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "Geth UDP discovery (UDP:30303)"
+  SimpleFC::AdvRemoveRule "Gbgm incoming peers (TCP:17575)"
+  SimpleFC::AdvRemoveRule "Gbgm outgoing peers (TCP:17575)"
+  SimpleFC::AdvRemoveRule "Gbgm UDP discovery (UDP:17575)"
 
   # Firewall - add rules
-  SimpleFC::AdvAddRule "Geth incoming peers (TCP:30303)" ""  6 1 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" 30303 "" "" ""
-  SimpleFC::AdvAddRule "Geth outgoing peers (TCP:30303)" ""  6 2 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" "" 30303 "" ""
-  SimpleFC::AdvAddRule "Geth UDP discovery (UDP:30303)" "" 17 2 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" "" 30303 "" ""
+  SimpleFC::AdvAddRule "Gbgm incoming peers (TCP:17575)" ""  6 1 1 2147483647 1 "$INSTDIR\gbgm.exe" "" "" "Bgmchain" 17575 "" "" ""
+  SimpleFC::AdvAddRule "Gbgm outgoing peers (TCP:17575)" ""  6 2 1 2147483647 1 "$INSTDIR\gbgm.exe" "" "" "Bgmchain" "" 17575 "" ""
+  SimpleFC::AdvAddRule "Gbgm UDP discovery (UDP:17575)" "" 17 2 1 2147483647 1 "$INSTDIR\gbgm.exe" "" "" "Bgmchain" "" 17575 "" ""
 
-  # Set default IPC endpoint (https://github.com/ethereum/EIPs/issues/147)
-  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "R" "HKLM" "\\.\pipe\geth.ipc"
-  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "A" "HKLM" "\\.\pipe\geth.ipc"
+  # Set default IPC endpoint (https://github.com/bgmchain/EIPs/issues/147)
+  ${EnvVarUpdate} $0 "BGMCHAIN_SOCKET" "R" "HKLM" "\\.\pipe\gbgm.ipc"
+  ${EnvVarUpdate} $0 "BGMCHAIN_SOCKET" "A" "HKLM" "\\.\pipe\gbgm.ipc"
 
   # Add instdir to PATH
   Push "$INSTDIR"
@@ -54,8 +54,8 @@ Var GetInstalledSize.total
 Function GetInstalledSize
   StrCpy $GetInstalledSize.total 0
 
-  ${if} ${SectionIsSelected} ${GETH_IDX}
-    SectionGetSize ${GETH_IDX} $0
+  ${if} ${SectionIsSelected} ${GBGM_IDX}
+    SectionGetSize ${GBGM_IDX} $0
     IntOp $GetInstalledSize.total $GetInstalledSize.total + $0
   ${endif}
 

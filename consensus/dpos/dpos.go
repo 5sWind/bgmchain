@@ -10,20 +10,20 @@ import (
 	"time"
 
 	lru "github.com/hashicorp/golang-lru"
-	"github.com/meitu/go-ethereum/accounts"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/consensus"
-	"github.com/meitu/go-ethereum/consensus/misc"
-	"github.com/meitu/go-ethereum/core/state"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/crypto/sha3"
-	"github.com/meitu/go-ethereum/ethdb"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/params"
-	"github.com/meitu/go-ethereum/rlp"
-	"github.com/meitu/go-ethereum/rpc"
-	"github.com/meitu/go-ethereum/trie"
+	"github.com/5sWind/bgmchain/accounts"
+	"github.com/5sWind/bgmchain/common"
+	"github.com/5sWind/bgmchain/consensus"
+	"github.com/5sWind/bgmchain/consensus/misc"
+	"github.com/5sWind/bgmchain/core/state"
+	"github.com/5sWind/bgmchain/core/types"
+	"github.com/5sWind/bgmchain/crypto"
+	"github.com/5sWind/bgmchain/crypto/sha3"
+	"github.com/5sWind/bgmchain/bgmdb"
+	"github.com/5sWind/bgmchain/log"
+	"github.com/5sWind/bgmchain/params"
+	"github.com/5sWind/bgmchain/rlp"
+	"github.com/5sWind/bgmchain/rpc"
+	"github.com/5sWind/bgmchain/trie"
 )
 
 const (
@@ -83,7 +83,7 @@ var (
 
 type Dpos struct {
 	config *params.DposConfig // Consensus engine configuration parameters
-	db     ethdb.Database     // Database to store and retrieve snapshot checkpoints
+	db     bgmdb.Database     // Database to store and retrieve snapshot checkpoints
 
 	signer               common.Address
 	signFn               SignerFn
@@ -130,7 +130,7 @@ func sigHash(header *types.Header) (hash common.Hash) {
 	return hash
 }
 
-func New(config *params.DposConfig, db ethdb.Database) *Dpos {
+func New(config *params.DposConfig, db bgmdb.Database) *Dpos {
 	signatures, _ := lru.NewARC(inmemorySignatures)
 	return &Dpos{
 		config:     config,
@@ -221,7 +221,7 @@ func (d *Dpos) VerifyUncles(chain consensus.ChainReader, block *types.Block) err
 	return nil
 }
 
-// VerifySeal implements consensus.Engine, checking whether the signature contained
+// VerifySeal implements consensus.Engine, checking whbgmchain the signature contained
 // in the header satisfies the consensus protocol requirements.
 func (d *Dpos) VerifySeal(chain consensus.ChainReader, header *types.Header) error {
 	return d.verifySeal(chain, header, nil)
@@ -327,7 +327,7 @@ func (s *Dpos) loadConfirmedBlockHeader(chain consensus.ChainReader) (*types.Hea
 }
 
 // store inserts the snapshot into the database.
-func (s *Dpos) storeConfirmedBlockHeader(db ethdb.Database) error {
+func (s *Dpos) storeConfirmedBlockHeader(db bgmdb.Database) error {
 	return db.Put(confirmedBlockHead, s.confirmedBlockHeader.Hash().Bytes())
 }
 
@@ -469,7 +469,7 @@ func (d *Dpos) Authorize(signer common.Address, signFn SignerFn) {
 	d.mu.Unlock()
 }
 
-// ecrecover extracts the Ethereum account address from a signed header.
+// ecrecover extracts the Bgmchain account address from a signed header.
 func ecrecover(header *types.Header, sigcache *lru.ARCCache) (common.Address, error) {
 	// If the signature's already cached, return that
 	hash := header.Hash()
@@ -481,7 +481,7 @@ func ecrecover(header *types.Header, sigcache *lru.ARCCache) (common.Address, er
 		return common.Address{}, errMissingSignature
 	}
 	signature := header.Extra[len(header.Extra)-extraSeal:]
-	// Recover the public key and the Ethereum address
+	// Recover the public key and the Bgmchain address
 	pubkey, err := crypto.Ecrecover(sigHash(header).Bytes(), signature)
 	if err != nil {
 		return common.Address{}, err

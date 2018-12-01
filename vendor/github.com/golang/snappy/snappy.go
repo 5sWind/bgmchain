@@ -33,7 +33,7 @@ Lempel-Ziv compression algorithms. In particular:
     The length is 1 + m. The offset is the little-endian unsigned integer
     denoted by the next 2 bytes.
   - For l == 3, this tag is a legacy format that is no longer issued by most
-    encoders. Nonetheless, the offset ranges in [0, 1<<32) and the length in
+    encoders. Nonbgmeless, the offset ranges in [0, 1<<32) and the length in
     [1, 65). The length is 1 + m. The offset is the little-endian unsigned
     integer denoted by the next 4 bytes.
 */

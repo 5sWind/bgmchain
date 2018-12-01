@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-bgmchain Authors
+// This file is part of go-bgmchain.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-bgmchain is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-bgmchain is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-bgmchain. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -23,7 +23,7 @@ import (
 	"math/rand"
 	"path/filepath"
 
-	"github.com/meitu/go-ethereum/log"
+	"github.com/5sWind/bgmchain/log"
 )
 
 // nginxDockerfile is theis the Dockerfile required to build an nginx reverse-
@@ -78,7 +78,7 @@ func deployNginx(client *sshClient, network string, port int) ([]byte, error) {
 	}
 	defer client.Run("rm -rf " + workdir)
 
-	// Build and deploy the ethstats service
+	// Build and deploy the bgmstats service
 	return nil, client.Stream(fmt.Sprintf("cd %s && docker-compose -p %s up -d --build", workdir, network))
 }
 
@@ -93,7 +93,7 @@ func (info *nginxInfos) String() string {
 	return fmt.Sprintf("port=%d", info.port)
 }
 
-// checkNginx does a health-check against an nginx reverse-proxy to verify whether
+// checkNginx does a health-check against an nginx reverse-proxy to verify whbgmchain
 // it's running, and if yes, gathering a collection of useful infos about it.
 func checkNginx(client *sshClient, network string) (*nginxInfos, error) {
 	// Inspect a possible nginx container on the host

@@ -1,9 +1,9 @@
 pragma solidity ^0.4.18;
 
-import "https://github.com/ethereum/solidity/std/mortal.sol";
+import "https://github.com/bgmchain/solidity/std/mortal.sol";
 
-/// @title Chequebook for Ethereum micropayments
-/// @author Daniel A. Nagy <daniel@ethereum.org>
+/// @title Chequebook for Bgmchain micropayments
+/// @author Daniel A. Nagy <daniel@bgmchain.org>
 contract chequebook is mortal {
     // Cumulative paid amount in wei to each beneficiary
     mapping (address => uint256) public sent;

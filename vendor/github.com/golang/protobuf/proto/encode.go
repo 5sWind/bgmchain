@@ -25,7 +25,7 @@
 // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
 // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// THEORY OF LIABILITY, WHBGMCHAIN IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
@@ -1305,7 +1305,7 @@ func (o *Buffer) enc_len_struct(prop *StructProperties, base structPointer, stat
 	return o.enc_len_thing(func() error { return o.enc_struct(prop, base) }, state)
 }
 
-// Encode something, preceded by its encoded length (as a varint).
+// Encode sombgming, preceded by its encoded length (as a varint).
 func (o *Buffer) enc_len_thing(enc func() error, state *errorState) error {
 	iLen := len(o.buf)
 	o.buf = append(o.buf, 0, 0, 0, 0) // reserve four bytes for length
@@ -1339,7 +1339,7 @@ type errorState struct {
 	err error
 }
 
-// shouldContinue reports whether encoding should continue upon encountering the
+// shouldContinue reports whbgmchain encoding should continue upon encountering the
 // given error. If the error is RequiredNotSetError, shouldContinue returns true
 // and, if this is the first appearance of that error, remembers it for future
 // reporting.

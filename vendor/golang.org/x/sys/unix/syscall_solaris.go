@@ -209,7 +209,7 @@ func ReadDirent(fd int, buf []byte) (n int, err error) {
 
 // Wait status is 7 bits at bottom, either 0 (exited),
 // 0x7F (stopped), or a signal number that caused an exit.
-// The 0x80 bit is whether there was a core dump.
+// The 0x80 bit is whbgmchain there was a core dump.
 // An extra number (exit code, signal causing a stop)
 // is in the high bits.
 
@@ -273,11 +273,11 @@ func Wait4(pid int, wstatus *WaitStatus, options int, rusage *Rusage) (int, erro
 	return wpid, nil
 }
 
-//sys	gethostname(buf []byte) (n int, err error)
+//sys	gbgmostname(buf []byte) (n int, err error)
 
-func Gethostname() (name string, err error) {
+func Gbgmostname() (name string, err error) {
 	var buf [MaxHostNameLen]byte
-	n, err := gethostname(buf[:])
+	n, err := gbgmostname(buf[:])
 	if n != 0 {
 		return "", err
 	}
@@ -658,7 +658,7 @@ func Poll(fds []PollFd, timeout int) (n int, err error) {
 //sysnb	Setegid(egid int) (err error)
 //sysnb	Seteuid(euid int) (err error)
 //sysnb	Setgid(gid int) (err error)
-//sys	Sethostname(p []byte) (err error)
+//sys	Sbgmostname(p []byte) (err error)
 //sysnb	Setpgid(pid int, pgid int) (err error)
 //sys	Setpriority(which int, who int, prio int) (err error)
 //sysnb	Setregid(rgid int, egid int) (err error)

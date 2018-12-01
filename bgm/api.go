@@ -1,20 +1,20 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package bgm
 
 import (
 	"bytes"
@@ -28,56 +28,56 @@ import (
 	"strings"
 	"time"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/common/hexutil"
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/core/state"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/core/vm"
-	"github.com/meitu/go-ethereum/internal/ethapi"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/params"
-	"github.com/meitu/go-ethereum/rlp"
-	"github.com/meitu/go-ethereum/rpc"
-	"github.com/meitu/go-ethereum/trie"
+	"github.com/5sWind/bgmchain/common"
+	"github.com/5sWind/bgmchain/common/hexutil"
+	"github.com/5sWind/bgmchain/core"
+	"github.com/5sWind/bgmchain/core/state"
+	"github.com/5sWind/bgmchain/core/types"
+	"github.com/5sWind/bgmchain/core/vm"
+	"github.com/5sWind/bgmchain/internal/bgmapi"
+	"github.com/5sWind/bgmchain/log"
+	"github.com/5sWind/bgmchain/params"
+	"github.com/5sWind/bgmchain/rlp"
+	"github.com/5sWind/bgmchain/rpc"
+	"github.com/5sWind/bgmchain/trie"
 )
 
 const defaultTraceTimeout = 5 * time.Second
 
-// PublicEthereumAPI provides an API to access Ethereum full node-related
+// PublicBgmchainAPI provides an API to access Bgmchain full node-related
 // information.
-type PublicEthereumAPI struct {
-	e *Ethereum
+type PublicBgmchainAPI struct {
+	e *Bgmchain
 }
 
-// NewPublicEthereumAPI creates a new Ethereum protocol API for full nodes.
-func NewPublicEthereumAPI(e *Ethereum) *PublicEthereumAPI {
-	return &PublicEthereumAPI{e}
+// NewPublicBgmchainAPI creates a new Bgmchain protocol API for full nodes.
+func NewPublicBgmchainAPI(e *Bgmchain) *PublicBgmchainAPI {
+	return &PublicBgmchainAPI{e}
 }
 
 // Validator is the address that mining signer
-func (api *PublicEthereumAPI) Validator() (common.Address, error) {
+func (api *PublicBgmchainAPI) Validator() (common.Address, error) {
 	return api.e.Validator()
 }
 
 // Coinbase is the address that mining rewards will be send to
-func (api *PublicEthereumAPI) Coinbase() (common.Address, error) {
+func (api *PublicBgmchainAPI) Coinbase() (common.Address, error) {
 	return api.e.Coinbase()
 }
 
 // Hashrate returns the POW hashrate
-func (api *PublicEthereumAPI) Hashrate() hexutil.Uint64 {
+func (api *PublicBgmchainAPI) Hashrate() hexutil.Uint64 {
 	return hexutil.Uint64(api.e.Miner().HashRate())
 }
 
 // PublicMinerAPI provides an API to control the miner.
 // It offers only methods that operate on data that pose no security risk when it is publicly accessible.
 type PublicMinerAPI struct {
-	e *Ethereum
+	e *Bgmchain
 }
 
 // NewPublicMinerAPI create a new PublicMinerAPI instance.
-func NewPublicMinerAPI(e *Ethereum) *PublicMinerAPI {
+func NewPublicMinerAPI(e *Bgmchain) *PublicMinerAPI {
 	return &PublicMinerAPI{e}
 }
 
@@ -89,11 +89,11 @@ func (api *PublicMinerAPI) Mining() bool {
 // PrivateMinerAPI provides private RPC methods to control the miner.
 // These methods can be abused by external users and must be considered insecure for use by untrusted users.
 type PrivateMinerAPI struct {
-	e *Ethereum
+	e *Bgmchain
 }
 
 // NewPrivateMinerAPI create a new RPC service which controls the miner of this node.
-func NewPrivateMinerAPI(e *Ethereum) *PrivateMinerAPI {
+func NewPrivateMinerAPI(e *Bgmchain) *PrivateMinerAPI {
 	return &PrivateMinerAPI{e: e}
 }
 
@@ -175,16 +175,16 @@ func (api *PrivateMinerAPI) GetHashrate() uint64 {
 	return uint64(api.e.miner.HashRate())
 }
 
-// PrivateAdminAPI is the collection of Ethereum full node-related APIs
+// PrivateAdminAPI is the collection of Bgmchain full node-related APIs
 // exposed over the private admin endpoint.
 type PrivateAdminAPI struct {
-	eth *Ethereum
+	bgm *Bgmchain
 }
 
 // NewPrivateAdminAPI creates a new API definition for the full node private
-// admin methods of the Ethereum service.
-func NewPrivateAdminAPI(eth *Ethereum) *PrivateAdminAPI {
-	return &PrivateAdminAPI{eth: eth}
+// admin methods of the Bgmchain service.
+func NewPrivateAdminAPI(bgm *Bgmchain) *PrivateAdminAPI {
+	return &PrivateAdminAPI{bgm: bgm}
 }
 
 // ExportChain exports the current blockchain into a local file.
@@ -203,7 +203,7 @@ func (api *PrivateAdminAPI) ExportChain(file string) (bool, error) {
 	}
 
 	// Export the blockchain
-	if err := api.eth.BlockChain().Export(writer); err != nil {
+	if err := api.bgm.BlockChain().Export(writer); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -255,12 +255,12 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 			break
 		}
 
-		if hasAllBlocks(api.eth.BlockChain(), blocks) {
+		if hasAllBlocks(api.bgm.BlockChain(), blocks) {
 			blocks = blocks[:0]
 			continue
 		}
 		// Import the batch and reset the buffer
-		if _, err := api.eth.BlockChain().InsertChain(blocks); err != nil {
+		if _, err := api.bgm.BlockChain().InsertChain(blocks); err != nil {
 			return false, fmt.Errorf("batch %d: failed to insert: %v", batch, err)
 		}
 		blocks = blocks[:0]
@@ -268,16 +268,16 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 	return true, nil
 }
 
-// PublicDebugAPI is the collection of Ethereum full node APIs exposed
+// PublicDebugAPI is the collection of Bgmchain full node APIs exposed
 // over the public debugging endpoint.
 type PublicDebugAPI struct {
-	eth *Ethereum
+	bgm *Bgmchain
 }
 
 // NewPublicDebugAPI creates a new API definition for the full node-
-// related public debug methods of the Ethereum service.
-func NewPublicDebugAPI(eth *Ethereum) *PublicDebugAPI {
-	return &PublicDebugAPI{eth: eth}
+// related public debug methods of the Bgmchain service.
+func NewPublicDebugAPI(bgm *Bgmchain) *PublicDebugAPI {
+	return &PublicDebugAPI{bgm: bgm}
 }
 
 // DumpBlock retrieves the entire state of the database at a given block.
@@ -286,43 +286,43 @@ func (api *PublicDebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error
 		// If we're dumping the pending state, we need to request
 		// both the pending block as well as the pending state from
 		// the miner and operate on those
-		_, stateDb := api.eth.miner.Pending()
+		_, stateDb := api.bgm.miner.Pending()
 		return stateDb.RawDump(), nil
 	}
 	var block *types.Block
 	if blockNr == rpc.LatestBlockNumber {
-		block = api.eth.blockchain.CurrentBlock()
+		block = api.bgm.blockchain.CurrentBlock()
 	} else {
-		block = api.eth.blockchain.GetBlockByNumber(uint64(blockNr))
+		block = api.bgm.blockchain.GetBlockByNumber(uint64(blockNr))
 	}
 	if block == nil {
 		return state.Dump{}, fmt.Errorf("block #%d not found", blockNr)
 	}
-	stateDb, err := api.eth.BlockChain().StateAt(block.Root())
+	stateDb, err := api.bgm.BlockChain().StateAt(block.Root())
 	if err != nil {
 		return state.Dump{}, err
 	}
 	return stateDb.RawDump(), nil
 }
 
-// PrivateDebugAPI is the collection of Ethereum full node APIs exposed over
+// PrivateDebugAPI is the collection of Bgmchain full node APIs exposed over
 // the private debugging endpoint.
 type PrivateDebugAPI struct {
 	config *params.ChainConfig
-	eth    *Ethereum
+	bgm    *Bgmchain
 }
 
 // NewPrivateDebugAPI creates a new API definition for the full node-related
-// private debug methods of the Ethereum service.
-func NewPrivateDebugAPI(config *params.ChainConfig, eth *Ethereum) *PrivateDebugAPI {
-	return &PrivateDebugAPI{config: config, eth: eth}
+// private debug methods of the Bgmchain service.
+func NewPrivateDebugAPI(config *params.ChainConfig, bgm *Bgmchain) *PrivateDebugAPI {
+	return &PrivateDebugAPI{config: config, bgm: bgm}
 }
 
 // BlockTraceResult is the returned value when replaying a block to check for
 // consensus results and full VM trace logs for all included transactions.
 type BlockTraceResult struct {
 	Validated  bool                  `json:"validated"`
-	StructLogs []ethapi.StructLogRes `json:"structLogs"`
+	StructLogs []bgmapi.StructLogRes `json:"structLogs"`
 	Error      string                `json:"error"`
 }
 
@@ -345,7 +345,7 @@ func (api *PrivateDebugAPI) TraceBlock(blockRlp []byte, config *vm.LogConfig) Bl
 	validated, logs, err := api.traceBlock(&block, config)
 	return BlockTraceResult{
 		Validated:  validated,
-		StructLogs: ethapi.FormatLogs(logs),
+		StructLogs: bgmapi.FormatLogs(logs),
 		Error:      formatError(err),
 	}
 }
@@ -367,11 +367,11 @@ func (api *PrivateDebugAPI) TraceBlockByNumber(blockNr rpc.BlockNumber, config *
 	switch blockNr {
 	case rpc.PendingBlockNumber:
 		// Pending block is only known by the miner
-		block = api.eth.miner.PendingBlock()
+		block = api.bgm.miner.PendingBlock()
 	case rpc.LatestBlockNumber:
-		block = api.eth.blockchain.CurrentBlock()
+		block = api.bgm.blockchain.CurrentBlock()
 	default:
-		block = api.eth.blockchain.GetBlockByNumber(uint64(blockNr))
+		block = api.bgm.blockchain.GetBlockByNumber(uint64(blockNr))
 	}
 
 	if block == nil {
@@ -381,7 +381,7 @@ func (api *PrivateDebugAPI) TraceBlockByNumber(blockNr rpc.BlockNumber, config *
 	validated, logs, err := api.traceBlock(block, config)
 	return BlockTraceResult{
 		Validated:  validated,
-		StructLogs: ethapi.FormatLogs(logs),
+		StructLogs: bgmapi.FormatLogs(logs),
 		Error:      formatError(err),
 	}
 }
@@ -389,7 +389,7 @@ func (api *PrivateDebugAPI) TraceBlockByNumber(blockNr rpc.BlockNumber, config *
 // TraceBlockByHash processes the block by hash.
 func (api *PrivateDebugAPI) TraceBlockByHash(hash common.Hash, config *vm.LogConfig) BlockTraceResult {
 	// Fetch the block that we aim to reprocess
-	block := api.eth.BlockChain().GetBlockByHash(hash)
+	block := api.bgm.BlockChain().GetBlockByHash(hash)
 	if block == nil {
 		return BlockTraceResult{Error: fmt.Sprintf("block #%x not found", hash)}
 	}
@@ -397,7 +397,7 @@ func (api *PrivateDebugAPI) TraceBlockByHash(hash common.Hash, config *vm.LogCon
 	validated, logs, err := api.traceBlock(block, config)
 	return BlockTraceResult{
 		Validated:  validated,
-		StructLogs: ethapi.FormatLogs(logs),
+		StructLogs: bgmapi.FormatLogs(logs),
 		Error:      formatError(err),
 	}
 }
@@ -406,7 +406,7 @@ func (api *PrivateDebugAPI) TraceBlockByHash(hash common.Hash, config *vm.LogCon
 func (api *PrivateDebugAPI) traceBlock(block *types.Block, logConfig *vm.LogConfig) (bool, []vm.StructLog, error) {
 	// Validate and reprocess the block
 	var (
-		blockchain = api.eth.BlockChain()
+		blockchain = api.bgm.BlockChain()
 		validator  = blockchain.Validator()
 		processor  = blockchain.Processor()
 	)
@@ -417,7 +417,7 @@ func (api *PrivateDebugAPI) traceBlock(block *types.Block, logConfig *vm.LogConf
 		Debug:  true,
 		Tracer: structLogger,
 	}
-	if err := api.eth.engine.VerifyHeader(blockchain, block.Header(), true); err != nil {
+	if err := api.bgm.engine.VerifyHeader(blockchain, block.Header(), true); err != nil {
 		return false, structLogger.StructLogs(), err
 	}
 	statedb, err := blockchain.StateAt(blockchain.GetBlock(block.ParentHash(), block.NumberU64()-1).Root())
@@ -464,7 +464,7 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 		}
 
 		var err error
-		if tracer, err = ethapi.NewJavascriptTracer(*config.Tracer); err != nil {
+		if tracer, err = bgmapi.NewJavascriptTracer(*config.Tracer); err != nil {
 			return nil, err
 		}
 
@@ -472,7 +472,7 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 		deadlineCtx, cancel := context.WithTimeout(ctx, timeout)
 		go func() {
 			<-deadlineCtx.Done()
-			tracer.(*ethapi.JavascriptTracer).Stop(&timeoutError{})
+			tracer.(*bgmapi.JavascriptTracer).Stop(&timeoutError{})
 		}()
 		defer cancel()
 	} else if config == nil {
@@ -482,7 +482,7 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 	}
 
 	// Retrieve the tx from the chain and the containing block
-	tx, blockHash, _, txIndex := core.GetTransaction(api.eth.ChainDb(), txHash)
+	tx, blockHash, _, txIndex := core.GetTransaction(api.bgm.ChainDb(), txHash)
 	if tx == nil {
 		return nil, fmt.Errorf("transaction %x not found", txHash)
 	}
@@ -499,13 +499,13 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 	}
 	switch tracer := tracer.(type) {
 	case *vm.StructLogger:
-		return &ethapi.ExecutionResult{
+		return &bgmapi.ExecutionResult{
 			Gas:         gas,
 			Failed:      failed,
 			ReturnValue: fmt.Sprintf("%x", ret),
-			StructLogs:  ethapi.FormatLogs(tracer.StructLogs()),
+			StructLogs:  bgmapi.FormatLogs(tracer.StructLogs()),
 		}, nil
-	case *ethapi.JavascriptTracer:
+	case *bgmapi.JavascriptTracer:
 		return tracer.GetResult()
 	default:
 		panic(fmt.Sprintf("bad tracer type %T", tracer))
@@ -515,15 +515,15 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 // computeTxEnv returns the execution environment of a certain transaction.
 func (api *PrivateDebugAPI) computeTxEnv(blockHash common.Hash, txIndex int) (core.Message, vm.Context, *state.StateDB, error) {
 	// Create the parent state.
-	block := api.eth.BlockChain().GetBlockByHash(blockHash)
+	block := api.bgm.BlockChain().GetBlockByHash(blockHash)
 	if block == nil {
 		return nil, vm.Context{}, nil, fmt.Errorf("block %x not found", blockHash)
 	}
-	parent := api.eth.BlockChain().GetBlock(block.ParentHash(), block.NumberU64()-1)
+	parent := api.bgm.BlockChain().GetBlock(block.ParentHash(), block.NumberU64()-1)
 	if parent == nil {
 		return nil, vm.Context{}, nil, fmt.Errorf("block parent %x not found", block.ParentHash())
 	}
-	statedb, err := api.eth.BlockChain().StateAt(parent.Root())
+	statedb, err := api.bgm.BlockChain().StateAt(parent.Root())
 	if err != nil {
 		return nil, vm.Context{}, nil, err
 	}
@@ -534,7 +534,7 @@ func (api *PrivateDebugAPI) computeTxEnv(blockHash common.Hash, txIndex int) (co
 	for idx, tx := range txs {
 		// Assemble the transaction call message
 		msg, _ := tx.AsMessage(signer)
-		context := core.NewEVMContext(msg, block.Header(), api.eth.BlockChain(), nil)
+		context := core.NewEVMContext(msg, block.Header(), api.bgm.BlockChain(), nil)
 		if idx == txIndex {
 			return msg, context, statedb, nil
 		}
@@ -552,14 +552,14 @@ func (api *PrivateDebugAPI) computeTxEnv(blockHash common.Hash, txIndex int) (co
 
 // Preimage is a debug API function that returns the preimage for a sha3 hash, if known.
 func (api *PrivateDebugAPI) Preimage(ctx context.Context, hash common.Hash) (hexutil.Bytes, error) {
-	db := core.PreimageTable(api.eth.ChainDb())
+	db := core.PreimageTable(api.bgm.ChainDb())
 	return db.Get(hash.Bytes())
 }
 
 // GetBadBLocks returns a list of the last 'bad blocks' that the client has seen on the network
 // and returns them as a JSON list of block-hashes
 func (api *PrivateDebugAPI) GetBadBlocks(ctx context.Context) ([]core.BadBlockArgs, error) {
-	return api.eth.BlockChain().BadBlocks()
+	return api.bgm.BlockChain().BadBlocks()
 }
 
 // StorageRangeResult is the result of a debug_storageRangeAt API call.
@@ -615,19 +615,19 @@ func storageRangeAt(st state.Trie, start []byte, maxResult int) StorageRangeResu
 func (api *PrivateDebugAPI) GetModifiedAccountsByNumber(startNum uint64, endNum *uint64) ([]common.Address, error) {
 	var startBlock, endBlock *types.Block
 
-	startBlock = api.eth.blockchain.GetBlockByNumber(startNum)
+	startBlock = api.bgm.blockchain.GetBlockByNumber(startNum)
 	if startBlock == nil {
 		return nil, fmt.Errorf("start block %x not found", startNum)
 	}
 
 	if endNum == nil {
 		endBlock = startBlock
-		startBlock = api.eth.blockchain.GetBlockByHash(startBlock.ParentHash())
+		startBlock = api.bgm.blockchain.GetBlockByHash(startBlock.ParentHash())
 		if startBlock == nil {
 			return nil, fmt.Errorf("block %x has no parent", endBlock.Number())
 		}
 	} else {
-		endBlock = api.eth.blockchain.GetBlockByNumber(*endNum)
+		endBlock = api.bgm.blockchain.GetBlockByNumber(*endNum)
 		if endBlock == nil {
 			return nil, fmt.Errorf("end block %d not found", *endNum)
 		}
@@ -642,19 +642,19 @@ func (api *PrivateDebugAPI) GetModifiedAccountsByNumber(startNum uint64, endNum 
 // With one parameter, returns the list of accounts modified in the specified block.
 func (api *PrivateDebugAPI) GetModifiedAccountsByHash(startHash common.Hash, endHash *common.Hash) ([]common.Address, error) {
 	var startBlock, endBlock *types.Block
-	startBlock = api.eth.blockchain.GetBlockByHash(startHash)
+	startBlock = api.bgm.blockchain.GetBlockByHash(startHash)
 	if startBlock == nil {
 		return nil, fmt.Errorf("start block %x not found", startHash)
 	}
 
 	if endHash == nil {
 		endBlock = startBlock
-		startBlock = api.eth.blockchain.GetBlockByHash(startBlock.ParentHash())
+		startBlock = api.bgm.blockchain.GetBlockByHash(startBlock.ParentHash())
 		if startBlock == nil {
 			return nil, fmt.Errorf("block %x has no parent", endBlock.Number())
 		}
 	} else {
-		endBlock = api.eth.blockchain.GetBlockByHash(*endHash)
+		endBlock = api.bgm.blockchain.GetBlockByHash(*endHash)
 		if endBlock == nil {
 			return nil, fmt.Errorf("end block %x not found", *endHash)
 		}
@@ -667,11 +667,11 @@ func (api *PrivateDebugAPI) getModifiedAccounts(startBlock, endBlock *types.Bloc
 		return nil, fmt.Errorf("start block height (%d) must be less than end block height (%d)", startBlock.Number().Uint64(), endBlock.Number().Uint64())
 	}
 
-	oldTrie, err := trie.NewSecure(startBlock.Root(), api.eth.chainDb, 0)
+	oldTrie, err := trie.NewSecure(startBlock.Root(), api.bgm.chainDb, 0)
 	if err != nil {
 		return nil, err
 	}
-	newTrie, err := trie.NewSecure(endBlock.Root(), api.eth.chainDb, 0)
+	newTrie, err := trie.NewSecure(endBlock.Root(), api.bgm.chainDb, 0)
 	if err != nil {
 		return nil, err
 	}

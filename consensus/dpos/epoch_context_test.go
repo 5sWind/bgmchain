@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/core/state"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/ethdb"
-	"github.com/meitu/go-ethereum/trie"
+	"github.com/5sWind/bgmchain/common"
+	"github.com/5sWind/bgmchain/core/state"
+	"github.com/5sWind/bgmchain/core/types"
+	"github.com/5sWind/bgmchain/bgmdb"
+	"github.com/5sWind/bgmchain/trie"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -32,7 +32,7 @@ func TestEpochContextCountVotes(t *testing.T) {
 		common.HexToAddress("0x9d9667c71bb09d6ca7c3ed12bfe5e7be24e2ffe1"): {},
 	}
 	balance := int64(5)
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := bgmdb.NewMemDatabase()
 	stateDB, _ := state.New(common.Hash{}, state.NewDatabase(db))
 	dposContext, err := types.NewDposContext(db)
 	assert.Nil(t, err)
@@ -62,7 +62,7 @@ func TestEpochContextCountVotes(t *testing.T) {
 }
 
 func TestLookupValidator(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := bgmdb.NewMemDatabase()
 	dposCtx, _ := types.NewDposContext(db)
 	mockEpochContext := &EpochContext{
 		DposContext: dposCtx,
@@ -86,7 +86,7 @@ func TestLookupValidator(t *testing.T) {
 }
 
 func TestEpochContextKickoutValidator(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := bgmdb.NewMemDatabase()
 	stateDB, _ := state.New(common.Hash{}, state.NewDatabase(db))
 	dposContext, err := types.NewDposContext(db)
 	assert.Nil(t, err)
@@ -261,7 +261,7 @@ func getCandidates(candidateTrie *trie.Trie) map[common.Address]bool {
 }
 
 func TestEpochContextTryElect(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := bgmdb.NewMemDatabase()
 	stateDB, _ := state.New(common.Hash{}, state.NewDatabase(db))
 	dposContext, err := types.NewDposContext(db)
 	assert.Nil(t, err)

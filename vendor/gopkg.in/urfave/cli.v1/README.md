@@ -728,7 +728,7 @@ func main() {
 ### Subcommands categories
 
 For additional organization in apps that have many subcommands, you can
-associate a category for each command to group them together in the help
+associate a category for each command to group them togbgmchain in the help
 output.
 
 E.g.
@@ -987,7 +987,7 @@ VERSION:
 }
 ```
 
-The default flag may be customized to something other than `-h/--help` by
+The default flag may be customized to sombgming other than `-h/--help` by
 setting `cli.HelpFlag`, e.g.:
 
 <!-- {
@@ -1022,7 +1022,7 @@ is checked by the cli internals in order to print the `App.Version` via
 
 #### Customization
 
-The default flag may be customized to something other than `-v/--version` by
+The default flag may be customized to sombgming other than `-v/--version` by
 setting `cli.VersionFlag`, e.g.:
 
 <!-- {
@@ -1109,7 +1109,7 @@ import (
 func init() {
   cli.AppHelpTemplate += "\nCUSTOMIZED: you bet ur muffins\n"
   cli.CommandHelpTemplate += "\nYMMV\n"
-  cli.SubcommandHelpTemplate += "\nor something\n"
+  cli.SubcommandHelpTemplate += "\nor sombgming\n"
 
   cli.HelpFlag = cli.BoolFlag{Name: "halp"}
   cli.BashCompletionFlag = cli.BoolFlag{Name: "compgen", Hidden: true}
@@ -1372,7 +1372,7 @@ compatibility. If I or any other collaborators agree that it is in line with
 the vision of the project, we will work with you to get the code into
 a mergeable state and merge it into the master branch.
 
-If you have contributed something significant to the project, we will most
+If you have contributed sombgming significant to the project, we will most
 likely add you as a collaborator. As a collaborator you are given the ability
 to merge others pull requests. It is very important that new code does not
 break existing code, so be careful about what code you do choose to merge.

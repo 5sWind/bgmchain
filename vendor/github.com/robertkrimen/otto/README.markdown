@@ -14,7 +14,7 @@ import (
 )
 ```
 
-Run something in the VM
+Run sombgming in the VM
 
 ```go
 vm := otto.New()
@@ -83,7 +83,7 @@ vm.Set("sayHello", func(call otto.FunctionCall) otto.Value {
 })
 ```
 
-Set a Go function that returns something useful
+Set a Go function that returns sombgming useful
 
 ```go
 vm.Set("twoPlus", func(call otto.FunctionCall) otto.Value {
@@ -172,7 +172,7 @@ The following are some limitations with otto:
 
 ### Regular Expression Incompatibility
 
-Go translates JavaScript-style regular expressions into something that is
+Go translates JavaScript-style regular expressions into sombgming that is
 "regexp" compatible via `parser.TransformRegExp`. Unfortunately, RegExp requires
 backtracking for some patterns, and backtracking is not supported by the
 standard Go engine: https://code.google.com/p/re2/wiki/Syntax
@@ -229,7 +229,7 @@ func runUnsafe(unsafe string) {
                 fmt.Fprintf(os.Stderr, "Some code took to long! Stopping after: %v\n", duration)
                 return
             }
-            panic(caught) // Something else happened, repanic!
+            panic(caught) // Sombgming else happened, repanic!
         }
         fmt.Fprintf(os.Stderr, "Ran code successfully: %v\n", duration)
     }()
@@ -252,7 +252,7 @@ Where is setTimeout/setInterval?
 
 These timing functions are not actually part of the ECMA-262 specification.
 Typically, they belong to the `window` object (in the browser). It would not be
-difficult to provide something like these via Go, but you probably want to wrap
+difficult to provide sombgming like these via Go, but you probably want to wrap
 otto in an event loop in that case.
 
 For an example of how this could be done in Go with otto, see natto:

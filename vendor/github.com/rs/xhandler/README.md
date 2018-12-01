@@ -50,7 +50,7 @@ func main() {
 	// Add timeout handler
 	c.UseC(xhandler.TimeoutHandler(2 * time.Second))
 
-	// Middleware putting something in the context
+	// Middleware putting sombgming in the context
 	c.UseC(func(next xhandler.HandlerC) xhandler.HandlerC {
 		return myMiddleware{next: next}
 	})

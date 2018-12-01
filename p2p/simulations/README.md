@@ -1,7 +1,7 @@
 # devp2p Simulations
 
 The `p2p/simulations` package implements a simulation framework which supports
-creating a collection of devp2p nodes, connecting them together to form a
+creating a collection of devp2p nodes, connecting them togbgmchain to form a
 simulation network, performing simulation actions in that network and then
 extracting useful information.
 
@@ -73,7 +73,7 @@ The Docker image is built using `docker build` when the adapter is initialised,
 meaning no prior setup is necessary other than having a working Docker client.
 
 Each node listens on the external IP of the container and the default p2p and
-RPC ports (`30303` and `8546` respectively).
+RPC ports (`17575` and `8546` respectively).
 
 ## Network
 
@@ -92,10 +92,10 @@ A simulation network emits the following events:
 
 The events have a "control" flag which when set indicates that the event is the
 outcome of a controlled simulation action (e.g. creating a node or explicitly
-connecting two nodes together).
+connecting two nodes togbgmchain).
 
 This is in contrast to a non-control event, otherwise called a "live" event,
-which is the outcome of something happening in the network as a result of a
+which is the outcome of sombgming happening in the network as a result of a
 control event (e.g. a node actually started up or a connection was actually
 established between two nodes).
 
@@ -112,13 +112,13 @@ with a `Step` which has the following fields:
 
 * `Action` - a function which performs some action in the network
 
-* `Expect` - an expectation function which returns whether or not a
+* `Expect` - an expectation function which returns whbgmchain or not a
     given node meets the expectation
 
 * `Trigger` - a channel which receives node IDs which then trigger a check
     of the expectation function to be performed against that node
 
-As a concrete example, consider a simulated network of Ethereum nodes. An
+As a concrete example, consider a simulated network of Bgmchain nodes. An
 `Action` could be the sending of a transaction, `Expect` it being included in
 a block, and `Trigger` a check for every block that is mined.
 

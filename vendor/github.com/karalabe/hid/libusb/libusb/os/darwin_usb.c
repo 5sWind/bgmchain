@@ -635,7 +635,7 @@ static int darwin_get_config_descriptor(struct libusb_device *dev, uint8_t confi
   return (int) len;
 }
 
-/* check whether the os has configured the device */
+/* check whbgmchain the os has configured the device */
 static int darwin_check_configuration (struct libusb_context *ctx, struct darwin_cached_device *dev) {
   usb_device_t **darwin_device = dev->device;
 
@@ -1105,7 +1105,7 @@ static void darwin_close (struct libusb_device_handle *dev_handle) {
   int i;
 
   if (dpriv->open_count == 0) {
-    /* something is probably very wrong if this is the case */
+    /* sombgming is probably very wrong if this is the case */
     usbi_err (HANDLE_CTX (dev_handle), "Close called on a device that was not open!");
     return;
   }

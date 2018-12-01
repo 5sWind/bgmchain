@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-bgmchain Authors
+// This file is part of go-bgmchain.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-bgmchain is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-bgmchain is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-bgmchain. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -28,13 +28,13 @@ import (
 
 	cli "gopkg.in/urfave/cli.v1"
 
-	"github.com/meitu/go-ethereum/cmd/utils"
-	"github.com/meitu/go-ethereum/contracts/release"
-	"github.com/meitu/go-ethereum/dashboard"
-	"github.com/meitu/go-ethereum/eth"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/params"
-	whisper "github.com/meitu/go-ethereum/whisper/whisperv5"
+	"github.com/5sWind/bgmchain/cmd/utils"
+	"github.com/5sWind/bgmchain/contracts/release"
+	"github.com/5sWind/bgmchain/dashboard"
+	"github.com/5sWind/bgmchain/bgm"
+	"github.com/5sWind/bgmchain/node"
+	"github.com/5sWind/bgmchain/params"
+	whisper "github.com/5sWind/bgmchain/whisper/whisperv5"
 	"github.com/naoina/toml"
 )
 
@@ -72,19 +72,19 @@ var tomlSettings = toml.Config{
 	},
 }
 
-type ethstatsConfig struct {
+type bgmstatsConfig struct {
 	URL string `toml:",omitempty"`
 }
 
-type gethConfig struct {
-	Eth       eth.Config
+type gbgmConfig struct {
+	Bgm       bgm.Config
 	Shh       whisper.Config
 	Node      node.Config
-	Ethstats  ethstatsConfig
+	Bgmstats  bgmstatsConfig
 	Dashboard dashboard.Config
 }
 
-func loadConfig(file string, cfg *gethConfig) error {
+func loadConfig(file string, cfg *gbgmConfig) error {
 	f, err := os.Open(file)
 	if err != nil {
 		return err
@@ -103,16 +103,16 @@ func defaultNodeConfig() node.Config {
 	cfg := node.DefaultConfig
 	cfg.Name = clientIdentifier
 	cfg.Version = params.VersionWithCommit(gitCommit)
-	cfg.HTTPModules = append(cfg.HTTPModules, "eth", "shh")
-	cfg.WSModules = append(cfg.WSModules, "eth", "shh")
-	cfg.IPCPath = "geth.ipc"
+	cfg.HTTPModules = append(cfg.HTTPModules, "bgm", "shh")
+	cfg.WSModules = append(cfg.WSModules, "bgm", "shh")
+	cfg.IPCPath = "gbgm.ipc"
 	return cfg
 }
 
-func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
+func makeConfigNode(ctx *cli.Context) (*node.Node, gbgmConfig) {
 	// Load defaults.
-	cfg := gethConfig{
-		Eth:       eth.DefaultConfig,
+	cfg := gbgmConfig{
+		Bgm:       bgm.DefaultConfig,
 		Shh:       whisper.DefaultConfig,
 		Node:      defaultNodeConfig(),
 		Dashboard: dashboard.DefaultConfig,
@@ -131,9 +131,9 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 	if err != nil {
 		utils.Fatalf("Failed to create the protocol stack: %v", err)
 	}
-	utils.SetEthConfig(ctx, stack, &cfg.Eth)
-	if ctx.GlobalIsSet(utils.EthStatsURLFlag.Name) {
-		cfg.Ethstats.URL = ctx.GlobalString(utils.EthStatsURLFlag.Name)
+	utils.SetBgmConfig(ctx, stack, &cfg.Bgm)
+	if ctx.GlobalIsSet(utils.BgmStatsURLFlag.Name) {
+		cfg.Bgmstats.URL = ctx.GlobalString(utils.BgmStatsURLFlag.Name)
 	}
 
 	utils.SetShhConfig(ctx, stack, &cfg.Shh)
@@ -155,7 +155,7 @@ func enableWhisper(ctx *cli.Context) bool {
 func makeFullNode(ctx *cli.Context) *node.Node {
 	stack, cfg := makeConfigNode(ctx)
 
-	utils.RegisterEthService(stack, &cfg.Eth)
+	utils.RegisterBgmService(stack, &cfg.Bgm)
 
 	if ctx.GlobalBool(utils.DashboardEnabledFlag.Name) {
 		utils.RegisterDashboardService(stack, &cfg.Dashboard)
@@ -172,9 +172,9 @@ func makeFullNode(ctx *cli.Context) *node.Node {
 		utils.RegisterShhService(stack, &cfg.Shh)
 	}
 
-	// Add the Ethereum Stats daemon if requested.
-	if cfg.Ethstats.URL != "" {
-		utils.RegisterEthStatsService(stack, cfg.Ethstats.URL)
+	// Add the Bgmchain Stats daemon if requested.
+	if cfg.Bgmstats.URL != "" {
+		utils.RegisterBgmStatsService(stack, cfg.Bgmstats.URL)
 	}
 
 	// Add the release oracle service so it boots along with node.
@@ -189,7 +189,7 @@ func makeFullNode(ctx *cli.Context) *node.Node {
 		copy(config.Commit[:], commit)
 		return release.NewReleaseService(ctx, config)
 	}); err != nil {
-		utils.Fatalf("Failed to register the Geth release oracle service: %v", err)
+		utils.Fatalf("Failed to register the Gbgm release oracle service: %v", err)
 	}
 	return stack
 }
@@ -199,8 +199,8 @@ func dumpConfig(ctx *cli.Context) error {
 	_, cfg := makeConfigNode(ctx)
 	comment := ""
 
-	if cfg.Eth.Genesis != nil {
-		cfg.Eth.Genesis = nil
+	if cfg.Bgm.Genesis != nil {
+		cfg.Bgm.Genesis = nil
 		comment += "# Note: this config doesn't contain the genesis block.\n\n"
 	}
 

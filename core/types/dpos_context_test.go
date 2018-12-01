@@ -3,14 +3,14 @@ package types
 import (
 	"testing"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/ethdb"
-	"github.com/meitu/go-ethereum/trie"
+	"github.com/5sWind/bgmchain/common"
+	"github.com/5sWind/bgmchain/bgmdb"
+	"github.com/5sWind/bgmchain/trie"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDposContextSnapshot(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := bgmdb.NewMemDatabase()
 	dposContext, err := NewDposContext(db)
 	assert.Nil(t, err)
 
@@ -34,7 +34,7 @@ func TestDposContextBecomeCandidate(t *testing.T) {
 		common.HexToAddress("0xa60a3886b552ff9992cfcd208ec1152079e046c2"),
 		common.HexToAddress("0x4e080e49f62694554871e669aeb4ebe17c4a9670"),
 	}
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := bgmdb.NewMemDatabase()
 	dposContext, err := NewDposContext(db)
 	assert.Nil(t, err)
 	for _, candidate := range candidates {
@@ -58,7 +58,7 @@ func TestDposContextKickoutCandidate(t *testing.T) {
 		common.HexToAddress("0xa60a3886b552ff9992cfcd208ec1152079e046c2"),
 		common.HexToAddress("0x4e080e49f62694554871e669aeb4ebe17c4a9670"),
 	}
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := bgmdb.NewMemDatabase()
 	dposContext, err := NewDposContext(db)
 	assert.Nil(t, err)
 	for _, candidate := range candidates {
@@ -96,7 +96,7 @@ func TestDposContextDelegateAndUnDelegate(t *testing.T) {
 	candidate := common.HexToAddress("0x44d1ce0b7cb3588bca96151fe1bc05af38f91b6e")
 	newCandidate := common.HexToAddress("0xa60a3886b552ff9992cfcd208ec1152079e046c2")
 	delegator := common.HexToAddress("0x4e080e49f62694554871e669aeb4ebe17c4a9670")
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := bgmdb.NewMemDatabase()
 	dposContext, err := NewDposContext(db)
 	assert.Nil(t, err)
 	assert.Nil(t, dposContext.BecomeCandidate(candidate))
@@ -159,7 +159,7 @@ func TestDposContextValidators(t *testing.T) {
 		common.HexToAddress("0x4e080e49f62694554871e669aeb4ebe17c4a9670"),
 	}
 
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := bgmdb.NewMemDatabase()
 	dposContext, err := NewDposContext(db)
 	assert.Nil(t, err)
 

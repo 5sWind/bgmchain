@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -83,7 +83,7 @@ func isSubscriptionType(t reflect.Type) bool {
 	return t == subscriptionType
 }
 
-// isPubSub tests whether the given method has as as first argument a context.Context
+// isPubSub tests whbgmchain the given method has as as first argument a context.Context
 // and returns the pair (Subscription, error)
 func isPubSub(methodType reflect.Type) bool {
 	// numIn(0) is the receiver type
@@ -126,7 +126,7 @@ func suitableCallbacks(rcvr reflect.Value, typ reflect.Type) (callbacks, subscri
 	callbacks := make(callbacks)
 	subscriptions := make(subscriptions)
 
-METHODS:
+MBGMODS:
 	for m := 0; m < typ.NumMethod(); m++ {
 		method := typ.Method(m)
 		mtype := method.Type
@@ -155,12 +155,12 @@ METHODS:
 				if isExportedOrBuiltinType(argType) {
 					h.argTypes[i-firstArg] = argType
 				} else {
-					continue METHODS
+					continue MBGMODS
 				}
 			}
 
 			subscriptions[mname] = &h
-			continue METHODS
+			continue MBGMODS
 		}
 
 		// determine method arguments, ignore first arg since it's the receiver type
@@ -169,7 +169,7 @@ METHODS:
 		for i := firstArg; i < numIn; i++ {
 			argType := mtype.In(i)
 			if !isExportedOrBuiltinType(argType) {
-				continue METHODS
+				continue MBGMODS
 			}
 			h.argTypes[i-firstArg] = argType
 		}
@@ -177,7 +177,7 @@ METHODS:
 		// check that all returned values are exported or builtin types
 		for i := 0; i < mtype.NumOut(); i++ {
 			if !isExportedOrBuiltinType(mtype.Out(i)) {
-				continue METHODS
+				continue MBGMODS
 			}
 		}
 
@@ -191,13 +191,13 @@ METHODS:
 		}
 
 		if h.errPos >= 0 && h.errPos != mtype.NumOut()-1 {
-			continue METHODS
+			continue MBGMODS
 		}
 
 		switch mtype.NumOut() {
 		case 0, 1, 2:
 			if mtype.NumOut() == 2 && h.errPos == -1 { // method must one return value and 1 error
-				continue METHODS
+				continue MBGMODS
 			}
 			callbacks[mname] = &h
 		}

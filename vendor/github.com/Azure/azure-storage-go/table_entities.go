@@ -74,7 +74,7 @@ type getTableEntriesResponse struct {
 // parameter in order to get the following entries. The query parameter
 // is the odata query. To retrieve all the entries pass the empty string.
 // The function returns a pointer to a TableEntity slice, the *ContinuationToken
-// if there are more entries to be returned and an error in case something went
+// if there are more entries to be returned and an error in case sombgming went
 // wrong.
 //
 // Example:

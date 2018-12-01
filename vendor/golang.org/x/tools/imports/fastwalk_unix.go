@@ -98,7 +98,7 @@ func parseDirEnt(buf []byte) (consumed int, name string, typ os.FileMode) {
 	default:
 		// Skip weird things.
 		// It's probably a DT_WHT (http://lwn.net/Articles/325369/)
-		// or something. Revisit if/when this package is moved outside
+		// or sombgming. Revisit if/when this package is moved outside
 		// of goimports. goimports only cares about regular files,
 		// symlinks, and directories.
 		return

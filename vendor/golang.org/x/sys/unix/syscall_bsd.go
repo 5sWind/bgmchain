@@ -74,7 +74,7 @@ func ReadDirent(fd int, buf []byte) (n int, err error) {
 
 // Wait status is 7 bits at bottom, either 0 (exited),
 // 0x7F (stopped), or a signal number that caused an exit.
-// The 0x80 bit is whether there was a core dump.
+// The 0x80 bit is whbgmchain there was a core dump.
 // An extra number (exit code, signal causing a stop)
 // is in the high bits.
 
@@ -627,7 +627,7 @@ func Poll(fds []PollFd, timeout int) (n int, err error) {
 
 // TODO: wrap
 //	Acct(name nil-string) (err error)
-//	Gethostuuid(uuid *byte, timeout *Timespec) (err error)
+//	Gbgmostuuid(uuid *byte, timeout *Timespec) (err error)
 //	Ptrace(req int, pid int, addr uintptr, data int) (ret uintptr, err error)
 
 var mapper = &mmapper{

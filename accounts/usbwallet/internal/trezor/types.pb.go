@@ -42,9 +42,9 @@ It has these top-level messages:
 	GetPublicKey
 	PublicKey
 	GetAddress
-	EthereumGetAddress
+	BgmchainGetAddress
 	Address
-	EthereumAddress
+	BgmchainAddress
 	WipeDevice
 	LoadDevice
 	ResetDevice
@@ -69,12 +69,12 @@ It has these top-level messages:
 	SimpleSignTx
 	TxRequest
 	TxAck
-	EthereumSignTx
-	EthereumTxRequest
-	EthereumTxAck
-	EthereumSignMessage
-	EthereumVerifyMessage
-	EthereumMessageSignature
+	BgmchainSignTx
+	BgmchainTxRequest
+	BgmchainTxAck
+	BgmchainSignMessage
+	BgmchainVerifyMessage
+	BgmchainMessageSignature
 	SignIdentity
 	SignedIdentity
 	GetECDHSessionKey

@@ -269,7 +269,7 @@
 		},
 		{
 			"checksumSHA1": "WbbxCn2jUYIL5viqLo0BKXEdPrQ=",
-			"path": "github.com/prometheus/prometheus/util/flock",
+			"path": "github.com/prombgmeus/prombgmeus/util/flock",
 			"revision": "3101606756c53221ed58ba94ecba6b26adf89dcc",
 			"revisionTime": "2017-08-14T17:01:13Z"
 		},
@@ -712,5 +712,5 @@
 			"revisionTime": "2017-08-11T01:42:03Z"
 		}
 	],
-	"rootPath": "github.com/ethereum/go-ethereum"
+	"rootPath": "github.com/bgmchain/go-bgmchain"
 }

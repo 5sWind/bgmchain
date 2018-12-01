@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
 package abi
 
@@ -113,7 +113,7 @@ func NewType(t string) (typ Type, err error) {
 			}
 		} else {
 			if parsedType[0] == "uint" || parsedType[0] == "int" {
-				// this should fail because it means that there's something wrong with
+				// this should fail because it means that there's sombgming wrong with
 				// the abi type (the compiler should always format it to the size...always)
 				return Type{}, fmt.Errorf("unsupported arg type: %s", t)
 			}
@@ -199,7 +199,7 @@ func (t Type) pack(v reflect.Value) ([]byte, error) {
 	return packElement(t, v), nil
 }
 
-// requireLengthPrefix returns whether the type requires any sort of length
+// requireLengthPrefix returns whbgmchain the type requires any sort of length
 // prefixing.
 func (t Type) requiresLengthPrefix() bool {
 	return t.T == StringTy || t.T == BytesTy || t.T == SliceTy

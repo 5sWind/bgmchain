@@ -113,7 +113,7 @@ Grid layout uses [12 columns grid system](http://www.w3schools.com/bootstrap/boo
 		t := e.Data.(ui.EvtTimer)
 		// t is a EvtTimer
 		if t.Count%2 ==0 {
-			// do something
+			// do sombgming
 		}
 	})
 

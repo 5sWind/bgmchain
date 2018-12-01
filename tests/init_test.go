@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
 package tests
 
@@ -29,7 +29,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/meitu/go-ethereum/params"
+	"github.com/5sWind/bgmchain/params"
 )
 
 var (
@@ -154,7 +154,7 @@ func (tm *testMatcher) findConfig(name string) *params.ChainConfig {
 	return new(params.ChainConfig)
 }
 
-// checkFailure checks whether a failure is expected.
+// checkFailure checks whbgmchain a failure is expected.
 func (tm *testMatcher) checkFailure(t *testing.T, name string, err error) error {
 	// TODO(fjl): name can be derived from t when min Go version is 1.8
 	failReason := ""

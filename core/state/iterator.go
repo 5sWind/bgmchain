@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-bgmchain Authors
+// This file is part of the go-bgmchain library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
 package state
 
@@ -20,9 +20,9 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/rlp"
-	"github.com/meitu/go-ethereum/trie"
+	"github.com/5sWind/bgmchain/common"
+	"github.com/5sWind/bgmchain/rlp"
+	"github.com/5sWind/bgmchain/trie"
 )
 
 // NodeIterator is an iterator to traverse the entire state trie post-order,
@@ -50,7 +50,7 @@ func NewNodeIterator(state *StateDB) *NodeIterator {
 	}
 }
 
-// Next moves the iterator to the next node, returning whether there are any
+// Next moves the iterator to the next node, returning whbgmchain there are any
 // further nodes. In case of an internal error this method returns false and
 // sets the Error field to the encountered failure.
 func (it *NodeIterator) Next() bool {
@@ -129,7 +129,7 @@ func (it *NodeIterator) step() error {
 }
 
 // retrieve pulls and caches the current state entry the iterator is traversing.
-// The method returns whether there are any more data left for inspection.
+// The method returns whbgmchain there are any more data left for inspection.
 func (it *NodeIterator) retrieve() bool {
 	// Clear out any previously set values
 	it.Hash = common.Hash{}
