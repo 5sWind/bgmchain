@@ -6,8 +6,7 @@
         "byzantiumBlock":0,
         "dpos":{
             "validators":[
-                "0xd29dd46ef6ffb553471a8904d5eac2c97f54a033",
-                "0x44553ad3406006068203b0328eb126fc28dccd2d"
+                "0x606455f61d06daa729e572450040aeb36568a0d1"
             ]
         }
     },
