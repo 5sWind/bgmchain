@@ -68,7 +68,7 @@ main() {
   stop_cluster
   create_network
   start_bootnode
-  start_geth_node
+  start_gbgm_node
   start_swarm_nodes
 }
 
@@ -136,9 +136,9 @@ start_bootnode() {
   start_node "bootnode" "${BOOTNODE_IP}" "$(which bootnode)" ${args[@]}
 }
 
-# start_geth_node starts a gbgm node with --datadir pointing at <base-dir>/gbgm
+# start_gbgm_node starts a gbgm node with --datadir pointing at <base-dir>/gbgm
 # and a single, unlocked account with password "gbgm"
-start_geth_node() {
+start_gbgm_node() {
   local dir="${base_dir}/gbgm"
   mkdir -p "${dir}"
 
