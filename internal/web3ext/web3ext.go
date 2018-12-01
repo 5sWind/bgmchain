@@ -437,8 +437,8 @@ web3._extend({
 			name: 'getBalance',
 			call: 'eth_getBalance',
 			params: 2,
-			inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
-			outputFormatter: formatters.outputBigNumberFormatter
+			inputFormatter: [web3._extend.formatters.inputAddressFormatter, web3._extend.formatters.inputDefaultBlockNumberFormatter],
+			outputFormatter: web3._extend.formatters.outputBigNumberFormatter
 		}),
 	],
 	properties: [
