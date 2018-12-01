@@ -433,6 +433,13 @@ web3._extend({
 			params: 2,
 			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter, web3._extend.utils.toHex]
 		}),
+		new web3._extend.Method({
+			name: 'getBalance',
+			call: 'eth_getBalance',
+			params: 2,
+			inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
+			outputFormatter: formatters.outputBigNumberFormatter
+		}),
 	],
 	properties: [
 		new web3._extend.Property({
