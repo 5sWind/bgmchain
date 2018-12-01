@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	lru "github.com/hashicorp/golang-lru"
 	"github.com/5sWind/bgmchain/accounts"
+	"github.com/5sWind/bgmchain/bgmdb"
 	"github.com/5sWind/bgmchain/common"
 	"github.com/5sWind/bgmchain/consensus"
 	"github.com/5sWind/bgmchain/consensus/misc"
@@ -18,12 +18,12 @@ import (
 	"github.com/5sWind/bgmchain/core/types"
 	"github.com/5sWind/bgmchain/crypto"
 	"github.com/5sWind/bgmchain/crypto/sha3"
-	"github.com/5sWind/bgmchain/bgmdb"
 	"github.com/5sWind/bgmchain/log"
 	"github.com/5sWind/bgmchain/params"
 	"github.com/5sWind/bgmchain/rlp"
 	"github.com/5sWind/bgmchain/rpc"
 	"github.com/5sWind/bgmchain/trie"
+	lru "github.com/hashicorp/golang-lru"
 )
 
 const (
@@ -33,7 +33,7 @@ const (
 
 	blockInterval    = int64(10)
 	epochInterval    = int64(86400)
-	maxValidatorSize = 3
+	maxValidatorSize = 2
 	safeSize         = maxValidatorSize*2/3 + 1
 	consensusSize    = maxValidatorSize*2/3 + 1
 )
