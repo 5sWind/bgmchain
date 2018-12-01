@@ -11,10 +11,10 @@ fi
 workspace="$PWD/build/_workspace"
 root="$PWD"
 bgmdir="$workspace/src/github.com/5sWind"
-if [ ! -L "$bgmdir/go-bgmchain" ]; then
+if [ ! -L "$bgmdir/bgmchain" ]; then
     mkdir -p "$bgmdir"
     cd "$bgmdir"
-    ln -s ../../../../../. go-bgmchain
+    ln -s ../../../../../. bgmchain
     cd "$root"
 fi
 
@@ -23,8 +23,8 @@ GOPATH="$workspace"
 export GOPATH
 
 # Run the command inside the workspace.
-cd "$bgmdir/go-bgmchain"
-PWD="$bgmdir/go-bgmchain"
+cd "$bgmdir/bgmchain"
+PWD="$bgmdir/bgmchain"
 
 # Launch the arguments with the configured environment.
 exec "$@"

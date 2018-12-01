@@ -5,8 +5,8 @@ Maintainer: {{.Author}}
 Build-Depends: debhelper (>= 8.0.0), golang-1.9
 Standards-Version: 3.9.5
 Homepage: https://bgmchain.org
-Vcs-Git: git://github.com/bgmchain/go-bgmchain.git
-Vcs-Browser: https://github.com/bgmchain/go-bgmchain
+Vcs-Git: git://github.com/bgmchain/bgmchain.git
+Vcs-Browser: https://github.com/bgmchain/bgmchain
 
 Package: {{.Name}}
 Architecture: any

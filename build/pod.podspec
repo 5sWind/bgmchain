@@ -2,12 +2,12 @@ Pod::Spec.new do |spec|
   spec.name         = 'Gbgm'
   spec.version      = '{{.Version}}'
   spec.license      = { :type => 'GNU Lesser General Public License, Version 3.0' }
-  spec.homepage     = 'https://github.com/bgmchain/go-bgmchain'
+  spec.homepage     = 'https://github.com/bgmchain/bgmchain'
   spec.authors      = { {{range .Contributors}}
 		'{{.Name}}' => '{{.Email}}',{{end}}
 	}
   spec.summary      = 'iOS Bgmchain Client'
-  spec.source       = { :git => 'https://github.com/bgmchain/go-bgmchain.git', :commit => '{{.Commit}}' }
+  spec.source       = { :git => 'https://github.com/bgmchain/bgmchain.git', :commit => '{{.Commit}}' }
 
 	spec.platform = :ios
   spec.ios.deployment_target  = '9.0'

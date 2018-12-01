@@ -3,9 +3,9 @@ InstallDir "$InstDir"
 OutFile "${OUTPUTFILE}" # set through command line arguments
 
 # Links for "Add/Remove Programs"
-!define HELPURL "https://github.com/bgmchain/go-bgmchain/issues"
-!define UPDATEURL "https://github.com/bgmchain/go-bgmchain/releases"
-!define ABOUTURL "https://github.com/bgmchain/go-bgmchain#bgmchain-go"
+!define HELPURL "https://github.com/bgmchain/bgmchain/issues"
+!define UPDATEURL "https://github.com/bgmchain/bgmchain/releases"
+!define ABOUTURL "https://github.com/bgmchain/bgmchain#bgmchain-go"
 !define /date NOW "%Y%m%d"
 
 PageEx license

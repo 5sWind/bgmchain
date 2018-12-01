@@ -10,8 +10,8 @@
   <packaging>aar</packaging>
 
   <name>Android Bgmchain Client</name>
-  <description>Android port of the go-bgmchain libraries and node</description>
-  <url>https://github.com/bgmchain/go-bgmchain</url>
+  <description>Android port of the bgmchain libraries and node</description>
+  <url>https://github.com/bgmchain/bgmchain</url>
   <inceptionYear>2015</inceptionYear>
 
   <licenses>
@@ -48,10 +48,10 @@
 
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>https://github.com/bgmchain/go-bgmchain/issues/</url>
+    <url>https://github.com/bgmchain/bgmchain/issues/</url>
   </issueManagement>
 
   <scm>
-    <url>https://github.com/bgmchain/go-bgmchain</url>
+    <url>https://github.com/bgmchain/bgmchain</url>
   </scm>
 </project>

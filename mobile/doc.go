@@ -1,23 +1,23 @@
-// Copyright 2016 The go-bgmchain Authors
-// This file is part of the go-bgmchain library.
+// Copyright 2016 The bgmchain Authors
+// This file is part of the bgmchain library.
 //
-// The go-bgmchain library is free software: you can redistribute it and/or modify
+// The bgmchain library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-bgmchain library is distributed in the hope that it will be useful,
+// The bgmchain library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package gbgm contains the simplified mobile APIs to go-bgmchain.
+// Package gbgm contains the simplified mobile APIs to bgmchain.
 //
 // The scope of this package is *not* to allow writing a custom Bgmchain client
-// with pieces plucked from go-bgmchain, rather to allow writing native dapps on
+// with pieces plucked from bgmchain, rather to allow writing native dapps on
 // mobile platforms. Keep this in mind when using or extending this package!
 //
 // API limitations
@@ -33,13 +33,13 @@
 // writing custom library generators, but those are out of scope now.
 //
 // Content wise each file in this package corresponds to an entire Go package
-// from the go-bgmchain repository. Please adhere to this scoping to prevent this
+// from the bgmchain repository. Please adhere to this scoping to prevent this
 // package getting unmaintainable.
 //
 // Wrapping guidelines:
 //
 // Every type that is to be exposed should be wrapped into its own plain struct,
-// which internally contains a single field: the original go-bgmchain version.
+// which internally contains a single field: the original bgmchain version.
 // This is needed because gomobile cannot expose named types for now.
 //
 // Whenever a method argument or a return type is a custom struct, the pointer
