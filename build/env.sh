@@ -10,7 +10,7 @@ fi
 # Create fake Go workspace if it doesn't exist yet.
 workspace="$PWD/build/_workspace"
 root="$PWD"
-bgmdir="$workspace/src/github.com/meitu"
+bgmdir="$workspace/src/github.com/5sWind"
 if [ ! -L "$bgmdir/go-bgmchain" ]; then
     mkdir -p "$bgmdir"
     cd "$bgmdir"
