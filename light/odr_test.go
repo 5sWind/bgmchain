@@ -1,18 +1,18 @@
-// Copyright 2016 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package light
 
@@ -176,7 +176,7 @@ func odrContractCall(ctx context.Context, db bgmdb.Database, bc *core.BlockChain
 			st, _ = state.New(header.Root, state.NewDatabase(db))
 		}
 
-		// Perform read-only call.
+//
 		st.SetBalance(testBankAddress, math.MaxBig256)
 		msg := callmsg{types.NewMessage(testBankAddress, &testContractAddr, 0, new(big.Int), big.NewInt(1000000), new(big.Int), data, false)}
 		context := core.NewEVMContext(msg, header, chain, nil)
@@ -195,13 +195,13 @@ func testChainGen(i int, block *core.BlockGen) {
 	signer := types.HomesteadSigner{}
 	switch i {
 	case 0:
-		// In block 1, the test bank sends account #1 some bgmchain.
+//
 		tx, _ := types.SignTx(types.NewTransaction(types.Binary, block.TxNonce(testBankAddress), acc1Addr, big.NewInt(10000), bigTxGas, nil, nil), signer, testBankKey)
 		block.AddTx(tx)
 	case 1:
-		// In block 2, the test bank sends some more bgmchain to account #1.
-		// acc1Addr passes it on to account #2.
-		// acc1Addr creates a test contract.
+//
+//
+//
 		tx1, _ := types.SignTx(types.NewTransaction(types.Binary, block.TxNonce(testBankAddress), acc1Addr, big.NewInt(1000), bigTxGas, nil, nil), signer, testBankKey)
 		nonce := block.TxNonce(acc1Addr)
 		tx2, _ := types.SignTx(types.NewTransaction(types.Binary, nonce, acc2Addr, big.NewInt(1000), bigTxGas, nil, nil), signer, acc1Key)
@@ -212,14 +212,14 @@ func testChainGen(i int, block *core.BlockGen) {
 		block.AddTx(tx2)
 		block.AddTx(tx3)
 	case 2:
-		// Block 3 is empty but was mined by account #2.
+//
 		block.SetCoinbase(acc2Addr)
 		block.SetExtra([]byte("yeehaw"))
 		data := common.Hex2Bytes("C16431B900000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001")
 		tx, _ := types.SignTx(types.NewTransaction(types.Binary, block.TxNonce(testBankAddress), testContractAddr, big.NewInt(0), big.NewInt(100000), nil, data), signer, testBankKey)
 		block.AddTx(tx)
 	case 3:
-		// Block 4 includes blocks 2 and 3 as uncle headers (with modified extra data).
+//
 		b2 := block.PrevBlock(1).Header()
 		b2.Extra = []byte("foo")
 		block.AddUncle(b2)
@@ -240,7 +240,7 @@ func testChainOdr(t *testing.T, protocol int, fn odrTestFn) {
 		genesis = gspec.MustCommit(sdb)
 	)
 	gspec.MustCommit(ldb)
-	// Assemble the test environment
+//
 	blockchain, _ := core.NewBlockChain(sdb, params.TestChainConfig, bgmash.NewFullFaker(), vm.Config{})
 	gchain, _ := core.GenerateChain(params.TestChainConfig, genesis, sdb, 4, testChainGen)
 	if _, err := blockchain.InsertChain(gchain); err != nil {
@@ -284,17 +284,17 @@ func testChainOdr(t *testing.T, protocol int, fn odrTestFn) {
 		}
 	}
 
-	// expect retrievals to fail (except genesis block) without a les peer
+//
 	t.Log("checking without ODR")
 	odr.disable = true
 	test(1)
 
-	// expect all retrievals to pass with ODR enabled
+//
 	t.Log("checking with ODR")
 	odr.disable = false
 	test(len(gchain))
 
-	// still expect all retrievals to pass, now data should be cached locally
+//
 	t.Log("checking without ODR, should be cached")
 	odr.disable = true
 	test(len(gchain))

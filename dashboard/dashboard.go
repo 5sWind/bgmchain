@@ -1,18 +1,18 @@
-// Copyright 2017 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package dashboard
 
@@ -36,53 +36,53 @@ import (
 )
 
 const (
-	memorySampleLimit  = 200 // Maximum number of memory data samples
-	trafficSampleLimit = 200 // Maximum number of traffic data samples
+	memorySampleLimit  = 200 //
+	trafficSampleLimit = 200 //
 )
 
-var nextId uint32 // Next connection id
+var nextId uint32 //
 
-// Dashboard contains the dashboard internals.
+//
 type Dashboard struct {
 	config *Config
 
 	listener net.Listener
-	conns    map[uint32]*client // Currently live websocket connections
-	charts   charts             // The collected data samples to plot
-	lock     sync.RWMutex       // Lock protecting the dashboard's internals
+	conns    map[uint32]*client //
+	charts   charts             //
+	lock     sync.RWMutex       //
 
-	quit chan chan error // Channel used for graceful exit
+	quit chan chan error //
 	wg   sync.WaitGroup
 }
 
-// message embraces the data samples of a client message.
+//
 type message struct {
-	History *charts     `json:"history,omitempty"` // Past data samples
-	Memory  *chartEntry `json:"memory,omitempty"`  // One memory sample
-	Traffic *chartEntry `json:"traffic,omitempty"` // One traffic sample
-	Log     string      `json:"log,omitempty"`     // One log
+	History *charts     `json:"history,omitempty"` //
+	Memory  *chartEntry `json:"memory,omitempty"`  //
+	Traffic *chartEntry `json:"traffic,omitempty"` //
+	Log     string      `json:"log,omitempty"`     //
 }
 
-// client represents active websocket connection with a remote browser.
+//
 type client struct {
-	conn   *websocket.Conn // Particular live websocket connection
-	msg    chan message    // Message queue for the update messages
-	logger log.Logger      // Logger for the particular live websocket connection
+	conn   *websocket.Conn //
+	msg    chan message    //
+	logger log.Logger      //
 }
 
-// charts contains the collected data samples.
+//
 type charts struct {
 	Memory  []*chartEntry `json:"memorySamples,omitempty"`
 	Traffic []*chartEntry `json:"trafficSamples,omitempty"`
 }
 
-// chartEntry represents one data sample
+//
 type chartEntry struct {
 	Time  time.Time `json:"time,omitempty"`
 	Value float64   `json:"value,omitempty"`
 }
 
-// New creates a new dashboard instance with the given configuration.
+//
 func New(config *Config) (*Dashboard, error) {
 	return &Dashboard{
 		conns:  make(map[uint32]*client),
@@ -91,17 +91,17 @@ func New(config *Config) (*Dashboard, error) {
 	}, nil
 }
 
-// Protocols is a meaningless implementation of node.Service.
+//
 func (db *Dashboard) Protocols() []p2p.Protocol { return nil }
 
-// APIs is a meaningless implementation of node.Service.
+//
 func (db *Dashboard) APIs() []rpc.API { return nil }
 
-// Start implements node.Service, starting the data collection thread and the listening server of the dashboard.
+//
 func (db *Dashboard) Start(server *p2p.Server) error {
 	db.wg.Add(2)
 	go db.collectData()
-	go db.collectLogs() // In case of removing this line change 2 back to 1 in wg.Add.
+	go db.collectLogs() //
 
 	http.HandleFunc("/", db.webHandler)
 	http.Handle("/api", websocket.Handler(db.apiHandler))
@@ -117,14 +117,14 @@ func (db *Dashboard) Start(server *p2p.Server) error {
 	return nil
 }
 
-// Stop implements node.Service, stopping the data collection thread and the connection listener of the dashboard.
+//
 func (db *Dashboard) Stop() error {
-	// Close the connection listener.
+//
 	var errs []error
 	if err := db.listener.Close(); err != nil {
 		errs = append(errs, err)
 	}
-	// Close the collectors.
+//
 	errc := make(chan error, 1)
 	for i := 0; i < 2; i++ {
 		db.quit <- errc
@@ -132,7 +132,7 @@ func (db *Dashboard) Stop() error {
 			errs = append(errs, err)
 		}
 	}
-	// Close the connections.
+//
 	db.lock.Lock()
 	for _, c := range db.conns {
 		if err := c.conn.Close(); err != nil {
@@ -141,7 +141,7 @@ func (db *Dashboard) Stop() error {
 	}
 	db.lock.Unlock()
 
-	// Wait until every goroutine terminates.
+//
 	db.wg.Wait()
 	log.Info("Dashboard stopped")
 
@@ -153,7 +153,7 @@ func (db *Dashboard) Stop() error {
 	return err
 }
 
-// webHandler handles all non-api requests, simply flattening and returning the dashboard website.
+//
 func (db *Dashboard) webHandler(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Request", "URL", r.URL)
 
@@ -161,7 +161,7 @@ func (db *Dashboard) webHandler(w http.ResponseWriter, r *http.Request) {
 	if path == "/" {
 		path = "/dashboard.html"
 	}
-	// If the path of the assets is manually set
+//
 	if db.config.Assets != "" {
 		blob, err := ioutil.ReadFile(filepath.Join(db.config.Assets, path))
 		if err != nil {
@@ -181,7 +181,7 @@ func (db *Dashboard) webHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(blob)
 }
 
-// apiHandler handles requests for the dashboard.
+//
 func (db *Dashboard) apiHandler(conn *websocket.Conn) {
 	id := atomic.AddUint32(&nextId, 1)
 	client := &client{
@@ -189,9 +189,9 @@ func (db *Dashboard) apiHandler(conn *websocket.Conn) {
 		msg:    make(chan message, 128),
 		logger: log.New("id", id),
 	}
-	done := make(chan struct{}) // Buffered channel as sender may exit early
+	done := make(chan struct{}) //
 
-	// Start listening for messages to send.
+//
 	db.wg.Add(1)
 	go func() {
 		defer db.wg.Done()
@@ -209,11 +209,11 @@ func (db *Dashboard) apiHandler(conn *websocket.Conn) {
 			}
 		}
 	}()
-	// Send the past data.
+//
 	client.msg <- message{
 		History: &db.charts,
 	}
-	// Start tracking the connection and drop at connection loss.
+//
 	db.lock.Lock()
 	db.conns[id] = client
 	db.lock.Unlock()
@@ -228,11 +228,11 @@ func (db *Dashboard) apiHandler(conn *websocket.Conn) {
 			close(done)
 			return
 		}
-		// Ignore all messages
+//
 	}
 }
 
-// collectData collects the required data to plot on the dashboard.
+//
 func (db *Dashboard) collectData() {
 	defer db.wg.Done()
 
@@ -253,7 +253,7 @@ func (db *Dashboard) collectData() {
 				Time:  now,
 				Value: inboundTraffic,
 			}
-			// Remove the first elements in case the samples' amount exceeds the limit.
+//
 			first := 0
 			if len(db.charts.Memory) == memorySampleLimit {
 				first = 1
@@ -273,11 +273,11 @@ func (db *Dashboard) collectData() {
 	}
 }
 
-// collectLogs collects and sends the logs to the active dashboards.
+//
 func (db *Dashboard) collectLogs() {
 	defer db.wg.Done()
 
-	// TODO (kurkomisi): log collection comes here.
+//
 	for {
 		select {
 		case errc := <-db.quit:
@@ -291,7 +291,7 @@ func (db *Dashboard) collectLogs() {
 	}
 }
 
-// sendToAll sends the given message to the active dashboards.
+//
 func (db *Dashboard) sendToAll(msg *message) {
 	db.lock.Lock()
 	for _, c := range db.conns {

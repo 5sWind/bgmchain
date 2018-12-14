@@ -1,21 +1,21 @@
-// Copyright 2016 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-// This file contains some shares testing functionality, common to  multiple
-// different files and modules being tested.
+//
+//
 
 package les
 
@@ -80,13 +80,13 @@ func testChainGen(i int, block *core.BlockGen) {
 
 	switch i {
 	case 0:
-		// In block 1, the test bank sends account #1 some bgmchain.
+//
 		tx, _ := types.SignTx(types.NewTransaction(types.Binary, block.TxNonce(testBankAddress), acc1Addr, big.NewInt(10000), bigTxGas, nil, nil), signer, testBankKey)
 		block.AddTx(tx)
 	case 1:
-		// In block 2, the test bank sends some more bgmchain to account #1.
-		// acc1Addr passes it on to account #2.
-		// acc1Addr creates a test contract.
+//
+//
+//
 		tx1, _ := types.SignTx(types.NewTransaction(types.Binary, block.TxNonce(testBankAddress), acc1Addr, big.NewInt(1000), bigTxGas, nil, nil), signer, testBankKey)
 		nonce := block.TxNonce(acc1Addr)
 		tx2, _ := types.SignTx(types.NewTransaction(types.Binary, nonce, acc2Addr, big.NewInt(1000), bigTxGas, nil, nil), signer, acc1Key)
@@ -97,14 +97,14 @@ func testChainGen(i int, block *core.BlockGen) {
 		block.AddTx(tx2)
 		block.AddTx(tx3)
 	case 2:
-		// Block 3 is empty but was mined by account #2.
+//
 		block.SetCoinbase(acc2Addr)
 		block.SetExtra([]byte("yeehaw"))
 		data := common.Hex2Bytes("C16431B900000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001")
 		tx, _ := types.SignTx(types.NewTransaction(types.Binary, block.TxNonce(testBankAddress), testContractAddr, big.NewInt(0), big.NewInt(100000), nil, data), signer, testBankKey)
 		block.AddTx(tx)
 	case 3:
-		// Block 4 includes blocks 2 and 3 as uncle headers (with modified extra data).
+//
 		b2 := block.PrevBlock(1).Header()
 		b2.Extra = []byte("foo")
 		block.AddUncle(b2)
@@ -127,9 +127,9 @@ func testRCL() RequestCostList {
 	return cl
 }
 
-// newTestProtocolManager creates a new protocol manager for testing purposes,
-// with the given number of blocks already known, and potential notification
-// channels for different events.
+//
+//
+//
 func newTestProtocolManager(lightSync bool, blocks int, generator func(int, *core.BlockGen), peers *peerSet, odr *LesOdr, db bgmdb.Database) (*ProtocolManager, error) {
 	var (
 		evmux  = new(event.TypeMux)
@@ -182,10 +182,10 @@ func newTestProtocolManager(lightSync bool, blocks int, generator func(int, *cor
 	return pm, nil
 }
 
-// newTestProtocolManagerMust creates a new protocol manager for testing purposes,
-// with the given number of blocks already known, and potential notification
-// channels for different events. In case of an error, the constructor force-
-// fails the test.
+//
+//
+//
+//
 func newTestProtocolManagerMust(t *testing.T, lightSync bool, blocks int, generator func(int, *core.BlockGen), peers *peerSet, odr *LesOdr, db bgmdb.Database) *ProtocolManager {
 	pm, err := newTestProtocolManager(lightSync, blocks, generator, peers, odr, db)
 	if err != nil {
@@ -194,25 +194,25 @@ func newTestProtocolManagerMust(t *testing.T, lightSync bool, blocks int, genera
 	return pm
 }
 
-// testPeer is a simulated peer to allow testing direct network calls.
+//
 type testPeer struct {
-	net p2p.MsgReadWriter // Network layer reader/writer to simulate remote messaging
-	app *p2p.MsgPipeRW    // Application layer reader/writer to simulate the local side
+	net p2p.MsgReadWriter //
+	app *p2p.MsgPipeRW    //
 	*peer
 }
 
-// newTestPeer creates a new peer registered at the given protocol manager.
+//
 func newTestPeer(t *testing.T, name string, version int, pm *ProtocolManager, shake bool) (*testPeer, <-chan error) {
-	// Create a message pipe to communicate through
+//
 	app, net := p2p.MsgPipe()
 
-	// Generate a random id and create the peer
+//
 	var id discover.NodeID
 	rand.Read(id[:])
 
 	peer := pm.newPeer(version, NetworkId, p2p.NewPeer(id, name, nil), net)
 
-	// Start the peer on a new thread
+//
 	errc := make(chan error, 1)
 	go func() {
 		select {
@@ -227,7 +227,7 @@ func newTestPeer(t *testing.T, name string, version int, pm *ProtocolManager, sh
 		net:  net,
 		peer: peer,
 	}
-	// Execute any implicitly requested handshakes and return
+//
 	if shake {
 		td, head, genesis := pm.blockchain.Status()
 		headNum := pm.blockchain.CurrentHeader().Number.Uint64()
@@ -237,17 +237,17 @@ func newTestPeer(t *testing.T, name string, version int, pm *ProtocolManager, sh
 }
 
 func newTestPeerPair(name string, version int, pm, pm2 *ProtocolManager) (*peer, <-chan error, *peer, <-chan error) {
-	// Create a message pipe to communicate through
+//
 	app, net := p2p.MsgPipe()
 
-	// Generate a random id and create the peer
+//
 	var id discover.NodeID
 	rand.Read(id[:])
 
 	peer := pm.newPeer(version, NetworkId, p2p.NewPeer(id, name, nil), net)
 	peer2 := pm2.newPeer(version, NetworkId, p2p.NewPeer(id, name, nil), app)
 
-	// Start the peer on a new thread
+//
 	errc := make(chan error, 1)
 	errc2 := make(chan error, 1)
 	go func() {
@@ -269,8 +269,8 @@ func newTestPeerPair(name string, version int, pm, pm2 *ProtocolManager) (*peer,
 	return peer, errc, peer2, errc2
 }
 
-// handshake simulates a trivial handshake that expects the same state from the
-// remote side as we are simulating locally.
+//
+//
 func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, headNum uint64, genesis common.Hash) {
 	var expList keyValueList
 	expList = expList.add("protocolVersion", uint64(p.version))
@@ -302,8 +302,8 @@ func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, headNu
 	}
 }
 
-// close terminates the local side of the peer, notifying the remote protocol
-// manager of termination.
+//
+//
 func (p *testPeer) close() {
 	p.app.Close()
 }

@@ -1,20 +1,20 @@
-// Copyright 2016 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-// Package les implements the Light Bgmchain Subprotocol.
+//
 package les
 
 import (
@@ -47,25 +47,25 @@ import (
 )
 
 const (
-	softResponseLimit = 2 * 1024 * 1024 // Target maximum size of returned blocks, headers or node data.
-	estHeaderRlpSize  = 500             // Approximate size of an RLP encoded block header
+	softResponseLimit = 2 * 1024 * 1024 //
+	estHeaderRlpSize  = 500             //
 
-	bgmVersion = 63 // equivalent bgm version for the downloader
+	bgmVersion = 63 //
 
-	MaxHeaderFetch           = 192 // Amount of block headers to be fetched per retrieval request
-	MaxBodyFetch             = 32  // Amount of block bodies to be fetched per retrieval request
-	MaxReceiptFetch          = 128 // Amount of transaction receipts to allow fetching per request
-	MaxCodeFetch             = 64  // Amount of contract codes to allow fetching per request
-	MaxProofsFetch           = 64  // Amount of merkle proofs to be fetched per retrieval request
-	MaxHelperTrieProofsFetch = 64  // Amount of merkle proofs to be fetched per retrieval request
-	MaxTxSend                = 64  // Amount of transactions to be send per request
-	MaxTxStatus              = 256 // Amount of transactions to queried per request
+	MaxHeaderFetch           = 192 //
+	MaxBodyFetch             = 32  //
+	MaxReceiptFetch          = 128 //
+	MaxCodeFetch             = 64  //
+	MaxProofsFetch           = 64  //
+	MaxHelperTrieProofsFetch = 64  //
+	MaxTxSend                = 64  //
+	MaxTxStatus              = 256 //
 
 	disableClientRemovePeer = false
 )
 
-// errIncompatibleConfig is returned if the requested protocols and configs are
-// not compatible (low protocol version restrictions and high requirements).
+//
+//
 var errIncompatibleConfig = errors.New("incompatible configuration")
 
 func errResp(code errCode, format string, v ...interface{}) error {
@@ -116,20 +116,20 @@ type ProtocolManager struct {
 
 	eventMux *event.TypeMux
 
-	// channels for fetcher, syncer, txsyncLoop
+//
 	newPeerCh   chan *peer
 	quitSync    chan struct{}
 	noMorePeers chan struct{}
 
-	// wait group is used for graceful shutdowns during downloading
-	// and processing
+//
+//
 	wg *sync.WaitGroup
 }
 
-// NewProtocolManager returns a new bgmchain sub protocol manager. The Bgmchain sub protocol manages peers capable
-// with the bgmchain network.
+//
+//
 func NewProtocolManager(chainConfig *params.ChainConfig, lightSync bool, protocolVersions []uint, networkId uint64, mux *event.TypeMux, engine consensus.Engine, peers *peerSet, blockchain BlockChain, txpool txPool, chainDb bgmdb.Database, odr *LesOdr, txrelay *LesTxRelay, quitSync chan struct{}, wg *sync.WaitGroup) (*ProtocolManager, error) {
-	// Create the protocol manager with the base fields
+//
 	manager := &ProtocolManager{
 		lightSync:   lightSync,
 		eventMux:    mux,
@@ -151,11 +151,11 @@ func NewProtocolManager(chainConfig *params.ChainConfig, lightSync bool, protoco
 		manager.reqDist = odr.retriever.dist
 	}
 
-	// Initiate a sub-protocol for every implemented version we can handle
+//
 	manager.SubProtocols = make([]p2p.Protocol, 0, len(protocolVersions))
 	for _, version := range protocolVersions {
-		// Compatible, initialize the sub-protocol
-		version := version // Closure for the run
+//
+		version := version //
 		manager.SubProtocols = append(manager.SubProtocols, p2p.Protocol{
 			Name:    "les",
 			Version: version,
@@ -213,7 +213,7 @@ func NewProtocolManager(chainConfig *params.ChainConfig, lightSync bool, protoco
 	return manager, nil
 }
 
-// removePeer initiates disconnection from a peer by removing it from the peer set
+//
 func (pm *ProtocolManager) removePeer(id string) {
 	pm.peers.Unregister(id)
 }
@@ -230,23 +230,23 @@ func (pm *ProtocolManager) Start() {
 }
 
 func (pm *ProtocolManager) Stop() {
-	// Showing a log message. During download / process this could actually
-	// take between 5 to 10 seconds and therefor feedback is required.
+//
+//
 	log.Info("Stopping light Bgmchain protocol")
 
-	// Quit the sync loop.
-	// After this send has completed, no new peers will be accepted.
+//
+//
 	pm.noMorePeers <- struct{}{}
 
-	close(pm.quitSync) // quits syncer, fetcher
+	close(pm.quitSync) //
 
-	// Disconnect existing sessions.
-	// This also closes the gate for any new registrations on the peer set.
-	// sessions which are already established but not added to pm.peers yet
-	// will exit when they try to register.
+//
+//
+//
+//
 	pm.peers.Close()
 
-	// Wait for any process action
+//
 	pm.wg.Wait()
 
 	log.Info("Light Bgmchain protocol stopped")
@@ -256,12 +256,12 @@ func (pm *ProtocolManager) newPeer(pv int, nv uint64, p *p2p.Peer, rw p2p.MsgRea
 	return newPeer(pv, nv, p, newMeteredMsgWriter(rw))
 }
 
-// handle is the callback invoked to manage the life cycle of a les peer. When
-// this function terminates, the peer is disconnected.
+//
+//
 func (pm *ProtocolManager) handle(p *peer) error {
 	p.Log().Debug("Light Bgmchain peer connected", "name", p.Name())
 
-	// Execute the LES handshake
+//
 	td, head, genesis := pm.blockchain.Status()
 	headNum := core.GetBlockNumber(pm.chainDb, head)
 	if err := p.Handshake(td, head, headNum, genesis, pm.server); err != nil {
@@ -271,7 +271,7 @@ func (pm *ProtocolManager) handle(p *peer) error {
 	if rw, ok := p.rw.(*meteredMsgReadWriter); ok {
 		rw.Init(p.version)
 	}
-	// Register the peer locally
+//
 	if err := pm.peers.Register(p); err != nil {
 		p.Log().Error("Light Bgmchain peer registration failed", "err", err)
 		return err
@@ -282,7 +282,7 @@ func (pm *ProtocolManager) handle(p *peer) error {
 		}
 		pm.removePeer(p.id)
 	}()
-	// Register the peer in the downloader. If the downloader considers it banned, we disconnect
+//
 	if pm.lightSync {
 		p.lock.Lock()
 		head := p.headInfo
@@ -299,7 +299,7 @@ func (pm *ProtocolManager) handle(p *peer) error {
 	stop := make(chan struct{})
 	defer close(stop)
 	go func() {
-		// new block announce loop
+//
 		for {
 			select {
 			case announce := <-p.announceChn:
@@ -310,7 +310,7 @@ func (pm *ProtocolManager) handle(p *peer) error {
 		}
 	}()
 
-	// main loop. handle incoming messages.
+//
 	for {
 		if err := pm.handleMsg(p); err != nil {
 			p.Log().Debug("Light Bgmchain message handling failed", "err", err)
@@ -321,10 +321,10 @@ func (pm *ProtocolManager) handle(p *peer) error {
 
 var reqList = []uint64{GetBlockHeadersMsg, GetBlockBodiesMsg, GetCodeMsg, GetReceiptsMsg, GetProofsV1Msg, SendTxMsg, SendTxV2Msg, GetTxStatusMsg, GetHeaderProofsMsg, GetProofsV2Msg, GetHelperTrieProofsMsg}
 
-// handleMsg is invoked whenever an inbound message is received from a remote
-// peer. The remote connection is torn down upon returning any error.
+//
+//
 func (pm *ProtocolManager) handleMsg(p *peer) error {
-	// Read the next message from the remote peer, and ensure it's fully consumed
+//
 	msg, err := p.rw.ReadMsg()
 	if err != nil {
 		return err
@@ -356,14 +356,14 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 	var deliverMsg *Msg
 
-	// Handle the message depending on its contents
+//
 	switch msg.Code {
 	case StatusMsg:
 		p.Log().Trace("Received status message")
-		// Status messages should never arrive after the handshake
+//
 		return errResp(ErrExtraStatusMsg, "uncontrolled status message")
 
-	// Block header query, collect the requested headers and reply
+//
 	case AnnounceMsg:
 		p.Log().Trace("Received announce message")
 		if p.requestAnnounceType == announceTypeNone {
@@ -390,7 +390,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 	case GetBlockHeadersMsg:
 		p.Log().Trace("Received block header request")
-		// Decode the complex header query
+//
 		var req struct {
 			ReqID uint64
 			Query getBlockHeadersData
@@ -406,14 +406,14 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 		hashMode := query.Origin.Hash != (common.Hash{})
 
-		// Gather headers until the fetch or network limits is reached
+//
 		var (
 			bytes   common.StorageSize
 			headers []*types.Header
 			unknown bool
 		)
 		for !unknown && len(headers) < int(query.Amount) && bytes < softResponseLimit {
-			// Retrieve the next header satisfying the query
+//
 			var origin *types.Header
 			if hashMode {
 				origin = pm.blockchain.GetHeaderByHash(query.Origin.Hash)
@@ -427,10 +427,10 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			headers = append(headers, origin)
 			bytes += estHeaderRlpSize
 
-			// Advance to the next header of the query
+//
 			switch {
 			case query.Origin.Hash != (common.Hash{}) && query.Reverse:
-				// Hash based traversal towards the genesis block
+//
 				for i := 0; i < int(query.Skip)+1; i++ {
 					if header := pm.blockchain.GetHeader(query.Origin.Hash, number); header != nil {
 						query.Origin.Hash = header.ParentHash
@@ -441,7 +441,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 					}
 				}
 			case query.Origin.Hash != (common.Hash{}) && !query.Reverse:
-				// Hash based traversal towards the leaf block
+//
 				if header := pm.blockchain.GetHeaderByNumber(origin.Number.Uint64() + query.Skip + 1); header != nil {
 					if pm.blockchain.GetBlockHashesFromHash(header.Hash(), query.Skip+1)[query.Skip] == query.Origin.Hash {
 						query.Origin.Hash = header.Hash()
@@ -452,7 +452,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 					unknown = true
 				}
 			case query.Reverse:
-				// Number based traversal towards the genesis block
+//
 				if query.Origin.Number >= query.Skip+1 {
 					query.Origin.Number -= (query.Skip + 1)
 				} else {
@@ -460,7 +460,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				}
 
 			case !query.Reverse:
-				// Number based traversal towards the leaf block
+//
 				query.Origin.Number += (query.Skip + 1)
 			}
 		}
@@ -475,7 +475,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 
 		p.Log().Trace("Received block header response message")
-		// A batch of headers arrived to one of our previous requests
+//
 		var resp struct {
 			ReqID, BV uint64
 			Headers   []*types.Header
@@ -495,7 +495,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 	case GetBlockBodiesMsg:
 		p.Log().Trace("Received block bodies request")
-		// Decode the retrieval message
+//
 		var req struct {
 			ReqID  uint64
 			Hashes []common.Hash
@@ -503,7 +503,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if err := msg.Decode(&req); err != nil {
 			return errResp(ErrDecode, "msg %v: %v", msg, err)
 		}
-		// Gather blocks until the fetch or network limits is reached
+//
 		var (
 			bytes  int
 			bodies []rlp.RawValue
@@ -516,7 +516,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			if bytes >= softResponseLimit {
 				break
 			}
-			// Retrieve the requested block body, stopping if enough was found
+//
 			if data := core.GetBodyRLP(pm.chainDb, hash, core.GetBlockNumber(pm.chainDb, hash)); len(data) != 0 {
 				bodies = append(bodies, data)
 				bytes += len(data)
@@ -532,7 +532,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 
 		p.Log().Trace("Received block bodies response")
-		// A batch of block bodies arrived to one of our previous requests
+//
 		var resp struct {
 			ReqID, BV uint64
 			Data      []*types.Body
@@ -549,7 +549,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 	case GetCodeMsg:
 		p.Log().Trace("Received code request")
-		// Decode the retrieval message
+//
 		var req struct {
 			ReqID uint64
 			Reqs  []CodeReq
@@ -557,7 +557,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if err := msg.Decode(&req); err != nil {
 			return errResp(ErrDecode, "msg %v: %v", msg, err)
 		}
-		// Gather state data until the fetch or network limits is reached
+//
 		var (
 			bytes int
 			data  [][]byte
@@ -567,7 +567,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			return errResp(ErrRequestRejected, "")
 		}
 		for _, req := range req.Reqs {
-			// Retrieve the requested state entry, stopping if enough was found
+//
 			if header := core.GetHeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 				if trie, _ := trie.New(header.Root, pm.chainDb); trie != nil {
 					sdata := trie.Get(req.AccKey)
@@ -593,7 +593,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 
 		p.Log().Trace("Received code response")
-		// A batch of node state data arrived to one of our previous requests
+//
 		var resp struct {
 			ReqID, BV uint64
 			Data      [][]byte
@@ -610,7 +610,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 	case GetReceiptsMsg:
 		p.Log().Trace("Received receipts request")
-		// Decode the retrieval message
+//
 		var req struct {
 			ReqID  uint64
 			Hashes []common.Hash
@@ -618,7 +618,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if err := msg.Decode(&req); err != nil {
 			return errResp(ErrDecode, "msg %v: %v", msg, err)
 		}
-		// Gather state data until the fetch or network limits is reached
+//
 		var (
 			bytes    int
 			receipts []rlp.RawValue
@@ -631,14 +631,14 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			if bytes >= softResponseLimit {
 				break
 			}
-			// Retrieve the requested block's receipts, skipping if unknown to us
+//
 			results := core.GetBlockReceipts(pm.chainDb, hash, core.GetBlockNumber(pm.chainDb, hash))
 			if results == nil {
 				if header := pm.blockchain.GetHeaderByHash(hash); header == nil || header.ReceiptHash != types.EmptyRootHash {
 					continue
 				}
 			}
-			// If known, encode and queue for response packet
+//
 			if encoded, err := rlp.EncodeToBytes(results); err != nil {
 				log.Error("Failed to encode receipt", "err", err)
 			} else {
@@ -656,7 +656,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 
 		p.Log().Trace("Received receipts response")
-		// A batch of receipts arrived to one of our previous requests
+//
 		var resp struct {
 			ReqID, BV uint64
 			Receipts  []types.Receipts
@@ -673,7 +673,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 	case GetProofsV1Msg:
 		p.Log().Trace("Received proofs request")
-		// Decode the retrieval message
+//
 		var req struct {
 			ReqID uint64
 			Reqs  []ProofReq
@@ -681,7 +681,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if err := msg.Decode(&req); err != nil {
 			return errResp(ErrDecode, "msg %v: %v", msg, err)
 		}
-		// Gather state data until the fetch or network limits is reached
+//
 		var (
 			bytes  int
 			proofs proofsData
@@ -694,7 +694,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			if bytes >= softResponseLimit {
 				break
 			}
-			// Retrieve the requested state entry, stopping if enough was found
+//
 			if header := core.GetHeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 				if tr, _ := trie.New(header.Root, pm.chainDb); tr != nil {
 					if len(req.AccKey) > 0 {
@@ -720,7 +720,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 	case GetProofsV2Msg:
 		p.Log().Trace("Received les/2 proofs request")
-		// Decode the retrieval message
+//
 		var req struct {
 			ReqID uint64
 			Reqs  []ProofReq
@@ -728,7 +728,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if err := msg.Decode(&req); err != nil {
 			return errResp(ErrDecode, "msg %v: %v", msg, err)
 		}
-		// Gather state data until the fetch or network limits is reached
+//
 		var (
 			lastBHash  common.Hash
 			lastAccKey []byte
@@ -784,7 +784,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 
 		p.Log().Trace("Received proofs response")
-		// A batch of merkle proofs arrived to one of our previous requests
+//
 		var resp struct {
 			ReqID, BV uint64
 			Data      []light.NodeList
@@ -805,7 +805,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 
 		p.Log().Trace("Received les/2 proofs response")
-		// A batch of merkle proofs arrived to one of our previous requests
+//
 		var resp struct {
 			ReqID, BV uint64
 			Data      light.NodeList
@@ -822,7 +822,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 	case GetHeaderProofsMsg:
 		p.Log().Trace("Received headers proof request")
-		// Decode the retrieval message
+//
 		var req struct {
 			ReqID uint64
 			Reqs  []ChtReq
@@ -830,7 +830,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if err := msg.Decode(&req); err != nil {
 			return errResp(ErrDecode, "msg %v: %v", msg, err)
 		}
-		// Gather state data until the fetch or network limits is reached
+//
 		var (
 			bytes  int
 			proofs []ChtResp
@@ -865,7 +865,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 	case GetHelperTrieProofsMsg:
 		p.Log().Trace("Received helper trie proof request")
-		// Decode the retrieval message
+//
 		var req struct {
 			ReqID uint64
 			Reqs  []HelperTrieReq
@@ -873,7 +873,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if err := msg.Decode(&req); err != nil {
 			return errResp(ErrDecode, "msg %v: %v", msg, err)
 		}
-		// Gather state data until the fetch or network limits is reached
+//
 		var (
 			auxBytes int
 			auxData  [][]byte
@@ -975,7 +975,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if pm.txpool == nil {
 			return errResp(ErrRequestRejected, "")
 		}
-		// Transactions arrived, parse all of them and deliver to the pool
+//
 		var txs []*types.Transaction
 		if err := msg.Decode(&txs); err != nil {
 			return errResp(ErrDecode, "msg %v: %v", msg, err)
@@ -993,7 +993,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if pm.txpool == nil {
 			return errResp(ErrRequestRejected, "")
 		}
-		// Transactions arrived, parse all of them and deliver to the pool
+//
 		var req struct {
 			ReqID uint64
 			Txs   []*types.Transaction
@@ -1030,7 +1030,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if pm.txpool == nil {
 			return errResp(ErrUnexpectedResponse, "")
 		}
-		// Transactions arrived, parse all of them and deliver to the pool
+//
 		var req struct {
 			ReqID  uint64
 			Hashes []common.Hash
@@ -1080,7 +1080,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 	return nil
 }
 
-// getHelperTrie returns the post-processed trie root for the given trie ID and section index
+//
 func (pm *ProtocolManager) getHelperTrie(id uint, idx uint64) (common.Hash, string) {
 	switch id {
 	case htCanonical:
@@ -1093,7 +1093,7 @@ func (pm *ProtocolManager) getHelperTrie(id uint, idx uint64) (common.Hash, stri
 	return common.Hash{}, ""
 }
 
-// getHelperTrieAuxData returns requested auxiliary data for the given HelperTrie request
+//
 func (pm *ProtocolManager) getHelperTrieAuxData(req HelperTrieReq) []byte {
 	if req.HelperTrieType == htCanonical && req.AuxReq == auxHeader {
 		if len(req.Key) != 8 {
@@ -1109,10 +1109,10 @@ func (pm *ProtocolManager) getHelperTrieAuxData(req HelperTrieReq) []byte {
 func (pm *ProtocolManager) txStatus(hashes []common.Hash) []txStatus {
 	stats := make([]txStatus, len(hashes))
 	for i, stat := range pm.txpool.Status(hashes) {
-		// Save the status we've got from the transaction pool
+//
 		stats[i].Status = stat
 
-		// If the transaction is unknown to the pool, try looking it up locally
+//
 		if stat == core.TxStatusUnknown {
 			if block, number, index := core.GetTxLookupEntry(pm.chainDb, hashes[i]); block != (common.Hash{}) {
 				stats[i].Status = core.TxStatusIncluded
@@ -1123,7 +1123,7 @@ func (pm *ProtocolManager) txStatus(hashes []common.Hash) []txStatus {
 	return stats
 }
 
-// NodeInfo retrieves some protocol metadata about the running host node.
+//
 func (self *ProtocolManager) NodeInfo() *bgm.BgmNodeInfo {
 	return &bgm.BgmNodeInfo{
 		Network:    self.networkId,
@@ -1133,7 +1133,7 @@ func (self *ProtocolManager) NodeInfo() *bgm.BgmNodeInfo {
 	}
 }
 
-// downloaderPeerNotify implements peerSetNotify
+//
 type downloaderPeerNotify ProtocolManager
 
 type peerConnection struct {

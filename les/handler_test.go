@@ -1,18 +1,18 @@
-// Copyright 2016 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package les
 
@@ -62,7 +62,7 @@ func testCheckProof(t *testing.T, exp *light.NodeSet, got light.NodeList) {
 	}
 }
 
-// Tests that block headers can be retrieved from a remote chain based on user queries.
+//
 func TestGetBlockHeadersLes1(t *testing.T) { testGetBlockHeaders(t, 1) }
 
 func TestGetBlockHeadersLes2(t *testing.T) { testGetBlockHeaders(t, 2) }
@@ -74,18 +74,18 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 	peer, _ := newTestPeer(t, "peer", protocol, pm, true)
 	defer peer.close()
 
-	// Create a "random" unknown hash for testing
+//
 	var unknown common.Hash
 	for i := range unknown {
 		unknown[i] = byte(i)
 	}
-	// Create a batch of tests for various scenarios
+//
 	limit := uint64(MaxHeaderFetch)
 	tests := []struct {
-		query  *getBlockHeadersData // The query to execute for header retrieval
-		expect []common.Hash        // The hashes of the block whose headers are expected
+		query  *getBlockHeadersData //
+		expect []common.Hash        //
 	}{
-		// A single random block should be retrievable by hash and number too
+//
 		{
 			&getBlockHeadersData{Origin: hashOrNumber{Hash: bc.GetBlockByNumber(limit / 2).Hash()}, Amount: 1},
 			[]common.Hash{bc.GetBlockByNumber(limit / 2).Hash()},
@@ -93,7 +93,7 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 			&getBlockHeadersData{Origin: hashOrNumber{Number: limit / 2}, Amount: 1},
 			[]common.Hash{bc.GetBlockByNumber(limit / 2).Hash()},
 		},
-		// Multiple headers should be retrievable in both directions
+//
 		{
 			&getBlockHeadersData{Origin: hashOrNumber{Number: limit / 2}, Amount: 3},
 			[]common.Hash{
@@ -109,7 +109,7 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 				bc.GetBlockByNumber(limit/2 - 2).Hash(),
 			},
 		},
-		// Multiple headers with skip lists should be retrievable
+//
 		{
 			&getBlockHeadersData{Origin: hashOrNumber{Number: limit / 2}, Skip: 3, Amount: 3},
 			[]common.Hash{
@@ -125,7 +125,7 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 				bc.GetBlockByNumber(limit/2 - 8).Hash(),
 			},
 		},
-		// The chain endpoints should be retrievable
+//
 		{
 			&getBlockHeadersData{Origin: hashOrNumber{Number: 0}, Amount: 1},
 			[]common.Hash{bc.GetBlockByNumber(0).Hash()},
@@ -133,12 +133,12 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 			&getBlockHeadersData{Origin: hashOrNumber{Number: bc.CurrentBlock().NumberU64()}, Amount: 1},
 			[]common.Hash{bc.CurrentBlock().Hash()},
 		},
-		// Ensure protocol limits are honored
+//
 		/*{
 			&getBlockHeadersData{Origin: hashOrNumber{Number: bc.CurrentBlock().NumberU64() - 1}, Amount: limit + 10, Reverse: true},
 			bc.GetBlockHashesFromHash(bc.CurrentBlock().Hash(), limit),
 		},*/
-		// Check that requesting more than available is handled gracefully
+//
 		{
 			&getBlockHeadersData{Origin: hashOrNumber{Number: bc.CurrentBlock().NumberU64() - 4}, Skip: 3, Amount: 3},
 			[]common.Hash{
@@ -152,7 +152,7 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 				bc.GetBlockByNumber(0).Hash(),
 			},
 		},
-		// Check that requesting more than available is handled gracefully, even if mid skip
+//
 		{
 			&getBlockHeadersData{Origin: hashOrNumber{Number: bc.CurrentBlock().NumberU64() - 4}, Skip: 2, Amount: 3},
 			[]common.Hash{
@@ -166,7 +166,7 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 				bc.GetBlockByNumber(1).Hash(),
 			},
 		},
-		// Check that non existing headers aren't returned
+//
 		{
 			&getBlockHeadersData{Origin: hashOrNumber{Hash: unknown}, Amount: 1},
 			[]common.Hash{},
@@ -175,15 +175,15 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 			[]common.Hash{},
 		},
 	}
-	// Run each of the tests and verify the results against the chain
+//
 	var reqID uint64
 	for i, tt := range tests {
-		// Collect the headers to expect in the response
+//
 		headers := []*types.Header{}
 		for _, hash := range tt.expect {
 			headers = append(headers, bc.GetHeaderByHash(hash))
 		}
-		// Send the hash request and verify the response
+//
 		reqID++
 		cost := peer.GetRequestCost(GetBlockHeadersMsg, int(tt.query.Amount))
 		sendRequest(peer.app, GetBlockHeadersMsg, reqID, cost, tt.query)
@@ -193,7 +193,7 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 	}
 }
 
-// Tests that block contents can be retrieved from a remote chain based on their hashes.
+//
 func TestGetBlockBodiesLes1(t *testing.T) { testGetBlockBodies(t, 1) }
 
 func TestGetBlockBodiesLes2(t *testing.T) { testGetBlockBodies(t, 2) }
@@ -205,11 +205,11 @@ func testGetBlockBodies(t *testing.T, protocol int) {
 	peer, _ := newTestPeer(t, "peer", protocol, pm, true)
 	defer peer.close()
 
-	// Create a batch of tests for various scenarios
+//
 	limit := MaxBodyFetch
 	tests := []struct {
-		random    int           // Number of blocks to fetch randomly from the chain
-		explicit  []common.Hash // Explicitly requested blocks
+		random    int           //
+		explicit  []common.Hash //
 		available []bool        // Availability of explicitly requested blocks
 		expected  int           // Total number of existing blocks to expect
 	}{

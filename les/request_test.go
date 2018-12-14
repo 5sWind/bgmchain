@@ -1,18 +1,18 @@
-// Copyright 2016 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package les
 
@@ -76,7 +76,7 @@ func tfCodeAccess(db bgmdb.Database, bhash common.Hash, number uint64) light.Odr
 }
 
 func testAccess(t *testing.T, protocol int, fn accessTestFn) {
-	// Assemble the test environment
+//
 	peers := newPeerSet()
 	dist := newRequestDistributor(peers, make(chan struct{}))
 	rm := newRetrieveManager(peers, dist, nil)
@@ -117,17 +117,17 @@ func testAccess(t *testing.T, protocol int, fn accessTestFn) {
 		}
 	}
 
-	// temporarily remove peer to test odr fails
+//
 	peers.Unregister(lpeer.id)
-	time.Sleep(time.Millisecond * 10) // ensure that all peerSetNotify callbacks are executed
-	// expect retrievals to fail (except genesis block) without a les peer
+	time.Sleep(time.Millisecond * 10) //
+//
 	test(0)
 
 	peers.Register(lpeer)
-	time.Sleep(time.Millisecond * 10) // ensure that all peerSetNotify callbacks are executed
+	time.Sleep(time.Millisecond * 10) //
 	lpeer.lock.Lock()
 	lpeer.hasBlock = func(common.Hash, uint64) bool { return true }
 	lpeer.lock.Unlock()
-	// expect all retrievals to pass
+//
 	test(5)
 }

@@ -1,18 +1,18 @@
-// Copyright 2017 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package bmt
 
@@ -35,8 +35,8 @@ const (
 	maxproccnt = 8
 )
 
-// TestRefHasher tests that the RefHasher computes the expected BMT hash for
-// all data lengths between 0 and 256 bytes
+//
+//
 func TestRefHasher(t *testing.T) {
 	hashFunc := sha3.NewKeccak256
 
@@ -48,8 +48,8 @@ func TestRefHasher(t *testing.T) {
 		return h.Sum(nil)
 	}
 
-	// the test struct is used to specify the expected BMT hash for data
-	// lengths between "from" and "to"
+//
+//
 	type test struct {
 		from     int64
 		to       int64
@@ -58,9 +58,9 @@ func TestRefHasher(t *testing.T) {
 
 	var tests []*test
 
-	// all lengths in [0,64] should be:
+//
 	//
-	//   sha3(data)
+//
 	//
 	tests = append(tests, &test{
 		from: 0,
@@ -70,12 +70,12 @@ func TestRefHasher(t *testing.T) {
 		},
 	})
 
-	// all lengths in [65,96] should be:
+//
 	//
-	//   sha3(
-	//     sha3(data[:64])
-	//     data[64:]
-	//   )
+//
+//
+//
+//
 	//
 	tests = append(tests, &test{
 		from: 65,
@@ -85,12 +85,12 @@ func TestRefHasher(t *testing.T) {
 		},
 	})
 
-	// all lengths in [97,128] should be:
+//
 	//
-	//   sha3(
-	//     sha3(data[:64])
-	//     sha3(data[64:])
-	//   )
+//
+//
+//
+//
 	//
 	tests = append(tests, &test{
 		from: 97,
@@ -100,15 +100,15 @@ func TestRefHasher(t *testing.T) {
 		},
 	})
 
-	// all lengths in [129,160] should be:
+//
 	//
-	//   sha3(
-	//     sha3(
-	//       sha3(data[:64])
-	//       sha3(data[64:128])
-	//     )
-	//     data[128:]
-	//   )
+//
+//
+//
+//
+//
+//
+//
 	//
 	tests = append(tests, &test{
 		from: 129,
@@ -118,15 +118,15 @@ func TestRefHasher(t *testing.T) {
 		},
 	})
 
-	// all lengths in [161,192] should be:
+//
 	//
-	//   sha3(
-	//     sha3(
-	//       sha3(data[:64])
-	//       sha3(data[64:128])
-	//     )
-	//     sha3(data[128:])
-	//   )
+//
+//
+//
+//
+//
+//
+//
 	//
 	tests = append(tests, &test{
 		from: 161,
@@ -136,18 +136,18 @@ func TestRefHasher(t *testing.T) {
 		},
 	})
 
-	// all lengths in [193,224] should be:
+//
 	//
-	//   sha3(
-	//     sha3(
-	//       sha3(data[:64])
-	//       sha3(data[64:128])
-	//     )
-	//     sha3(
-	//       sha3(data[128:192])
-	//       data[192:]
-	//     )
-	//   )
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 	//
 	tests = append(tests, &test{
 		from: 193,
@@ -157,18 +157,18 @@ func TestRefHasher(t *testing.T) {
 		},
 	})
 
-	// all lengths in [225,256] should be:
+//
 	//
-	//   sha3(
-	//     sha3(
-	//       sha3(data[:64])
-	//       sha3(data[64:128])
-	//     )
-	//     sha3(
-	//       sha3(data[128:192])
-	//       sha3(data[192:])
-	//     )
-	//   )
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 	//
 	tests = append(tests, &test{
 		from: 225,
@@ -178,7 +178,7 @@ func TestRefHasher(t *testing.T) {
 		},
 	})
 
-	// run the tests
+//
 	for _, x := range tests {
 		for length := x.from; length <= x.to; length++ {
 			t.Run(fmt.Sprintf("%d_bytes", length), func(t *testing.T) {
@@ -369,11 +369,11 @@ func BenchmarkHasherReuse_512b(t *testing.B) { benchmarkHasherReuse(16, 4096/8, 
 func BenchmarkHasherReuse_256b(t *testing.B) { benchmarkHasherReuse(16, 4096/16, t) }
 func BenchmarkHasherReuse_128b(t *testing.B) { benchmarkHasherReuse(16, 4096/32, t) }
 
-// benchmarks the minimum hashing time for a balanced (for simplicity) BMT
-// by doing count/segmentsize parallel hashings of 2*segmentsize bytes
-// doing it on n maxproccnt each reusing the base hasher
-// the premise is that this is the minimum computation needed for a BMT
-// therefore this serves as a theoretical optimum for concurrent implementations
+//
+//
+//
+//
+//
 func benchmarkBMTBaseline(n int, t *testing.B) {
 	tdata := testDataReader(64)
 	data := make([]byte, 64)

@@ -1,18 +1,18 @@
-// Copyright 2017 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package core
 
@@ -69,15 +69,15 @@ func TestSetupGenesis(t *testing.T) {
 		{
 			name: "incompatible config in DB",
 			fn: func(db bgmdb.Database) (*params.ChainConfig, common.Hash, error) {
-				// Commit the 'old' genesis block with Homestead transition at #2.
-				// Advance to block #4, past the homestead transition block of customg.
+//
+//
 				genesis := oldcustomg.MustCommit(db)
 				bc, _ := NewBlockChain(db, oldcustomg.Config, bgmash.NewFullFaker(), vm.Config{})
 				defer bc.Stop()
 				bc.SetValidator(bproc{})
 				bc.InsertChain(makeBlockChainWithDiff(genesis, []int{2, 3, 4, 5}, 0))
 				bc.CurrentBlock()
-				// This should return a compatibility error.
+//
 				return SetupGenesisBlock(db, &customg)
 			},
 			wantHash:   customghash,
@@ -94,7 +94,7 @@ func TestSetupGenesis(t *testing.T) {
 	for _, test := range tests {
 		db, _ := bgmdb.NewMemDatabase()
 		config, hash, err := test.fn(db)
-		// Check the return values.
+//
 		if !reflect.DeepEqual(err, test.wantErr) {
 			spew := spew.ConfigState{DisablePointerAddresses: true, DisableCapacities: true}
 			t.Errorf("%s: returned error %#v, want %#v", test.name, spew.NewFormatter(err), spew.NewFormatter(test.wantErr))
@@ -105,7 +105,7 @@ func TestSetupGenesis(t *testing.T) {
 		if hash != test.wantHash {
 			t.Errorf("%s: returned hash %s, want %s", test.name, hash.Hex(), test.wantHash.Hex())
 		} else if err == nil {
-			// Check database content.
+//
 			stored := GetBlock(db, test.wantHash, 0)
 			if stored.Hash() != test.wantHash {
 				t.Errorf("%s: block in DB has hash %s, want %s", test.name, stored.Hash(), test.wantHash)

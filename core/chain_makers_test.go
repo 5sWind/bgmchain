@@ -1,18 +1,18 @@
-// Copyright 2015 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package core
 
@@ -39,36 +39,36 @@ func ExampleGenerateChain() {
 		db, _   = bgmdb.NewMemDatabase()
 	)
 
-	// Ensure that key1 has some funds in the genesis block.
+//
 	gspec := &Genesis{
 		Config: &params.ChainConfig{HomesteadBlock: new(big.Int)},
 		Alloc:  GenesisAlloc{addr1: {Balance: big.NewInt(1000000)}},
 	}
 	genesis := gspec.MustCommit(db)
 
-	// This call generates a chain of 5 blocks. The function runs for
-	// each block and adds different features to gen based on the
-	// block index.
+//
+//
+//
 	signer := types.HomesteadSigner{}
 	chain, _ := GenerateChain(gspec.Config, genesis, db, 5, func(i int, gen *BlockGen) {
 		switch i {
 		case 0:
-			// In block 1, addr1 sends addr2 some bgmchain.
+//
 			tx, _ := types.SignTx(types.NewTransaction(types.Binary, gen.TxNonce(addr1), addr2, big.NewInt(10000), bigTxGas, nil, nil), signer, key1)
 			gen.AddTx(tx)
 		case 1:
-			// In block 2, addr1 sends some more bgmchain to addr2.
-			// addr2 passes it on to addr3.
+//
+//
 			tx1, _ := types.SignTx(types.NewTransaction(types.Binary, gen.TxNonce(addr1), addr2, big.NewInt(1000), bigTxGas, nil, nil), signer, key1)
 			tx2, _ := types.SignTx(types.NewTransaction(types.Binary, gen.TxNonce(addr2), addr3, big.NewInt(1000), bigTxGas, nil, nil), signer, key2)
 			gen.AddTx(tx1)
 			gen.AddTx(tx2)
 		case 2:
-			// Block 3 is empty but was mined by addr3.
+//
 			gen.SetCoinbase(addr3)
 			gen.SetExtra([]byte("yeehaw"))
 		case 3:
-			// Block 4 includes blocks 2 and 3 as uncle headers (with modified extra data).
+//
 			b2 := gen.PrevBlock(1).Header()
 			b2.Extra = []byte("foo")
 			gen.AddUncle(b2)
@@ -78,7 +78,7 @@ func ExampleGenerateChain() {
 		}
 	})
 
-	// Import the chain. This runs all block validation rules.
+//
 	blockchain, _ := NewBlockChain(db, gspec.Config, bgmash.NewFaker(), vm.Config{})
 	defer blockchain.Stop()
 
@@ -92,9 +92,9 @@ func ExampleGenerateChain() {
 	fmt.Println("balance of addr1:", state.GetBalance(addr1))
 	fmt.Println("balance of addr2:", state.GetBalance(addr2))
 	fmt.Println("balance of addr3:", state.GetBalance(addr3))
-	// Output:
-	// last block: #5
-	// balance of addr1: 989000
-	// balance of addr2: 10000
-	// balance of addr3: 15000000000000001000
+//
+//
+//
+//
+//
 }

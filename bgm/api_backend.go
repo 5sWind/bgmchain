@@ -1,18 +1,18 @@
-// Copyright 2015 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package bgm
 
@@ -36,7 +36,7 @@ import (
 	"github.com/5sWind/bgmchain/rpc"
 )
 
-// BgmApiBackend implements bgmapi.Backend for full nodes
+//
 type BgmApiBackend struct {
 	bgm *Bgmchain
 	gpo *gasprice.Oracle
@@ -56,12 +56,12 @@ func (b *BgmApiBackend) SetHead(number uint64) {
 }
 
 func (b *BgmApiBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Header, error) {
-	// Pending block is only known by the miner
+//
 	if blockNr == rpc.PendingBlockNumber {
 		block := b.bgm.miner.PendingBlock()
 		return block.Header(), nil
 	}
-	// Otherwise resolve and return the block
+//
 	if blockNr == rpc.LatestBlockNumber {
 		return b.bgm.blockchain.CurrentBlock().Header(), nil
 	}
@@ -69,12 +69,12 @@ func (b *BgmApiBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNum
 }
 
 func (b *BgmApiBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Block, error) {
-	// Pending block is only known by the miner
+//
 	if blockNr == rpc.PendingBlockNumber {
 		block := b.bgm.miner.PendingBlock()
 		return block, nil
 	}
-	// Otherwise resolve and return the block
+//
 	if blockNr == rpc.LatestBlockNumber {
 		return b.bgm.blockchain.CurrentBlock(), nil
 	}
@@ -82,12 +82,12 @@ func (b *BgmApiBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumb
 }
 
 func (b *BgmApiBackend) StateAndHeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*state.StateDB, *types.Header, error) {
-	// Pending state is only known by the miner
+//
 	if blockNr == rpc.PendingBlockNumber {
 		block, state := b.bgm.miner.Pending()
 		return state, block.Header(), nil
 	}
-	// Otherwise resolve the block number and return its state
+//
 	header, err := b.HeaderByNumber(ctx, blockNr)
 	if header == nil || err != nil {
 		return nil, nil, err

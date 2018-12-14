@@ -1,18 +1,18 @@
-// Copyright 2014 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package trie
 
@@ -95,19 +95,19 @@ func TestIteratorLargeData(t *testing.T) {
 	}
 }
 
-// Tests that the node iterator indeed walks over the entire database contents.
+//
 func TestNodeIteratorCoverage(t *testing.T) {
-	// Create some arbitrary test trie to iterate
+//
 	db, trie, _ := makeTestTrie()
 
-	// Gather all the node hashes found by the iterator
+//
 	hashes := make(map[common.Hash]struct{})
 	for it := trie.NodeIterator(nil); it.Next(true); {
 		if it.Hash() != (common.Hash{}) {
 			hashes[it.Hash()] = struct{}{}
 		}
 	}
-	// Cross check the hashes and the database itself
+//
 	for hash := range hashes {
 		if _, err := db.Get(hash.Bytes()); err != nil {
 			t.Errorf("failed to retrieve reported node %x: %v", hash, err)
@@ -151,19 +151,19 @@ func TestIteratorSeek(t *testing.T) {
 		trie.Update([]byte(val.k), []byte(val.v))
 	}
 
-	// Seek to the middle.
+//
 	it := NewIterator(trie.NodeIterator([]byte("fab")))
 	if err := checkIteratorOrder(testdata1[4:], it); err != nil {
 		t.Fatal(err)
 	}
 
-	// Seek to a non-existent key.
+//
 	it = NewIterator(trie.NodeIterator([]byte("barc")))
 	if err := checkIteratorOrder(testdata1[1:], it); err != nil {
 		t.Fatal(err)
 	}
 
-	// Seek beyond the end.
+//
 	it = NewIterator(trie.NodeIterator([]byte("z")))
 	if err := checkIteratorOrder(nil, it); err != nil {
 		t.Fatal(err)
@@ -277,7 +277,7 @@ func TestIteratorNoDups(t *testing.T) {
 	checkIteratorNoDups(t, tr.NodeIterator(nil), nil)
 }
 
-// This test checks that nodeIterator.Next can be retried after inserting missing trie nodes.
+//
 func TestIteratorContinueAfterError(t *testing.T) {
 	db, _ := bgmdb.NewMemDatabase()
 	tr, _ := New(common.Hash{}, db)
@@ -290,11 +290,11 @@ func TestIteratorContinueAfterError(t *testing.T) {
 	t.Log("node count", wantNodeCount)
 
 	for i := 0; i < 20; i++ {
-		// Create trie that will load all nodes from DB.
+//
 		tr, _ := New(tr.Hash(), db)
 
-		// Remove a random node from the database. It can't be the root node
-		// because that one is already loaded.
+//
+//
 		var rkey []byte
 		for {
 			if rkey = keys[rand.Intn(len(keys))]; !bytes.Equal(rkey, tr.Hash().Bytes()) {
@@ -304,7 +304,7 @@ func TestIteratorContinueAfterError(t *testing.T) {
 		rval, _ := db.Get(rkey)
 		db.Delete(rkey)
 
-		// Iterate until the error is hit.
+//
 		seen := make(map[string]bool)
 		it := tr.NodeIterator(nil)
 		checkIteratorNoDups(t, it, seen)
@@ -313,7 +313,7 @@ func TestIteratorContinueAfterError(t *testing.T) {
 			t.Fatal("didn't hit missing node, got", it.Error())
 		}
 
-		// Add the node back and continue iteration.
+//
 		db.Put(rkey, rval)
 		checkIteratorNoDups(t, it, seen)
 		if it.Error() != nil {
@@ -325,11 +325,11 @@ func TestIteratorContinueAfterError(t *testing.T) {
 	}
 }
 
-// Similar to the test above, this one checks that failure to create nodeIterator at a
-// certain key prefix behaves correctly when Next is called. The expectation is that Next
-// should retry seeking before returning true for the first time.
+//
+//
+//
 func TestIteratorContinueAfterSeekError(t *testing.T) {
-	// Commit test trie to db, then remove the node containing "bars".
+//
 	db, _ := bgmdb.NewMemDatabase()
 	ctr, _ := New(common.Hash{}, db)
 	for _, val := range testdata1 {
@@ -340,8 +340,8 @@ func TestIteratorContinueAfterSeekError(t *testing.T) {
 	barNode, _ := db.Get(barNodeHash[:])
 	db.Delete(barNodeHash[:])
 
-	// Create a new iterator that seeks to "bars". Seeking can't proceed because
-	// the node is missing.
+//
+//
 	tr, _ := New(root, db)
 	it := tr.NodeIterator([]byte("bars"))
 	missing, ok := it.Error().(*MissingNodeError)
@@ -351,10 +351,10 @@ func TestIteratorContinueAfterSeekError(t *testing.T) {
 		t.Fatal("wrong node missing")
 	}
 
-	// Reinsert the missing node.
+//
 	db.Put(barNodeHash[:], barNode[:])
 
-	// Check that iteration produces the right set of values.
+//
 	if err := checkIteratorOrder(testdata1[2:], NewIterator(it)); err != nil {
 		t.Fatal(err)
 	}

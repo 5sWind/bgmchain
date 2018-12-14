@@ -1,18 +1,18 @@
-// Copyright 2014 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package trie
 
@@ -41,7 +41,7 @@ func init() {
 	spew.Config.DisableMethods = false
 }
 
-// Used for testing
+//
 func newEmpty() *Trie {
 	db, _ := bgmdb.NewMemDatabase()
 	trie, _ := New(common.Hash{}, db)
@@ -268,7 +268,7 @@ func TestReplication(t *testing.T) {
 		t.Fatalf("commit error: %v", err)
 	}
 
-	// create a new trie on top of the database and check that lookups work.
+//
 	trie2, err := New(exp, trie.db)
 	if err != nil {
 		t.Fatalf("can't recreate trie at %x: %v", exp, err)
@@ -286,17 +286,17 @@ func TestReplication(t *testing.T) {
 		t.Errorf("root failure. expected %x got %x", exp, hash)
 	}
 
-	// perform some insertions on the new trie.
+//
 	vals2 := []struct{ k, v string }{
 		{"do", "verb"},
 		{"bgmchain", "wookiedoo"},
 		{"horse", "stallion"},
-		// {"shaman", "horse"},
-		// {"doge", "coin"},
-		// {"bgmchain", ""},
-		// {"dog", "puppy"},
-		// {"sombgmingveryoddindeedthis is", "myothernodedata"},
-		// {"shaman", ""},
+//
+//
+//
+//
+//
+//
 	}
 	for _, val := range vals2 {
 		updateString(trie2, val.k, val.v)
@@ -323,10 +323,10 @@ func (db *countingDB) Get(key []byte) ([]byte, error) {
 	return db.Database.Get(key)
 }
 
-// TestCacheUnload checks that decoded nodes are unloaded after a
-// certain number of commit operations.
+//
+//
 func TestCacheUnload(t *testing.T) {
-	// Create test trie with two branches.
+//
 	trie := newEmpty()
 	key1 := "---------------------------------"
 	key2 := "---some other branch"
@@ -334,9 +334,9 @@ func TestCacheUnload(t *testing.T) {
 	updateString(trie, key2, "this is the branch of key2.")
 	root, _ := trie.Commit()
 
-	// Commit the trie repeatedly and access key1.
-	// The branch containing it is loaded from DB exactly two times:
-	// in the 0th and 6th iteration.
+//
+//
+//
 	db := &countingDB{Database: trie.db, gets: make(map[string]int)}
 	trie, _ = New(root, db)
 	trie.SetCacheLimit(5)
@@ -345,7 +345,7 @@ func TestCacheUnload(t *testing.T) {
 		trie.Commit()
 	}
 
-	// Check that it got loaded two times.
+//
 	for dbkey, count := range db.gets {
 		if count != 2 {
 			t.Errorf("db key %x loaded %d times, want %d times", []byte(dbkey), count, 2)
@@ -353,15 +353,15 @@ func TestCacheUnload(t *testing.T) {
 	}
 }
 
-// randTest performs random trie operations.
-// Instances of this test are created by Generate.
+//
+//
 type randTest []randTestStep
 
 type randTestStep struct {
 	op    int
-	key   []byte // for opUpdate, opDelete, opGet
-	value []byte // for opUpdate
-	err   error  // for debugging
+	key   []byte //
+	value []byte //
+	err   error  //
 }
 
 const (
@@ -373,20 +373,20 @@ const (
 	opReset
 	opItercheckhash
 	opCheckCacheInvariant
-	opMax // boundary value, not an actual op
+	opMax //
 )
 
 func (randTest) Generate(r *rand.Rand, size int) reflect.Value {
 	var allKeys [][]byte
 	genKey := func() []byte {
 		if len(allKeys) < 2 || r.Intn(100) < 10 {
-			// new key
+//
 			key := make([]byte, r.Intn(50))
 			r.Read(key)
 			allKeys = append(allKeys, key)
 			return key
 		}
-		// use existing key
+//
 		return allKeys[r.Intn(len(allKeys))]
 	}
 
@@ -409,7 +409,7 @@ func (randTest) Generate(r *rand.Rand, size int) reflect.Value {
 func runRandTest(rt randTest) bool {
 	db, _ := bgmdb.NewMemDatabase()
 	tr, _ := New(common.Hash{}, db)
-	values := make(map[string]string) // tracks content of the trie
+	values := make(map[string]string) //
 
 	for i, step := range rt {
 		switch step.op {
@@ -453,7 +453,7 @@ func runRandTest(rt randTest) bool {
 		case opCheckCacheInvariant:
 			rt[i].err = checkCacheInvariant(tr.root, nil, tr.cachegen, false, 0)
 		}
-		// Abort the test on error.
+//
 		if rt[i].err != nil {
 			return false
 		}
@@ -550,15 +550,15 @@ func benchUpdate(b *testing.B, e binary.ByteOrder) *Trie {
 	return trie
 }
 
-// Benchmarks the trie hashing. Since the trie caches the result of any operation,
-// we cannot use b.N as the number of hashing rouns, since all rounds apart from
-// the first one will be NOOP. As such, we'll use b.N as the number of account to
-// insert into the trie before measuring the hashing.
+//
+//
+//
+//
 func BenchmarkHash(b *testing.B) {
-	// Make the random benchmark deterministic
+//
 	random := rand.New(rand.NewSource(0))
 
-	// Create a realistic account trie to hash
+//
 	addresses := make([][20]byte, b.N)
 	for i := 0; i < len(addresses); i++ {
 		for j := 0; j < len(addresses[i]); j++ {
@@ -575,7 +575,7 @@ func BenchmarkHash(b *testing.B) {
 		)
 		accounts[i], _ = rlp.EncodeToBytes([]interface{}{nonce, balance, root, code})
 	}
-	// Insert the accounts into the trie and hash it
+//
 	trie := newEmpty()
 	for i := 0; i < len(addresses); i++ {
 		trie.Update(crypto.Keccak256(addresses[i][:]), accounts[i])

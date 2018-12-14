@@ -1,18 +1,18 @@
-// Copyright 2015 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//e
+//
 
 package light
 
@@ -135,8 +135,8 @@ func (t *odrTrie) GetKey(sha []byte) []byte {
 	return nil
 }
 
-// do tries and retries to execute a function until it returns with no error or
-// an error type other than MissingNodeError
+//
+//
 func (t *odrTrie) do(key []byte, fn func() error) error {
 	for {
 		var err error
@@ -164,7 +164,7 @@ type nodeIterator struct {
 
 func newNodeIterator(t *odrTrie, startkey []byte) trie.NodeIterator {
 	it := &nodeIterator{t: t}
-	// Open the actual non-ODR trie if that hasn't happened yet.
+//
 	if t.trie == nil {
 		it.do(func() error {
 			t, err := trie.New(t.id.Root, t.db.backend.Database())
@@ -190,7 +190,7 @@ func (it *nodeIterator) Next(descend bool) bool {
 	return ok
 }
 
-// do runs fn and attempts to fill in missing nodes by retrieving.
+//
 func (it *nodeIterator) do(fn func() error) {
 	var lasthash common.Hash
 	for {
@@ -220,10 +220,10 @@ func (it *nodeIterator) Error() error {
 
 func nibblesToKey(nib []byte) []byte {
 	if len(nib) > 0 && nib[len(nib)-1] == 0x10 {
-		nib = nib[:len(nib)-1] // drop terminator
+		nib = nib[:len(nib)-1] //
 	}
 	if len(nib)&1 == 1 {
-		nib = append(nib, 0) // make even
+		nib = append(nib, 0) //
 	}
 	key := make([]byte, len(nib)/2)
 	for bi, ni := 0, 0; ni < len(nib); bi, ni = bi+1, ni+2 {

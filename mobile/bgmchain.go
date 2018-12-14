@@ -1,20 +1,20 @@
-// Copyright 2016 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-// Contains all the wrappers from the bgmchain root package.
+//
 
 package gbgm
 
@@ -26,24 +26,24 @@ import (
 	"github.com/5sWind/bgmchain/common"
 )
 
-// Subscription represents an event subscription where events are
-// delivered on a data channel.
+//
+//
 type Subscription struct {
 	sub bgmchain.Subscription
 }
 
-// Unsubscribe cancels the sending of events to the data channel
-// and closes the error channel.
+//
+//
 func (s *Subscription) Unsubscribe() {
 	s.sub.Unsubscribe()
 }
 
-// CallMsg contains parameters for contract calls.
+//
 type CallMsg struct {
 	msg bgmchain.CallMsg
 }
 
-// NewCallMsg creates an empty contract call parameter list.
+//
 func NewCallMsg() *CallMsg {
 	return new(CallMsg)
 }
@@ -72,8 +72,8 @@ func (msg *CallMsg) SetTo(address *Address) {
 	msg.msg.To = &address.address
 }
 
-// SyncProgress gives progress indications when the node is synchronising with
-// the Bgmchain network.
+//
+//
 type SyncProgress struct {
 	progress bgmchain.SyncProgress
 }
@@ -84,27 +84,27 @@ func (p *SyncProgress) GetHighestBlock() int64  { return int64(p.progress.Highes
 func (p *SyncProgress) GetPulledStates() int64  { return int64(p.progress.PulledStates) }
 func (p *SyncProgress) GetKnownStates() int64   { return int64(p.progress.KnownStates) }
 
-// Topics is a set of topic lists to filter events with.
+//
 type Topics struct{ topics [][]common.Hash }
 
-// NewTopics creates a slice of uninitialized Topics.
+//
 func NewTopics(size int) *Topics {
 	return &Topics{
 		topics: make([][]common.Hash, size),
 	}
 }
 
-// NewTopicsEmpty creates an empty slice of Topics values.
+//
 func NewTopicsEmpty() *Topics {
 	return NewTopics(0)
 }
 
-// Size returns the number of topic lists inside the set
+//
 func (t *Topics) Size() int {
 	return len(t.topics)
 }
 
-// Get returns the topic list at the given index from the slice.
+//
 func (t *Topics) Get(index int) (hashes *Hashes, _ error) {
 	if index < 0 || index >= len(t.topics) {
 		return nil, errors.New("index out of bounds")
@@ -112,7 +112,7 @@ func (t *Topics) Get(index int) (hashes *Hashes, _ error) {
 	return &Hashes{t.topics[index]}, nil
 }
 
-// Set sets the topic list at the given index in the slice.
+//
 func (t *Topics) Set(index int, topics *Hashes) error {
 	if index < 0 || index >= len(t.topics) {
 		return errors.New("index out of bounds")
@@ -121,17 +121,17 @@ func (t *Topics) Set(index int, topics *Hashes) error {
 	return nil
 }
 
-// Append adds a new topic list to the end of the slice.
+//
 func (t *Topics) Append(topics *Hashes) {
 	t.topics = append(t.topics, topics.hashes)
 }
 
-// FilterQuery contains options for contact log filtering.
+//
 type FilterQuery struct {
 	query bgmchain.FilterQuery
 }
 
-// NewFilterQuery creates an empty filter query for contact log filtering.
+//
 func NewFilterQuery() *FilterQuery {
 	return new(FilterQuery)
 }

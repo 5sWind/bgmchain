@@ -1,18 +1,18 @@
-// Copyright 2016 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package light
 
@@ -54,15 +54,15 @@ func (self *testTxRelay) Discard(hashes []common.Hash) {
 const poolTestTxs = 1000
 const poolTestBlocks = 100
 
-// test tx 0..n-1
+//
 var testTx [poolTestTxs]*types.Transaction
 
-// txs sent before block i
+//
 func sentTx(i int) int {
 	return int(math.Pow(float64(i)/float64(poolTestBlocks), 0.9) * poolTestTxs)
 }
 
-// txs included in block i or before that (minedTx(i) <= sentTx(i))
+//
 func minedTx(i int) int {
 	return int(math.Pow(float64(i)/float64(poolTestBlocks), 1.1) * poolTestTxs)
 }
@@ -87,7 +87,7 @@ func TestTxPool(t *testing.T) {
 		genesis = gspec.MustCommit(sdb)
 	)
 	gspec.MustCommit(ldb)
-	// Assemble the test environment
+//
 	blockchain, _ := core.NewBlockChain(sdb, params.TestChainConfig, bgmash.NewFullFaker(), vm.Config{})
 	gchain, _ := core.GenerateChain(params.TestChainConfig, genesis, sdb, poolTestBlocks, txPoolTestChainGen)
 	if _, err := blockchain.InsertChain(gchain); err != nil {

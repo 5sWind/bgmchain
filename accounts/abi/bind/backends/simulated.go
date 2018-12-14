@@ -1,18 +1,5 @@
-// Copyright 2015 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
 
 package backends
 
@@ -26,6 +13,7 @@ import (
 
 	"github.com/5sWind/bgmchain"
 	"github.com/5sWind/bgmchain/accounts/abi/bind"
+	"github.com/5sWind/bgmchain/bgmdb"
 	"github.com/5sWind/bgmchain/common"
 	"github.com/5sWind/bgmchain/common/math"
 	"github.com/5sWind/bgmchain/consensus/bgmash"
@@ -33,31 +21,30 @@ import (
 	"github.com/5sWind/bgmchain/core/state"
 	"github.com/5sWind/bgmchain/core/types"
 	"github.com/5sWind/bgmchain/core/vm"
-	"github.com/5sWind/bgmchain/bgmdb"
 	"github.com/5sWind/bgmchain/params"
 )
 
-// This nil assignment ensures compile time that SimulatedBackend implements bind.ContractBackend.
+//
 var _ bind.ContractBackend = (*SimulatedBackend)(nil)
 
 var errBlockNumberUnsupported = errors.New("SimulatedBackend cannot access blocks other than the latest block")
 var errGasEstimationFailed = errors.New("gas required exceeds allowance or always failing transaction")
 
-// SimulatedBackend implements bind.ContractBackend, simulating a blockchain in
-// the background. Its main purpose is to allow easily testing contract bindings.
+//
+//
 type SimulatedBackend struct {
-	database   bgmdb.Database   // In memory database to store our testing data
-	blockchain *core.BlockChain // Bgmchain blockchain to handle the consensus
+	database   bgmdb.Database   //
+	blockchain *core.BlockChain //
 
 	mu           sync.Mutex
-	pendingBlock *types.Block   // Currently pending block that will be imported on request
-	pendingState *state.StateDB // Currently pending state that will be the active on on request
+	pendingBlock *types.Block   //
+	pendingState *state.StateDB //
 
 	config *params.ChainConfig
 }
 
-// NewSimulatedBackend creates a new binding backend using a simulated blockchain
-// for testing purposes.
+//
+//
 func NewSimulatedBackend(alloc core.GenesisAlloc) *SimulatedBackend {
 	database, _ := bgmdb.NewMemDatabase()
 	genesis := core.Genesis{Config: params.DposChainConfig, Alloc: alloc}
@@ -68,19 +55,19 @@ func NewSimulatedBackend(alloc core.GenesisAlloc) *SimulatedBackend {
 	return backend
 }
 
-// Commit imports all the pending transactions as a single block and starts a
-// fresh new state.
+//
+//
 func (b *SimulatedBackend) Commit() {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
 	if _, err := b.blockchain.InsertChain([]*types.Block{b.pendingBlock}); err != nil {
-		panic(err) // This cannot happen unless the simulator is wrong, fail in that case
+		panic(err) //
 	}
 	b.rollback()
 }
 
-// Rollback aborts all pending transactions, reverting to the last committed state.
+//
 func (b *SimulatedBackend) Rollback() {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -94,7 +81,7 @@ func (b *SimulatedBackend) rollback() {
 	b.pendingState, _ = state.New(b.pendingBlock.Root(), state.NewDatabase(b.database))
 }
 
-// CodeAt returns the code associated with a certain account in the blockchain.
+//
 func (b *SimulatedBackend) CodeAt(ctx context.Context, contract common.Address, blockNumber *big.Int) ([]byte, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -106,7 +93,7 @@ func (b *SimulatedBackend) CodeAt(ctx context.Context, contract common.Address, 
 	return statedb.GetCode(contract), nil
 }
 
-// BalanceAt returns the wei balance of a certain account in the blockchain.
+//
 func (b *SimulatedBackend) BalanceAt(ctx context.Context, contract common.Address, blockNumber *big.Int) (*big.Int, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -118,7 +105,7 @@ func (b *SimulatedBackend) BalanceAt(ctx context.Context, contract common.Addres
 	return statedb.GetBalance(contract), nil
 }
 
-// NonceAt returns the nonce of a certain account in the blockchain.
+//
 func (b *SimulatedBackend) NonceAt(ctx context.Context, contract common.Address, blockNumber *big.Int) (uint64, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -130,7 +117,7 @@ func (b *SimulatedBackend) NonceAt(ctx context.Context, contract common.Address,
 	return statedb.GetNonce(contract), nil
 }
 
-// StorageAt returns the value of key in the storage of an account in the blockchain.
+//
 func (b *SimulatedBackend) StorageAt(ctx context.Context, contract common.Address, key common.Hash, blockNumber *big.Int) ([]byte, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -143,13 +130,13 @@ func (b *SimulatedBackend) StorageAt(ctx context.Context, contract common.Addres
 	return val[:], nil
 }
 
-// TransactionReceipt returns the receipt of a transaction.
+//
 func (b *SimulatedBackend) TransactionReceipt(ctx context.Context, txHash common.Hash) (*types.Receipt, error) {
 	receipt, _, _, _ := core.GetReceipt(b.database, txHash)
 	return receipt, nil
 }
 
-// PendingCodeAt returns the code associated with an account in the pending state.
+//
 func (b *SimulatedBackend) PendingCodeAt(ctx context.Context, contract common.Address) ([]byte, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -157,7 +144,7 @@ func (b *SimulatedBackend) PendingCodeAt(ctx context.Context, contract common.Ad
 	return b.pendingState.GetCode(contract), nil
 }
 
-// CallContract executes a contract call.
+//
 func (b *SimulatedBackend) CallContract(ctx context.Context, call bgmchain.CallMsg, blockNumber *big.Int) ([]byte, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -173,7 +160,7 @@ func (b *SimulatedBackend) CallContract(ctx context.Context, call bgmchain.CallM
 	return rval, err
 }
 
-// PendingCallContract executes a contract call on the pending state.
+//
 func (b *SimulatedBackend) PendingCallContract(ctx context.Context, call bgmchain.CallMsg) ([]byte, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -183,8 +170,8 @@ func (b *SimulatedBackend) PendingCallContract(ctx context.Context, call bgmchai
 	return rval, err
 }
 
-// PendingNonceAt implements PendingStateReader.PendingNonceAt, retrieving
-// the nonce currently pending for the account.
+//
+//
 func (b *SimulatedBackend) PendingNonceAt(ctx context.Context, account common.Address) (uint64, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -192,19 +179,19 @@ func (b *SimulatedBackend) PendingNonceAt(ctx context.Context, account common.Ad
 	return b.pendingState.GetOrNewStateObject(account).Nonce(), nil
 }
 
-// SuggestGasPrice implements ContractTransactor.SuggestGasPrice. Since the simulated
-// chain doens't have miners, we just return a gas price of 1 for any call.
+//
+//
 func (b *SimulatedBackend) SuggestGasPrice(ctx context.Context) (*big.Int, error) {
 	return big.NewInt(1), nil
 }
 
-// EstimateGas executes the requested code against the currently pending block/state and
-// returns the used amount of gas.
+//
+//
 func (b *SimulatedBackend) EstimateGas(ctx context.Context, call bgmchain.CallMsg) (*big.Int, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
-	// Determine the lowest and highest possible gas limits to binary search in between
+//
 	var (
 		lo  uint64 = params.TxGas - 1
 		hi  uint64
@@ -217,7 +204,7 @@ func (b *SimulatedBackend) EstimateGas(ctx context.Context, call bgmchain.CallMs
 	}
 	cap = hi
 
-	// Create a helper to check if a gas allowance results in an executable transaction
+//
 	executable := func(gas uint64) bool {
 		call.Gas = new(big.Int).SetUint64(gas)
 
@@ -230,7 +217,7 @@ func (b *SimulatedBackend) EstimateGas(ctx context.Context, call bgmchain.CallMs
 		}
 		return true
 	}
-	// Execute the binary search and hone in on an executable gas limit
+//
 	for lo+1 < hi {
 		mid := (hi + lo) / 2
 		if !executable(mid) {
@@ -239,7 +226,7 @@ func (b *SimulatedBackend) EstimateGas(ctx context.Context, call bgmchain.CallMs
 			hi = mid
 		}
 	}
-	// Reject the transaction as invalid if it still fails at the highest allowance
+//
 	if hi == cap {
 		if !executable(hi) {
 			return nil, errGasEstimationFailed
@@ -248,10 +235,10 @@ func (b *SimulatedBackend) EstimateGas(ctx context.Context, call bgmchain.CallMs
 	return new(big.Int).SetUint64(hi), nil
 }
 
-// callContract implemens common code between normal and pending contract calls.
-// state is modified during execution, make sure to copy it if necessary.
+//
+//
 func (b *SimulatedBackend) callContract(ctx context.Context, call bgmchain.CallMsg, block *types.Block, statedb *state.StateDB) ([]byte, *big.Int, bool, error) {
-	// Ensure message is initialized properly.
+//
 	if call.GasPrice == nil {
 		call.GasPrice = big.NewInt(1)
 	}
@@ -261,23 +248,23 @@ func (b *SimulatedBackend) callContract(ctx context.Context, call bgmchain.CallM
 	if call.Value == nil {
 		call.Value = new(big.Int)
 	}
-	// Set infinite balance to the fake caller account.
+//
 	from := statedb.GetOrNewStateObject(call.From)
 	from.SetBalance(math.MaxBig256)
-	// Execute the call.
+//
 	msg := callmsg{call}
 
 	evmContext := core.NewEVMContext(msg, block.Header(), b.blockchain, nil)
-	// Create a new environment which holds all relevant information
-	// about the transaction and calling mechanisms.
+//
+//
 	vmenv := vm.NewEVM(evmContext, statedb, b.config, vm.Config{})
 	gaspool := new(core.GasPool).AddGas(math.MaxBig256)
 	ret, gasUsed, _, failed, err := core.NewStateTransition(vmenv, msg, gaspool).TransitionDb()
 	return ret, gasUsed, failed, err
 }
 
-// SendTransaction updates the pending block to include the given transaction.
-// It panics if the transaction is invalid.
+//
+//
 func (b *SimulatedBackend) SendTransaction(ctx context.Context, tx *types.Transaction) error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -302,7 +289,7 @@ func (b *SimulatedBackend) SendTransaction(ctx context.Context, tx *types.Transa
 	return nil
 }
 
-// JumpTimeInSeconds adds skip seconds to the clock
+//
 func (b *SimulatedBackend) AdjustTime(adjustment time.Duration) error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -318,7 +305,7 @@ func (b *SimulatedBackend) AdjustTime(adjustment time.Duration) error {
 	return nil
 }
 
-// callmsg implements core.Message to allow passing it as a transaction simulator.
+//
 type callmsg struct {
 	bgmchain.CallMsg
 }

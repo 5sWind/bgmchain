@@ -1,18 +1,18 @@
-// Copyright 2015 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package rlp
 
@@ -25,11 +25,11 @@ import (
 
 func TestCountValues(t *testing.T) {
 	tests := []struct {
-		input string // note: spaces in input are stripped by unhex
+		input string //
 		count int
 		err   error
 	}{
-		// simple cases
+//
 		{"", 0, nil},
 		{"00", 1, nil},
 		{"80", 1, nil},
@@ -38,7 +38,7 @@ func TestCountValues(t *testing.T) {
 		{"01 C406070809 02", 3, nil},
 		{"820101 820202 8403030303 04", 4, nil},
 
-		// size errors
+//
 		{"8142", 0, ErrCanonSize},
 		{"01 01 8142", 0, ErrCanonSize},
 		{"02 84020202", 0, ErrValueTooLarge},
@@ -82,7 +82,7 @@ func TestSplit(t *testing.T) {
 		{input: "80FFFF", kind: String, val: "", rest: "FFFF"},
 		{input: "C3010203", kind: List, val: "010203"},
 
-		// errors
+//
 		{input: "", err: io.ErrUnexpectedEOF},
 
 		{input: "8141", err: ErrCanonSize, rest: "8141"},
@@ -99,7 +99,7 @@ func TestSplit(t *testing.T) {
 		{input: "8501010101", err: ErrValueTooLarge, rest: "8501010101"},
 		{input: "C60607080902", err: ErrValueTooLarge, rest: "C60607080902"},
 
-		// size check overflow
+//
 		{input: "BFFFFFFFFFFFFFFFFF", err: ErrValueTooLarge, rest: "BFFFFFFFFFFFFFFFFF"},
 		{input: "FFFFFFFFFFFFFFFFFF", err: ErrValueTooLarge, rest: "FFFFFFFFFFFFFFFFFF"},
 
@@ -114,7 +114,7 @@ func TestSplit(t *testing.T) {
 			rest:  "F838FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 		},
 
-		// a few bigger values, just for kicks
+//
 		{
 			input: "F839FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 			kind:  List,

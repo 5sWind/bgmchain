@@ -1,18 +1,18 @@
-// Copyright 2017 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package tests
 
@@ -29,12 +29,12 @@ func TestState(t *testing.T) {
 	t.Parallel()
 
 	st := new(testMatcher)
-	// Long tests:
+//
 	st.skipShortMode(`^stQuadraticComplexityTest/`)
-	// Broken tests:
-	st.skipLoad(`^stTransactionTest/OverflowGasRequire\.json`) // gasLimit > 256 bits
-	st.skipLoad(`^stTransactionTest/zeroSigTransa[^/]*\.json`) // EIP-86 is not supported yet
-	// Expected failures:
+//
+	st.skipLoad(`^stTransactionTest/OverflowGasRequire\.json`) //
+	st.skipLoad(`^stTransactionTest/zeroSigTransa[^/]*\.json`) //
+//
 	st.fails(`^stRevertTest/RevertPrecompiledTouch\.json/EIP158`, "bug in test")
 	st.fails(`^stRevertTest/RevertPrefoundEmptyOOG\.json/EIP158`, "bug in test")
 	st.fails(`^stRevertTest/RevertPrecompiledTouch\.json/Byzantium`, "bug in test")
@@ -67,7 +67,7 @@ func TestState(t *testing.T) {
 	})
 }
 
-// Transactions with gasLimit above this value will not get a VM trace on failure.
+//
 //const traceErrorLimit = 400000
 const traceErrorLimit = 0
 

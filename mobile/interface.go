@@ -1,20 +1,20 @@
-// Copyright 2016 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-// Contains perverted wrappers to allow crossing over empty interfaces.
+//
 
 package gbgm
 
@@ -25,19 +25,19 @@ import (
 	"github.com/5sWind/bgmchain/common"
 )
 
-// Interface represents a wrapped version of Go's interface{}, with the capacity
-// to store arbitrary data types.
 //
-// Since it's impossible to get the arbitrary-ness converted between Go and mobile
-// platforms, we're using explicit getters and setters for the conversions. There
-// is of course no point in enumerating everything, just enough to support the
-// contract bindins requiring client side generated code.
+//
+//
+//
+//
+//
+//
 type Interface struct {
 	object interface{}
 }
 
-// NewInterface creates a new empty interface that can be used to pass around
-// generic types.
+//
+//
 func NewInterface() *Interface {
 	return new(Interface)
 }
@@ -113,24 +113,24 @@ func (i *Interface) GetUint64() *BigInt {
 func (i *Interface) GetBigInt() *BigInt   { return &BigInt{*i.object.(**big.Int)} }
 func (i *Interface) GetBigInts() *BigInts { return &BigInts{*i.object.(*[]*big.Int)} }
 
-// Interfaces is a slices of wrapped generic objects.
+//
 type Interfaces struct {
 	objects []interface{}
 }
 
-// NewInterfaces creates a slice of uninitialized interfaces.
+//
 func NewInterfaces(size int) *Interfaces {
 	return &Interfaces{
 		objects: make([]interface{}, size),
 	}
 }
 
-// Size returns the number of interfaces in the slice.
+//
 func (i *Interfaces) Size() int {
 	return len(i.objects)
 }
 
-// Get returns the bigint at the given index from the slice.
+//
 func (i *Interfaces) Get(index int) (iface *Interface, _ error) {
 	if index < 0 || index >= len(i.objects) {
 		return nil, errors.New("index out of bounds")
@@ -138,7 +138,7 @@ func (i *Interfaces) Get(index int) (iface *Interface, _ error) {
 	return &Interface{i.objects[index]}, nil
 }
 
-// Set sets the big int at the given index in the slice.
+//
 func (i *Interfaces) Set(index int, object *Interface) error {
 	if index < 0 || index >= len(i.objects) {
 		return errors.New("index out of bounds")

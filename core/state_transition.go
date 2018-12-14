@@ -1,18 +1,18 @@
-// Copyright 2014 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package core
 
@@ -61,7 +61,7 @@ type StateTransition struct {
 	evm        *vm.EVM
 }
 
-// Message represents a message sent to a contract.
+//
 type Message interface {
 	From() common.Address
 	//FromFrontier() (common.Address, error)
@@ -76,10 +76,10 @@ type Message interface {
 	Data() []byte
 }
 
-// IntrinsicGas computes the 'intrinsic gas' for a message
-// with the given data.
 //
-// TODO convert to uint64
+//
+//
+//
 func IntrinsicGas(data []byte, contractCreation, homestead bool) *big.Int {
 	igas := new(big.Int)
 	if contractCreation && homestead {
@@ -104,7 +104,7 @@ func IntrinsicGas(data []byte, contractCreation, homestead bool) *big.Int {
 	return igas
 }
 
-// NewStateTransition initialises and returns a new state transition object.
+//
 func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition {
 	return &StateTransition{
 		gp:         gp,
@@ -118,13 +118,13 @@ func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition 
 	}
 }
 
-// ApplyMessage computes the new state by applying the given message
-// against the old state within the environment.
 //
-// ApplyMessage returns the bytes returned by any EVM execution (if it took place),
-// the gas used (which includes gas refunds) and an error if it failed. An error always
-// indicates a core error meaning that the message would always fail for that particular
-// state and would never be accepted within a block.
+//
+//
+//
+//
+//
+//
 func ApplyMessage(evm *vm.EVM, msg Message, gp *GasPool) ([]byte, *big.Int, bool, error) {
 	st := NewStateTransition(evm, msg, gp)
 
@@ -146,7 +146,7 @@ func (st *StateTransition) to() vm.AccountRef {
 	}
 	to := st.msg.To()
 	if to == nil {
-		return vm.AccountRef{} // contract creation
+		return vm.AccountRef{} //
 	}
 
 	reference := vm.AccountRef(*to)
@@ -194,7 +194,7 @@ func (st *StateTransition) preCheck() error {
 	msg := st.msg
 	sender := st.from()
 
-	// Make sure this transaction's nonce is correct
+//
 	if msg.CheckNonce() {
 		nonce := st.state.GetNonce(sender.Address())
 		if nonce < msg.Nonce() {
@@ -206,21 +206,21 @@ func (st *StateTransition) preCheck() error {
 	return st.buyGas()
 }
 
-// TransitionDb will transition the state by applying the current message and returning the result
-// including the required gas for the operation as well as the used gas. It returns an error if it
-// failed. An error indicates a consensus issue.
+//
+//
+//
 func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big.Int, failed bool, err error) {
 	if err = st.preCheck(); err != nil {
 		return
 	}
 	msg := st.msg
-	sender := st.from() // err checked in preCheck
+	sender := st.from() //
 
 	homestead := st.evm.ChainConfig().IsHomestead(st.evm.BlockNumber)
 	contractCreation := msg.To() == nil
 
-	// Pay intrinsic gas
-	// TODO convert to uint64
+//
+//
 	intrinsicGas := IntrinsicGas(st.data, contractCreation, homestead)
 	if intrinsicGas.BitLen() > 64 {
 		return nil, nil, nil, false, vm.ErrOutOfGas
@@ -231,23 +231,23 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 
 	var (
 		evm = st.evm
-		// vm errors do not effect consensus and are therefor
-		// not assigned to err, except for insufficient balance
-		// error.
+//
+//
+//
 		vmerr error
 	)
 	if contractCreation {
 		ret, _, st.gas, vmerr = evm.Create(sender, st.data, st.gas, st.value)
 	} else {
-		// Increment the nonce for the next transaction
+//
 		st.state.SetNonce(sender.Address(), st.state.GetNonce(sender.Address())+1)
 		ret, st.gas, vmerr = evm.Call(sender, st.to().Address(), st.data, st.gas, st.value)
 	}
 	if vmerr != nil {
 		log.Debug("VM returned with error", "err", vmerr)
-		// The only possible consensus-error would be if there wasn't
-		// sufficient balance to make the transfer happen. The first
-		// balance transfer may never fail.
+//
+//
+//
 		if vmerr == vm.ErrInsufficientBalance {
 			return nil, nil, nil, false, vmerr
 		}
@@ -261,21 +261,21 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 }
 
 func (st *StateTransition) refundGas() {
-	// Return bgm for remaining gas to the sender account,
-	// exchanged at the original rate.
-	sender := st.from() // err already checked
+//
+//
+	sender := st.from() //
 	remaining := new(big.Int).Mul(new(big.Int).SetUint64(st.gas), st.gasPrice)
 	st.state.AddBalance(sender.Address(), remaining)
 
-	// Apply refund counter, capped to half of the used gas.
+//
 	uhalf := remaining.Div(st.gasUsed(), common.Big2)
 	refund := math.BigMin(uhalf, st.state.GetRefund())
 	st.gas += refund.Uint64()
 
 	st.state.AddBalance(sender.Address(), refund.Mul(refund, st.gasPrice))
 
-	// Also return remaining gas to the block gas counter so it is
-	// available for the next transaction.
+//
+//
 	st.gp.AddGas(new(big.Int).SetUint64(st.gas))
 }
 

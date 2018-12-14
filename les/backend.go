@@ -1,20 +1,20 @@
-// Copyright 2016 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-// Package les implements the Light Bgmchain Subprotocol.
+//
 package les
 
 import (
@@ -50,9 +50,9 @@ type LightBgmchain struct {
 	odr         *LesOdr
 	relay       *LesTxRelay
 	chainConfig *params.ChainConfig
-	// Channel for shutting down the service
+//
 	shutdownChan chan bool
-	// Handlers
+//
 	peers           *peerSet
 	txPool          *light.TxPool
 	blockchain      *light.LightChain
@@ -60,10 +60,10 @@ type LightBgmchain struct {
 	serverPool      *serverPool
 	reqDist         *requestDistributor
 	retriever       *retrieveManager
-	// DB interfaces
-	chainDb bgmdb.Database // Block chain database
+//
+	chainDb bgmdb.Database //
 
-	bloomRequests                              chan chan *bloombits.Retrieval // Channel receiving bloom data retrieval requests
+	bloomRequests                              chan chan *bloombits.Retrieval //
 	bloomIndexer, chtIndexer, bloomTrieIndexer *core.ChainIndexer
 
 	ApiBackend *LesApiBackend
@@ -116,7 +116,7 @@ func New(ctx *node.ServiceContext, config *bgm.Config) (*LightBgmchain, error) {
 		return nil, err
 	}
 	lbgm.bloomIndexer.Start(lbgm.blockchain)
-	// Rewind the chain in case of an incompatible config upgrade.
+//
 	if compat, ok := genesisErr.(*params.ConfigCompatError); ok {
 		log.Warn("Rewinding chain to upgrade configuration", "err", compat)
 		lbgm.blockchain.SetHead(compat.RewindTo)
@@ -151,23 +151,23 @@ func lesTopic(genesisHash common.Hash, protocolVersion uint) discv5.Topic {
 
 type LightDummyAPI struct{}
 
-// Coinbase is the address that mining rewards will be send to
+//
 func (s *LightDummyAPI) Coinbase() (common.Address, error) {
 	return common.Address{}, fmt.Errorf("not supported")
 }
 
-// Hashrate returns the POW hashrate
+//
 func (s *LightDummyAPI) Hashrate() hexutil.Uint {
 	return 0
 }
 
-// Mining returns an indication if this node is currently mining.
+//
 func (s *LightDummyAPI) Mining() bool {
 	return false
 }
 
-// APIs returns the collection of RPC services the bgmchain package offers.
-// NOTE, some of these services probably need to be moved to somewhere else.
+//
+//
 func (s *LightBgmchain) APIs() []rpc.API {
 	return append(bgmapi.GetAPIs(s.ApiBackend), []rpc.API{
 		{
@@ -205,28 +205,28 @@ func (s *LightBgmchain) LesVersion() int                    { return int(s.proto
 func (s *LightBgmchain) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
 func (s *LightBgmchain) EventMux() *event.TypeMux           { return s.eventMux }
 
-// Protocols implements node.Service, returning all the currently configured
-// network protocols to start.
+//
+//
 func (s *LightBgmchain) Protocols() []p2p.Protocol {
 	return s.protocolManager.SubProtocols
 }
 
-// Start implements node.Service, starting all internal goroutines needed by the
-// Bgmchain protocol implementation.
+//
+//
 func (s *LightBgmchain) Start(srvr *p2p.Server) error {
 	s.startBloomHandlers()
 	log.Warn("Light client mode is an experimental feature")
 	s.netRPCService = bgmapi.NewPublicNetAPI(srvr, s.networkId)
-	// search the topic belonging to the oldest supported protocol because
-	// servers always advertise all supported protocols
+//
+//
 	protocolVersion := ClientProtocolVersions[len(ClientProtocolVersions)-1]
 	s.serverPool.start(srvr, lesTopic(s.blockchain.Genesis().Hash(), protocolVersion))
 	s.protocolManager.Start()
 	return nil
 }
 
-// Stop implements node.Service, terminating all internal goroutines used by the
-// Bgmchain protocol.
+//
+//
 func (s *LightBgmchain) Stop() error {
 	s.odr.Stop()
 	if s.bloomIndexer != nil {

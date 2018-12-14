@@ -55,7 +55,7 @@ with each log line:
 
     requestlogger := log.New("path", r.URL.Path)
 
-    // later
+//
     requestlogger.Debug("db txn commit", "duration", txnTimer.Finish())
 
 This will output a log line that includes the path context that is attached to the logger:
@@ -156,7 +156,7 @@ lazily, just when it is about to be logged, so that it would not be evaluated if
 filters it out. Just wrap any function which takes no arguments with the log.Lazy type. For example:
 
     func factorRSAKey() (factors []int) {
-        // return the factors of a very large number
+//
     }
 
     log.Debug("factors", log.Lazy{factorRSAKey})
@@ -238,7 +238,7 @@ Users of your library may then enable it if they like:
     import "example.com/yourlib"
 
     func main() {
-        handler := // custom handler setup
+        handler := //
         yourlib.Log.SetHandler(handler)
     }
 
@@ -251,14 +251,14 @@ unique, tracing context keys to it. For instance, imagine I am writing a web bro
     type Tab struct {
         url string
         render *RenderingContext
-        // ...
+//
 
         Logger
     }
 
     func NewTab(url string) *Tab {
         return &Tab {
-            // ...
+//
             url: url,
 
             Logger: log.New("url", url),
@@ -288,7 +288,7 @@ Tab example, we would prefer to set up our Logger like so:
         import logext "github.com/inconshreveable/log15/ext"
 
         t := &Tab {
-            // ...
+//
             url: url,
         }
 

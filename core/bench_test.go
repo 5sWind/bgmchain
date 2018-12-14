@@ -1,18 +1,18 @@
-// Copyright 2015 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package core
 
@@ -71,15 +71,15 @@ func BenchmarkInsertChain_ring1000_diskdb(b *testing.B) {
 }
 
 var (
-	// This is the content of the genesis block used by the benchmarks.
+//
 	benchRootKey, _ = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
 	benchRootAddr   = crypto.PubkeyToAddress(benchRootKey.PublicKey)
 	benchRootFunds  = math.BigPow(2, 100)
 )
 
-// genValueTx returns a block generator that includes a single
-// value-transfer transaction with n bytes of extra data in each
-// block.
+//
+//
+//
 func genValueTx(nbytes int) func(int, *BlockGen) {
 	return func(i int, gen *BlockGen) {
 		toaddr := common.Address{}
@@ -105,9 +105,9 @@ func init() {
 	}
 }
 
-// genTxRing returns a block generator that sends bgmchain in a ring
-// among n accounts. This is creates n entries in the state database
-// and fills the blocks with many small transactions.
+//
+//
+//
 func genTxRing(naccounts int) func(int, *BlockGen) {
 	from := 0
 	return func(i int, gen *BlockGen) {
@@ -134,7 +134,7 @@ func genTxRing(naccounts int) func(int, *BlockGen) {
 	}
 }
 
-// genUncles generates blocks with two uncle headers.
+//
 func genUncles(i int, gen *BlockGen) {
 	if i >= 6 {
 		b2 := gen.PrevBlock(i - 6).Header()
@@ -147,7 +147,7 @@ func genUncles(i int, gen *BlockGen) {
 }
 
 func benchInsertChain(b *testing.B, disk bool, gen func(int, *BlockGen)) {
-	// Create the database in memory or in a temporary directory.
+//
 	var db bgmdb.Database
 	if !disk {
 		db, _ = bgmdb.NewMemDatabase()
@@ -164,8 +164,8 @@ func benchInsertChain(b *testing.B, disk bool, gen func(int, *BlockGen)) {
 		defer db.Close()
 	}
 
-	// Generate a chain of b.N blocks using the supplied block
-	// generator function.
+//
+//
 	gspec := Genesis{
 		Config: params.TestChainConfig,
 		Alloc:  GenesisAlloc{benchRootAddr: {Balance: benchRootFunds}},
@@ -173,8 +173,8 @@ func benchInsertChain(b *testing.B, disk bool, gen func(int, *BlockGen)) {
 	genesis := gspec.MustCommit(db)
 	chain, _ := GenerateChain(gspec.Config, genesis, db, b.N, gen)
 
-	// Time the insertion of the new chain.
-	// State and blocks are stored in the same DB.
+//
+//
 	chainman, _ := NewBlockChain(db, gspec.Config, bgmash.NewFaker(), vm.Config{})
 	defer chainman.Stop()
 	b.ReportAllocs()
@@ -221,8 +221,8 @@ func BenchmarkChainWrite_full_500k(b *testing.B) {
 	benchWriteChain(b, true, 500000)
 }
 
-// makeChainForBench writes a given number of headers or empty blocks/receipts
-// into a database.
+//
+//
 func makeChainForBench(db bgmdb.Database, full bool, count uint64) {
 	var hash common.Hash
 	for n := uint64(0); n < count; n++ {

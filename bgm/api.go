@@ -1,18 +1,18 @@
-// Copyright 2015 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package bgm
 
@@ -44,69 +44,69 @@ import (
 
 const defaultTraceTimeout = 5 * time.Second
 
-// PublicBgmchainAPI provides an API to access Bgmchain full node-related
-// information.
+//
+//
 type PublicBgmchainAPI struct {
 	e *Bgmchain
 }
 
-// NewPublicBgmchainAPI creates a new Bgmchain protocol API for full nodes.
+//
 func NewPublicBgmchainAPI(e *Bgmchain) *PublicBgmchainAPI {
 	return &PublicBgmchainAPI{e}
 }
 
-// Validator is the address that mining signer
+//
 func (api *PublicBgmchainAPI) Validator() (common.Address, error) {
 	return api.e.Validator()
 }
 
-// Coinbase is the address that mining rewards will be send to
+//
 func (api *PublicBgmchainAPI) Coinbase() (common.Address, error) {
 	return api.e.Coinbase()
 }
 
-// Hashrate returns the POW hashrate
+//
 func (api *PublicBgmchainAPI) Hashrate() hexutil.Uint64 {
 	return hexutil.Uint64(api.e.Miner().HashRate())
 }
 
-// PublicMinerAPI provides an API to control the miner.
-// It offers only methods that operate on data that pose no security risk when it is publicly accessible.
+//
+//
 type PublicMinerAPI struct {
 	e *Bgmchain
 }
 
-// NewPublicMinerAPI create a new PublicMinerAPI instance.
+//
 func NewPublicMinerAPI(e *Bgmchain) *PublicMinerAPI {
 	return &PublicMinerAPI{e}
 }
 
-// Mining returns an indication if this node is currently mining.
+//
 func (api *PublicMinerAPI) Mining() bool {
 	return api.e.IsMining()
 }
 
-// PrivateMinerAPI provides private RPC methods to control the miner.
-// These methods can be abused by external users and must be considered insecure for use by untrusted users.
+//
+//
 type PrivateMinerAPI struct {
 	e *Bgmchain
 }
 
-// NewPrivateMinerAPI create a new RPC service which controls the miner of this node.
+//
 func NewPrivateMinerAPI(e *Bgmchain) *PrivateMinerAPI {
 	return &PrivateMinerAPI{e: e}
 }
 
-// Start the miner with the given number of threads. If threads is nil the number
-// of workers started is equal to the number of logical CPUs that are usable by
-// this process. If mining is already running, this method adjust the number of
-// threads allowed to use.
+//
+//
+//
+//
 func (api *PrivateMinerAPI) Start(threads *int) error {
-	// Set the number of threads if the seal engine supports it
+//
 	if threads == nil {
 		threads = new(int)
 	} else if *threads == 0 {
-		*threads = -1 // Disable the miner from within
+		*threads = -1 //
 	}
 	type threaded interface {
 		SetThreads(threads int)
@@ -115,9 +115,9 @@ func (api *PrivateMinerAPI) Start(threads *int) error {
 		log.Info("Updated mining threads", "threads", *threads)
 		th.SetThreads(*threads)
 	}
-	// Start the miner and return
+//
 	if !api.e.IsMining() {
-		// Propagate the initial price point to the transaction pool
+//
 		api.e.lock.RLock()
 		price := api.e.gasPrice
 		api.e.lock.RUnlock()
@@ -128,7 +128,7 @@ func (api *PrivateMinerAPI) Start(threads *int) error {
 	return nil
 }
 
-// Stop the miner
+//
 func (api *PrivateMinerAPI) Stop() bool {
 	type threaded interface {
 		SetThreads(threads int)
@@ -140,7 +140,7 @@ func (api *PrivateMinerAPI) Stop() bool {
 	return true
 }
 
-// SetExtra sets the extra data string that is included when this miner mines a block.
+//
 func (api *PrivateMinerAPI) SetExtra(extra string) (bool, error) {
 	if err := api.e.Miner().SetExtra([]byte(extra)); err != nil {
 		return false, err
@@ -148,7 +148,7 @@ func (api *PrivateMinerAPI) SetExtra(extra string) (bool, error) {
 	return true, nil
 }
 
-// SetGasPrice sets the minimum accepted gas price for the miner.
+//
 func (api *PrivateMinerAPI) SetGasPrice(gasPrice hexutil.Big) bool {
 	api.e.lock.Lock()
 	api.e.gasPrice = (*big.Int)(&gasPrice)
@@ -158,38 +158,38 @@ func (api *PrivateMinerAPI) SetGasPrice(gasPrice hexutil.Big) bool {
 	return true
 }
 
-// SetValidator sets the validator of the miner
+//
 func (api *PrivateMinerAPI) SetValidator(validator common.Address) bool {
 	api.e.SetValidator(validator)
 	return true
 }
 
-// SetCoinbase sets the coinbase of the miner
+//
 func (api *PrivateMinerAPI) SetCoinbase(coinbase common.Address) bool {
 	api.e.SetCoinbase(coinbase)
 	return true
 }
 
-// GetHashrate returns the current hashrate of the miner.
+//
 func (api *PrivateMinerAPI) GetHashrate() uint64 {
 	return uint64(api.e.miner.HashRate())
 }
 
-// PrivateAdminAPI is the collection of Bgmchain full node-related APIs
-// exposed over the private admin endpoint.
+//
+//
 type PrivateAdminAPI struct {
 	bgm *Bgmchain
 }
 
-// NewPrivateAdminAPI creates a new API definition for the full node private
-// admin methods of the Bgmchain service.
+//
+//
 func NewPrivateAdminAPI(bgm *Bgmchain) *PrivateAdminAPI {
 	return &PrivateAdminAPI{bgm: bgm}
 }
 
-// ExportChain exports the current blockchain into a local file.
+//
 func (api *PrivateAdminAPI) ExportChain(file string) (bool, error) {
-	// Make sure we can create the file to export into
+//
 	out, err := os.OpenFile(file, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		return false, err
@@ -202,7 +202,7 @@ func (api *PrivateAdminAPI) ExportChain(file string) (bool, error) {
 		defer writer.(*gzip.Writer).Close()
 	}
 
-	// Export the blockchain
+//
 	if err := api.bgm.BlockChain().Export(writer); err != nil {
 		return false, err
 	}
@@ -219,9 +219,9 @@ func hasAllBlocks(chain *core.BlockChain, bs []*types.Block) bool {
 	return true
 }
 
-// ImportChain imports a blockchain from a local file.
+//
 func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
-	// Make sure the can access the file to import
+//
 	in, err := os.Open(file)
 	if err != nil {
 		return false, err
@@ -235,12 +235,12 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 		}
 	}
 
-	// Run actual the import in pre-configured batches
+//
 	stream := rlp.NewStream(reader, 0)
 
 	blocks, index := make([]*types.Block, 0, 2500), 0
 	for batch := 0; ; batch++ {
-		// Load a batch of blocks from the input file
+//
 		for len(blocks) < cap(blocks) {
 			block := new(types.Block)
 			if err := stream.Decode(block); err == io.EOF {
@@ -259,7 +259,7 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 			blocks = blocks[:0]
 			continue
 		}
-		// Import the batch and reset the buffer
+//
 		if _, err := api.bgm.BlockChain().InsertChain(blocks); err != nil {
 			return false, fmt.Errorf("batch %d: failed to insert: %v", batch, err)
 		}
@@ -268,24 +268,24 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 	return true, nil
 }
 
-// PublicDebugAPI is the collection of Bgmchain full node APIs exposed
-// over the public debugging endpoint.
+//
+//
 type PublicDebugAPI struct {
 	bgm *Bgmchain
 }
 
-// NewPublicDebugAPI creates a new API definition for the full node-
-// related public debug methods of the Bgmchain service.
+//
+//
 func NewPublicDebugAPI(bgm *Bgmchain) *PublicDebugAPI {
 	return &PublicDebugAPI{bgm: bgm}
 }
 
-// DumpBlock retrieves the entire state of the database at a given block.
+//
 func (api *PublicDebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error) {
 	if blockNr == rpc.PendingBlockNumber {
-		// If we're dumping the pending state, we need to request
-		// both the pending block as well as the pending state from
-		// the miner and operate on those
+//
+//
+//
 		_, stateDb := api.bgm.miner.Pending()
 		return stateDb.RawDump(), nil
 	}
@@ -305,36 +305,36 @@ func (api *PublicDebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error
 	return stateDb.RawDump(), nil
 }
 
-// PrivateDebugAPI is the collection of Bgmchain full node APIs exposed over
-// the private debugging endpoint.
+//
+//
 type PrivateDebugAPI struct {
 	config *params.ChainConfig
 	bgm    *Bgmchain
 }
 
-// NewPrivateDebugAPI creates a new API definition for the full node-related
-// private debug methods of the Bgmchain service.
+//
+//
 func NewPrivateDebugAPI(config *params.ChainConfig, bgm *Bgmchain) *PrivateDebugAPI {
 	return &PrivateDebugAPI{config: config, bgm: bgm}
 }
 
-// BlockTraceResult is the returned value when replaying a block to check for
-// consensus results and full VM trace logs for all included transactions.
+//
+//
 type BlockTraceResult struct {
 	Validated  bool                  `json:"validated"`
 	StructLogs []bgmapi.StructLogRes `json:"structLogs"`
 	Error      string                `json:"error"`
 }
 
-// TraceArgs holds extra parameters to trace functions
+//
 type TraceArgs struct {
 	*vm.LogConfig
 	Tracer  *string
 	Timeout *string
 }
 
-// TraceBlock processes the given block'api RLP but does not import the block in to
-// the chain.
+//
+//
 func (api *PrivateDebugAPI) TraceBlock(blockRlp []byte, config *vm.LogConfig) BlockTraceResult {
 	var block types.Block
 	err := rlp.Decode(bytes.NewReader(blockRlp), &block)
@@ -350,8 +350,8 @@ func (api *PrivateDebugAPI) TraceBlock(blockRlp []byte, config *vm.LogConfig) Bl
 	}
 }
 
-// TraceBlockFromFile loads the block'api RLP from the given file name and attempts to
-// process it but does not import the block in to the chain.
+//
+//
 func (api *PrivateDebugAPI) TraceBlockFromFile(file string, config *vm.LogConfig) BlockTraceResult {
 	blockRlp, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -360,13 +360,13 @@ func (api *PrivateDebugAPI) TraceBlockFromFile(file string, config *vm.LogConfig
 	return api.TraceBlock(blockRlp, config)
 }
 
-// TraceBlockByNumber processes the block by canonical block number.
+//
 func (api *PrivateDebugAPI) TraceBlockByNumber(blockNr rpc.BlockNumber, config *vm.LogConfig) BlockTraceResult {
-	// Fetch the block that we aim to reprocess
+//
 	var block *types.Block
 	switch blockNr {
 	case rpc.PendingBlockNumber:
-		// Pending block is only known by the miner
+//
 		block = api.bgm.miner.PendingBlock()
 	case rpc.LatestBlockNumber:
 		block = api.bgm.blockchain.CurrentBlock()
@@ -386,9 +386,9 @@ func (api *PrivateDebugAPI) TraceBlockByNumber(blockNr rpc.BlockNumber, config *
 	}
 }
 
-// TraceBlockByHash processes the block by hash.
+//
 func (api *PrivateDebugAPI) TraceBlockByHash(hash common.Hash, config *vm.LogConfig) BlockTraceResult {
-	// Fetch the block that we aim to reprocess
+//
 	block := api.bgm.BlockChain().GetBlockByHash(hash)
 	if block == nil {
 		return BlockTraceResult{Error: fmt.Sprintf("block #%x not found", hash)}
@@ -402,9 +402,9 @@ func (api *PrivateDebugAPI) TraceBlockByHash(hash common.Hash, config *vm.LogCon
 	}
 }
 
-// traceBlock processes the given block but does not save the state.
+//
 func (api *PrivateDebugAPI) traceBlock(block *types.Block, logConfig *vm.LogConfig) (bool, []vm.StructLog, error) {
-	// Validate and reprocess the block
+//
 	var (
 		blockchain = api.bgm.BlockChain()
 		validator  = blockchain.Validator()
@@ -435,8 +435,8 @@ func (api *PrivateDebugAPI) traceBlock(block *types.Block, logConfig *vm.LogConf
 	return true, structLogger.StructLogs(), nil
 }
 
-// formatError formats a Go error into either an empty string or the data content
-// of the error itself.
+//
+//
 func formatError(err error) string {
 	if err == nil {
 		return ""
@@ -450,8 +450,8 @@ func (t *timeoutError) Error() string {
 	return "Execution time exceeded"
 }
 
-// TraceTransaction returns the structured logs created during the execution of EVM
-// and returns them as a JSON object.
+//
+//
 func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.Hash, config *TraceArgs) (interface{}, error) {
 	var tracer vm.Tracer
 	if config != nil && config.Tracer != nil {
@@ -468,7 +468,7 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 			return nil, err
 		}
 
-		// Handle timeouts and RPC cancellations
+//
 		deadlineCtx, cancel := context.WithTimeout(ctx, timeout)
 		go func() {
 			<-deadlineCtx.Done()
@@ -481,7 +481,7 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 		tracer = vm.NewStructLogger(config.LogConfig)
 	}
 
-	// Retrieve the tx from the chain and the containing block
+//
 	tx, blockHash, _, txIndex := core.GetTransaction(api.bgm.ChainDb(), txHash)
 	if tx == nil {
 		return nil, fmt.Errorf("transaction %x not found", txHash)
@@ -491,7 +491,7 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 		return nil, err
 	}
 
-	// Run the transaction with tracing enabled.
+//
 	vmenv := vm.NewEVM(context, statedb, api.config, vm.Config{Debug: true, Tracer: tracer})
 	ret, gas, failed, err := core.ApplyMessage(vmenv, msg, new(core.GasPool).AddGas(tx.Gas()))
 	if err != nil {
@@ -512,9 +512,9 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 	}
 }
 
-// computeTxEnv returns the execution environment of a certain transaction.
+//
 func (api *PrivateDebugAPI) computeTxEnv(blockHash common.Hash, txIndex int) (core.Message, vm.Context, *state.StateDB, error) {
-	// Create the parent state.
+//
 	block := api.bgm.BlockChain().GetBlockByHash(blockHash)
 	if block == nil {
 		return nil, vm.Context{}, nil, fmt.Errorf("block %x not found", blockHash)
@@ -529,10 +529,10 @@ func (api *PrivateDebugAPI) computeTxEnv(blockHash common.Hash, txIndex int) (co
 	}
 	txs := block.Transactions()
 
-	// Recompute transactions up to the target index.
+//
 	signer := types.MakeSigner(api.config, block.Number())
 	for idx, tx := range txs {
-		// Assemble the transaction call message
+//
 		msg, _ := tx.AsMessage(signer)
 		context := core.NewEVMContext(msg, block.Header(), api.bgm.BlockChain(), nil)
 		if idx == txIndex {
@@ -550,22 +550,22 @@ func (api *PrivateDebugAPI) computeTxEnv(blockHash common.Hash, txIndex int) (co
 	return nil, vm.Context{}, nil, fmt.Errorf("tx index %d out of range for block %x", txIndex, blockHash)
 }
 
-// Preimage is a debug API function that returns the preimage for a sha3 hash, if known.
+//
 func (api *PrivateDebugAPI) Preimage(ctx context.Context, hash common.Hash) (hexutil.Bytes, error) {
 	db := core.PreimageTable(api.bgm.ChainDb())
 	return db.Get(hash.Bytes())
 }
 
-// GetBadBLocks returns a list of the last 'bad blocks' that the client has seen on the network
-// and returns them as a JSON list of block-hashes
+//
+//
 func (api *PrivateDebugAPI) GetBadBlocks(ctx context.Context) ([]core.BadBlockArgs, error) {
 	return api.bgm.BlockChain().BadBlocks()
 }
 
-// StorageRangeResult is the result of a debug_storageRangeAt API call.
+//
 type StorageRangeResult struct {
 	Storage storageMap   `json:"storage"`
-	NextKey *common.Hash `json:"nextKey"` // nil if Storage includes the last key in the trie.
+	NextKey *common.Hash `json:"nextKey"` //
 }
 
 type storageMap map[common.Hash]storageEntry
@@ -575,7 +575,7 @@ type storageEntry struct {
 	Value common.Hash  `json:"value"`
 }
 
-// StorageRangeAt returns the storage at the given block height and transaction index.
+//
 func (api *PrivateDebugAPI) StorageRangeAt(ctx context.Context, blockHash common.Hash, txIndex int, contractAddress common.Address, keyStart hexutil.Bytes, maxResult int) (StorageRangeResult, error) {
 	_, _, statedb, err := api.computeTxEnv(blockHash, txIndex)
 	if err != nil {
@@ -599,7 +599,7 @@ func storageRangeAt(st state.Trie, start []byte, maxResult int) StorageRangeResu
 		}
 		result.Storage[common.BytesToHash(it.Key)] = e
 	}
-	// Add the 'next key' so clients can continue downloading.
+//
 	if it.Next() {
 		next := common.BytesToHash(it.Key)
 		result.NextKey = &next
@@ -607,11 +607,11 @@ func storageRangeAt(st state.Trie, start []byte, maxResult int) StorageRangeResu
 	return result
 }
 
-// GetModifiedAccountsByumber returns all accounts that have changed between the
-// two blocks specified. A change is defined as a difference in nonce, balance,
-// code hash, or storage hash.
 //
-// With one parameter, returns the list of accounts modified in the specified block.
+//
+//
+//
+//
 func (api *PrivateDebugAPI) GetModifiedAccountsByNumber(startNum uint64, endNum *uint64) ([]common.Address, error) {
 	var startBlock, endBlock *types.Block
 
@@ -635,11 +635,11 @@ func (api *PrivateDebugAPI) GetModifiedAccountsByNumber(startNum uint64, endNum 
 	return api.getModifiedAccounts(startBlock, endBlock)
 }
 
-// GetModifiedAccountsByHash returns all accounts that have changed between the
-// two blocks specified. A change is defined as a difference in nonce, balance,
-// code hash, or storage hash.
 //
-// With one parameter, returns the list of accounts modified in the specified block.
+//
+//
+//
+//
 func (api *PrivateDebugAPI) GetModifiedAccountsByHash(startHash common.Hash, endHash *common.Hash) ([]common.Address, error) {
 	var startBlock, endBlock *types.Block
 	startBlock = api.bgm.blockchain.GetBlockByHash(startHash)

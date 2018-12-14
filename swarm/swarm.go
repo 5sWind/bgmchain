@@ -1,18 +1,18 @@
-// Copyright 2016 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 package swarm
 
@@ -41,23 +41,23 @@ import (
 	"github.com/5sWind/bgmchain/swarm/storage"
 )
 
-// the swarm stack
+//
 type Swarm struct {
-	config      *api.Config            // swarm configuration
-	api         *api.Api               // high level api layer (fs/manifest)
-	dns         api.Resolver           // DNS registrar
-	dbAccess    *network.DbAccess      // access to local chunk db iterator and storage counter
-	storage     storage.ChunkStore     // internal access to storage, common interface to cloud storage backends
-	dpa         *storage.DPA           // distributed preimage archive, the local API to the storage with document level storage/retrieval support
-	depo        network.StorageHandler // remote request handler, interface between bzz protocol and the storage
-	cloud       storage.CloudStore     // procurement, cloud storage backend (can multi-cloud)
-	hive        *network.Hive          // the logistic manager
-	backend     chequebook.Backend     // simple blockchain Backend
+	config      *api.Config            //
+	api         *api.Api               //
+	dns         api.Resolver           //
+	dbAccess    *network.DbAccess      //
+	storage     storage.ChunkStore     //
+	dpa         *storage.DPA           //
+	depo        network.StorageHandler //
+	cloud       storage.CloudStore     //
+	hive        *network.Hive          //
+	backend     chequebook.Backend     //
 	privateKey  *ecdsa.PrivateKey
 	corsString  string
 	swapEnabled bool
-	lstore      *storage.LocalStore // local store, needs to store for releasing resources after node stopped
-	sfs         *fuse.SwarmFS       // need this to cleanup all the active mounts on node exit
+	lstore      *storage.LocalStore //
+	sfs         *fuse.SwarmFS       //
 }
 
 type SwarmAPI struct {
@@ -74,8 +74,8 @@ func (self *Swarm) API() *SwarmAPI {
 	}
 }
 
-// creates a new swarm service instance
-// implements node.Service
+//
+//
 func NewSwarm(ctx *node.ServiceContext, backend chequebook.Backend, ensClient *bgmclient.Client, config *api.Config, swapEnabled, syncEnabled bool, cors string) (self *Swarm, err error) {
 	if bytes.Equal(common.FromHex(config.PublicKey), storage.ZeroKey) {
 		return nil, fmt.Errorf("empty public key")
@@ -99,41 +99,41 @@ func NewSwarm(ctx *node.ServiceContext, backend chequebook.Backend, ensClient *b
 		return
 	}
 
-	// setup local store
+//
 	log.Debug(fmt.Sprintf("Set up local storage"))
 
 	self.dbAccess = network.NewDbAccess(self.lstore)
 	log.Debug(fmt.Sprintf("Set up local db access (iterator/counter)"))
 
-	// set up the kademlia hive
+//
 	self.hive = network.NewHive(
-		common.HexToHash(self.config.BzzKey), // key to hive (kademlia base address)
-		config.HiveParams,                    // configuration parameters
-		swapEnabled,                          // SWAP enabled
-		syncEnabled,                          // syncronisation enabled
+		common.HexToHash(self.config.BzzKey), //
+		config.HiveParams,                    //
+		swapEnabled,                          //
+		syncEnabled,                          //
 	)
 	log.Debug(fmt.Sprintf("Set up swarm network with Kademlia hive"))
 
-	// setup cloud storage backend
+//
 	self.cloud = network.NewForwarder(self.hive)
 	log.Debug(fmt.Sprintf("-> set swarm forwarder as cloud storage backend"))
 
-	// setup cloud storage internal access layer
+//
 	self.storage = storage.NewNetStore(hash, self.lstore, self.cloud, config.StoreParams)
 	log.Debug(fmt.Sprintf("-> swarm net store shared access layer to Swarm Chunk Store"))
 
-	// set up Depo (storage handler = cloud storage access layer for incoming remote requests)
+//
 	self.depo = network.NewDepo(hash, self.lstore, self.storage)
 	log.Debug(fmt.Sprintf("-> REmote Access to CHunks"))
 
-	// set up DPA, the cloud storage local access layer
+//
 	dpaChunkStore := storage.NewDpaChunkStore(self.lstore, self.storage)
 	log.Debug(fmt.Sprintf("-> Local Access to Swarm"))
-	// Swarm Hash Merklised Chunking for Arbitrary-length Document/File storage
+//
 	self.dpa = storage.NewDPA(dpaChunkStore, self.config.ChunkerParams)
 	log.Debug(fmt.Sprintf("-> Content Store API"))
 
-	// set up high level api
+//
 	transactOpts := bind.NewKeyedTransactor(self.privateKey)
 
 	if ensClient == nil {
@@ -147,7 +147,7 @@ func NewSwarm(ctx *node.ServiceContext, backend chequebook.Backend, ensClient *b
 	log.Debug(fmt.Sprintf("-> Swarm Domain Name Registrar @ address %v", config.EnsRoot.Hex()))
 
 	self.api = api.NewApi(self.dpa, self.dns)
-	// Manifests for Smart Hosting
+//
 	log.Debug(fmt.Sprintf("-> Web3 virtual server API"))
 
 	self.sfs = fuse.NewSwarmFS(self.api)
@@ -166,7 +166,7 @@ Start is called when the stack is started
 * registers url scheme handlers for bzz, etc
 * TODO: start subservices like sword, swear, swarmdns
 */
-// implements the node.Service interface
+//
 func (self *Swarm) Start(srv *p2p.Server) error {
 	connectPeer := func(url string) error {
 		node, err := discover.ParseNode(url)
@@ -176,9 +176,9 @@ func (self *Swarm) Start(srv *p2p.Server) error {
 		srv.AddPeer(node)
 		return nil
 	}
-	// set chequebook
+//
 	if self.swapEnabled {
-		ctx := context.Background() // The initial setup has no deadline.
+		ctx := context.Background() //
 		err := self.SetChequebook(ctx)
 		if err != nil {
 			return fmt.Errorf("Unable to set chequebook for SWAP: %v", err)
@@ -199,7 +199,7 @@ func (self *Swarm) Start(srv *p2p.Server) error {
 	self.dpa.Start()
 	log.Debug(fmt.Sprintf("Swarm DPA started"))
 
-	// start swarm http proxy server
+//
 	if self.config.Port != "" {
 		addr := net.JoinHostPort(self.config.ListenAddr, self.config.Port)
 		go httpapi.StartHttpServer(self.api, &httpapi.ServerConfig{
@@ -216,8 +216,8 @@ func (self *Swarm) Start(srv *p2p.Server) error {
 	return nil
 }
 
-// implements the node.Service interface
-// stops all component services.
+//
+//
 func (self *Swarm) Stop() error {
 	self.dpa.Stop()
 	self.hive.Stop()
@@ -233,7 +233,7 @@ func (self *Swarm) Stop() error {
 	return self.config.Save()
 }
 
-// implements the node.Service interface
+//
 func (self *Swarm) Protocols() []p2p.Protocol {
 	proto, err := network.Bzz(self.depo, self.backend, self.hive, self.dbAccess, self.config.Swap, self.config.SyncParams, self.config.NetworkId)
 	if err != nil {
@@ -242,18 +242,18 @@ func (self *Swarm) Protocols() []p2p.Protocol {
 	return []p2p.Protocol{proto}
 }
 
-// implements node.Service
-// Apis returns the RPC Api descriptors the Swarm implementation offers
+//
+//
 func (self *Swarm) APIs() []rpc.API {
 	return []rpc.API{
-		// public APIs
+//
 		{
 			Namespace: "bzz",
 			Version:   "0.1",
 			Service:   &Info{self.config, chequebook.ContractParams},
 			Public:    true,
 		},
-		// admin APIs
+//
 		{
 			Namespace: "bzz",
 			Version:   "0.1",
@@ -272,8 +272,8 @@ func (self *Swarm) APIs() []rpc.API {
 			Service:   self.sfs,
 			Public:    false,
 		},
-		// storage APIs
-		// DEPRECATED: Use the HTTP API instead
+//
+//
 		{
 			Namespace: "bzz",
 			Version:   "0.1",
@@ -286,7 +286,7 @@ func (self *Swarm) APIs() []rpc.API {
 			Service:   api.NewFileSystem(self.api),
 			Public:    false,
 		},
-		// {Namespace, Version, api.NewAdmin(self), false},
+//
 	}
 }
 
@@ -294,7 +294,7 @@ func (self *Swarm) Api() *api.Api {
 	return self.api
 }
 
-// SetChequebook ensures that the local checquebook is set up on chain.
+//
 func (self *Swarm) SetChequebook(ctx context.Context) error {
 	err := self.config.Swap.SetChequebook(ctx, self.backend, self.config.Path)
 	if err != nil {
@@ -306,7 +306,7 @@ func (self *Swarm) SetChequebook(ctx context.Context) error {
 	return nil
 }
 
-// Local swarm without netStore
+//
 func NewLocalSwarm(datadir, port string) (self *Swarm, err error) {
 
 	prvKey, err := crypto.GenerateKey()
@@ -333,7 +333,7 @@ func NewLocalSwarm(datadir, port string) (self *Swarm, err error) {
 	return
 }
 
-// serialisable info about swarm
+//
 type Info struct {
 	*api.Config
 	*chequebook.Params

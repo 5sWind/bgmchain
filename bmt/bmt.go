@@ -1,20 +1,20 @@
-// Copyright 2017 The bgmchain Authors
-// This file is part of the bgmchain library.
 //
-// The bgmchain library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 //
-// The bgmchain library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with the bgmchain library. If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-// Package bmt provides a binary merkle tree implementation
+//
 package bmt
 
 import (
@@ -50,43 +50,43 @@ Two implementations are provided:
 */
 
 const (
-	// DefaultSegmentCount is the maximum number of segments of the underlying chunk
-	DefaultSegmentCount = 128 // Should be equal to storage.DefaultBranches
-	// DefaultPoolSize is the maximum number of bmt trees used by the hashers, i.e,
-	// the maximum number of concurrent BMT hashing operations performed by the same hasher
+//
+	DefaultSegmentCount = 128 //
+//
+//
 	DefaultPoolSize = 8
 )
 
-// BaseHasher is a hash.Hash constructor function used for the base hash of the  BMT.
+//
 type BaseHasher func() hash.Hash
 
-// Hasher a reusable hasher for fixed maximum size chunks representing a BMT
-// implements the hash.Hash interface
-// reuse pool of Tree-s for amortised memory allocation and resource control
-// supports order-agnostic concurrent segment writes
-// as well as sequential read and write
-// can not be called concurrently on more than one chunk
-// can be further appended after Sum
-// Reset gives back the Tree to the pool and guaranteed to leave
-// the tree and itself in a state reusable for hashing a new chunk
+//
+//
+//
+//
+//
+//
+//
+//
+//
 type Hasher struct {
-	pool        *TreePool   // BMT resource pool
-	bmt         *Tree       // prebuilt BMT resource for flowcontrol and proofs
-	blocksize   int         // segment size (size of hash) also for hash.Hash
-	count       int         // segment count
-	size        int         // for hash.Hash same as hashsize
-	cur         int         // cursor position for righmost currently open chunk
-	segment     []byte      // the rightmost open segment (not complete)
-	depth       int         // index of last level
-	result      chan []byte // result channel
-	hash        []byte      // to record the result
-	max         int32       // max segments for SegmentWriter interface
-	blockLength []byte      // The block length that needes to be added in Sum
+	pool        *TreePool   //
+	bmt         *Tree       //
+	blocksize   int         //
+	count       int         //
+	size        int         //
+	cur         int         //
+	segment     []byte      //
+	depth       int         //
+	result      chan []byte //
+	hash        []byte      //
+	max         int32       //
+	blockLength []byte      //
 }
 
-// New creates a reusable Hasher
-// implements the hash.Hash interface
-// pulls a new Tree from a resource pool for hashing each chunk
+//
+//
+//
 func New(p *TreePool) *Hasher {
 	return &Hasher{
 		pool:      p,
@@ -98,21 +98,21 @@ func New(p *TreePool) *Hasher {
 	}
 }
 
-// Node is a reuseable segment hasher representing a node in a BMT
-// it allows for continued writes after a Sum
-// and is left in completely reusable state after Reset
+//
+//
+//
 type Node struct {
-	level, index int   // position of node for information/logging only
-	initial      bool  // first and last node
-	root         bool  // whbgmchain the node is root to a smaller BMT
-	isLeft       bool  // whbgmchain it is left side of the parent double segment
-	unbalanced   bool  // indicates if a node has only the left segment
-	parent       *Node // BMT connections
-	state        int32 // atomic increment impl concurrent boolean toggle
+	level, index int   //
+	initial      bool  //
+	root         bool  //
+	isLeft       bool  //
+	unbalanced   bool  //
+	parent       *Node //
+	state        int32 //
 	left, right  []byte
 }
 
-// NewNode constructor for segment hasher nodes in the BMT
+//
 func NewNode(level, index int, parent *Node) *Node {
 	return &Node{
 		parent:  parent,
@@ -123,10 +123,10 @@ func NewNode(level, index int, parent *Node) *Node {
 	}
 }
 
-// TreePool provides a pool of Trees used as resources by Hasher
-// a Tree popped from the pool is guaranteed to have clean state
-// for hashing a new chunk
-// Hasher Reset releases the Tree to the pool
+//
+//
+//
+//
 type TreePool struct {
 	lock         sync.Mutex
 	c            chan *Tree
@@ -137,8 +137,8 @@ type TreePool struct {
 	count        int
 }
 
-// NewTreePool creates a Tree pool with hasher, segment size, segment count and capacity
-// on GetTree it reuses free Trees or creates a new one if size is not reached
+//
+//
 func NewTreePool(hasher BaseHasher, segmentCount, capacity int) *TreePool {
 	return &TreePool{
 		c:            make(chan *Tree, capacity),
@@ -149,7 +149,7 @@ func NewTreePool(hasher BaseHasher, segmentCount, capacity int) *TreePool {
 	}
 }
 
-// Drain drains the pool uptil it has no more than n resources
+//
 func (self *TreePool) Drain(n int) {
 	self.lock.Lock()
 	defer self.lock.Unlock()
@@ -159,8 +159,8 @@ func (self *TreePool) Drain(n int) {
 	}
 }
 
-// Reserve is blocking until it returns an available Tree
-// it reuses free Trees or creates a new one if size is not reached
+//
+//
 func (self *TreePool) Reserve() *Tree {
 	self.lock.Lock()
 	defer self.lock.Unlock()
@@ -177,22 +177,22 @@ func (self *TreePool) Reserve() *Tree {
 	return t
 }
 
-// Release gives back a Tree to the pool.
-// This Tree is guaranteed to be in reusable state
-// does not need locking
+//
+//
+//
 func (self *TreePool) Release(t *Tree) {
-	self.c <- t // can never fail but...
+	self.c <- t //
 }
 
-// Tree is a reusable control structure representing a BMT
-// organised in a binary tree
-// Hasher uses a TreePool to pick one for each chunk hash
-// the Tree is 'locked' while not in the pool
+//
+//
+//
+//
 type Tree struct {
 	leaves []*Node
 }
 
-// Draw draws the BMT (badly)
+//
 func (self *Tree) Draw(hash []byte, d int) string {
 	var left, right []string
 	var anc []*Node
@@ -244,17 +244,17 @@ func (self *Tree) Draw(hash []byte, d int) string {
 	return strings.Join(rows, "\n") + "\n"
 }
 
-// NewTree initialises the Tree by building up the nodes of a BMT
-// segment size is stipulated to be the size of the hash
-// segmentCount needs to be positive integer and does not need to be
-// a power of two and can even be an odd number
-// segmentSize * segmentCount determines the maximum chunk size
-// hashed using the tree
+//
+//
+//
+//
+//
+//
 func NewTree(hasher BaseHasher, segmentSize, segmentCount int) *Tree {
 	n := NewNode(0, 0, nil)
 	n.root = true
 	prevlevel := []*Node{n}
-	// iterate over levels and creates 2^level nodes
+//
 	level := 1
 	count := 2
 	for d := 1; d <= depth(segmentCount); d++ {
@@ -269,34 +269,34 @@ func NewTree(hasher BaseHasher, segmentSize, segmentCount int) *Tree {
 		level++
 		count *= 2
 	}
-	// the datanode level is the nodes on the last level where
+//
 	return &Tree{
 		leaves: prevlevel,
 	}
 }
 
-// methods needed by hash.Hash
+//
 
-// Size returns the size
+//
 func (self *Hasher) Size() int {
 	return self.size
 }
 
-// BlockSize returns the block size
+//
 func (self *Hasher) BlockSize() int {
 	return self.blocksize
 }
 
-// Sum returns the hash of the buffer
-// hash.Hash interface Sum method appends the byte slice to the underlying
-// data before it calculates and returns the hash of the chunk
+//
+//
+//
 func (self *Hasher) Sum(b []byte) (r []byte) {
 	t := self.bmt
 	i := self.cur
 	n := t.leaves[i]
 	j := i
-	// must run strictly before all nodes calculate
-	// datanodes are guaranteed to have a parent
+//
+//
 	if len(self.segment) > self.size && i > 0 && n.parent != nil {
 		n = n.parent
 	} else {
@@ -307,7 +307,7 @@ func (self *Hasher) Sum(b []byte) (r []byte) {
 	c := <-self.result
 	self.releaseTree()
 
-	// sha3(length + BMT(pure_chunk))
+//
 	if self.blockLength == nil {
 		return c
 	}
@@ -318,19 +318,19 @@ func (self *Hasher) Sum(b []byte) (r []byte) {
 	return res.Sum(nil)
 }
 
-// Hasher implements the SwarmHash interface
+//
 
-// Hash waits for the hasher result and returns it
-// caller must call this on a BMT Hasher being written to
+//
+//
 func (self *Hasher) Hash() []byte {
 	return <-self.result
 }
 
-// Hasher implements the io.Writer interface
+//
 
-// Write fills the buffer to hash
-// with every full segment complete launches a hasher go routine
-// that shoots up the BMT
+//
+//
+//
 func (self *Hasher) Write(b []byte) (int, error) {
 	l := len(b)
 	if l <= 0 {
@@ -347,16 +347,16 @@ func (self *Hasher) Write(b []byte) (int, error) {
 	if l < need {
 		need = l
 	}
-	// calculate missing bit to complete current open segment
+//
 	rest := size - len(s)
 	if need < rest {
 		rest = need
 	}
 	s = append(s, b[:rest]...)
 	need -= rest
-	// read full segments and the last possibly partial segment
+//
 	for need > 0 && i < count-1 {
-		// push all finished chunks we read
+//
 		self.writeSegment(i, s, self.depth)
 		need -= size
 		if need < 0 {
@@ -368,15 +368,15 @@ func (self *Hasher) Write(b []byte) (int, error) {
 	}
 	self.segment = s
 	self.cur = i
-	// otherwise, we can assume len(s) == 0, so all buffer is read and chunk is not yet full
+//
 	return l, nil
 }
 
-// Hasher implements the io.ReaderFrom interface
+//
 
-// ReadFrom reads from io.Reader and appends to the data to hash using Write
-// it reads so that chunk to hash is maximum length or reader reaches EOF
-// caller must Reset the hasher prior to call
+//
+//
+//
 func (self *Hasher) ReadFrom(r io.Reader) (m int64, err error) {
 	bufsize := self.size*self.count - self.size*self.cur - len(self.segment)
 	buf := make([]byte, bufsize)
@@ -403,25 +403,25 @@ func (self *Hasher) ReadFrom(r io.Reader) (m int64, err error) {
 	return int64(read), err
 }
 
-// Reset needs to be called before writing to the hasher
+//
 func (self *Hasher) Reset() {
 	self.getTree()
 	self.blockLength = nil
 }
 
-// Hasher implements the SwarmHash interface
+//
 
-// ResetWithLength needs to be called before writing to the hasher
-// the argument is supposed to be the byte slice binary representation of
-// the legth of the data subsumed under the hash
+//
+//
+//
 func (self *Hasher) ResetWithLength(l []byte) {
 	self.Reset()
 	self.blockLength = l
 
 }
 
-// Release gives back the Tree to the pool whereby it unlocks
-// it resets tree, segment and index
+//
+//
 func (self *Hasher) releaseTree() {
 	if self.bmt != nil {
 		n := self.bmt.leaves[self.cur]
@@ -493,7 +493,7 @@ func (self *Hasher) run(n *Node, h hash.Hash, d int, i int, s []byte) {
 	}
 }
 
-// getTree obtains a BMT resource by reserving one from the pool
+//
 func (self *Hasher) getTree() *Tree {
 	if self.bmt != nil {
 		return self.bmt
@@ -503,9 +503,9 @@ func (self *Hasher) getTree() *Tree {
 	return t
 }
 
-// atomic bool toggle implementing a concurrent reusable 2-state object
-// atomic addint with %2 implements atomic bool toggle
-// it returns true if the toggler just put it in the active/waiting state
+//
+//
+//
 func (self *Node) toggle() bool {
 	return atomic.AddInt32(&self.state, 1)%2 == 1
 }
@@ -525,15 +525,15 @@ func depth(n int) (d int) {
 	return d
 }
 
-// finalise is following the zigzags on the tree belonging
-// to the final datasegment
+//
+//
 func (self *Hasher) finalise(n *Node, i int) (d int) {
 	isLeft := i%2 == 0
 	for {
-		// when the final segment's path is going via left segments
-		// the incoming data is pushed to the parent upon pulling the left
-		// we do not need toogle the state since this condition is
-		// detectable
+//
+//
+//
+//
 		n.unbalanced = isLeft
 		n.right = nil
 		if n.initial {
@@ -546,17 +546,17 @@ func (self *Hasher) finalise(n *Node, i int) (d int) {
 	}
 }
 
-// EOC (end of chunk) implements the error interface
+//
 type EOC struct {
-	Hash []byte // read the hash of the chunk off the error
+	Hash []byte //
 }
 
-// Error returns the error string
+//
 func (self *EOC) Error() string {
 	return fmt.Sprintf("hasher limit reached, chunk hash: %x", self.Hash)
 }
 
-// NewEOC creates new end of chunk error with the hash
+//
 func NewEOC(hash []byte) *EOC {
 	return &EOC{hash}
 }
