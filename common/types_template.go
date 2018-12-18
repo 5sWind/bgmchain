@@ -14,7 +14,7 @@
 //
 //
 
-//
+// +build none
 //sed -e 's/_N_/Hash/g' -e 's/_S_/32/g' -e '1d' types_template.go | gofmt -w hash.go
 
 package common
@@ -42,12 +42,12 @@ func (h _N_) Hex() string   { return "0x" + Bytes2Hex(h[:]) }
 
 //
 func (h *_N_) SetBytes(b []byte) {
-//
+	//
 	if len(b) > len(h) {
 		b = b[len(b)-_S_:]
 	}
 
-//
+	//
 	for i := len(b) - 1; i >= 0; i-- {
 		h[_S_-len(b)+i] = b[i]
 	}
