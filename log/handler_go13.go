@@ -1,4 +1,4 @@
-//
+// +build !go1.4
 
 package log
 

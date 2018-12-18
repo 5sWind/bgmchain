@@ -14,7 +14,7 @@
 //
 //
 
-//
+// +build nacl js nocgo
 
 package crypto
 
@@ -36,7 +36,7 @@ func Ecrecover(hash, sig []byte) ([]byte, error) {
 }
 
 func SigToPub(hash, sig []byte) (*ecdsa.PublicKey, error) {
-//
+	//
 	btcsig := make([]byte, 65)
 	btcsig[0] = sig[64] + 27
 	copy(btcsig[1:], sig)
@@ -64,7 +64,7 @@ func Sign(hash []byte, prv *ecdsa.PrivateKey) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-//
+	//
 	v := sig[0] - 27
 	copy(sig, sig[1:])
 	sig[64] = v
